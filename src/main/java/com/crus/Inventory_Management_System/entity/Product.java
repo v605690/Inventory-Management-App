@@ -1,6 +1,8 @@
 package com.crus.Inventory_Management_System.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -23,6 +25,8 @@ public class Product {
     private Long id;
 
     @Column(name = "product_name", nullable = false)
+    @NotBlank(message = "Product name is required and cannot be empty")
+    @Size(min = 1, max = 255, message = "Product name must be between 1 and 255 characters")
     private String productName;
 
     @Column(name = "primary_barcode", unique = true)
@@ -61,5 +65,10 @@ public class Product {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName != null ? productName.trim() : null;
+
     }
 }

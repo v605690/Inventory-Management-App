@@ -1,0 +1,17 @@
+package com.crus.Inventory_Management_System.mappers;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class ProductResponse {
+    private List<ProductDTO> content;
+}
