@@ -15,4 +15,8 @@ public interface ProductService {
     ProductResponse getProductByKeyword(String keyword);
 
     ProductResponse getProductByBarcodePartial(String barcode);
+
+    ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
+
+    ProductDTO deleteProduct(Long productId) throws ResourceNotFoundException;
 }

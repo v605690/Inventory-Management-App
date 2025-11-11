@@ -63,4 +63,17 @@ public class ProductController {
         ProductResponse productResponse = productService.getProductByBarcodePartial(barcode);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
+
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO,
+                                                    @PathVariable Long productId) throws ResourceNotFoundException {
+        ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
+        return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long productId) throws ResourceNotFoundException {
+        ProductDTO deletedProductDTO = productService.deleteProduct(productId);
+        return new ResponseEntity<>(deletedProductDTO, HttpStatus.OK);
+    }
 }

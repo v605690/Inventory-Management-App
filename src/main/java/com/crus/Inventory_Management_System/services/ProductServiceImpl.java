@@ -3,6 +3,7 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.config.AppConfig;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
@@ -93,6 +94,34 @@ public class ProductServiceImpl implements ProductService {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
         return productResponse;
+    }
+
+    @Override
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
+
+        Product productFromDB = productRepository.findById(productId)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        Product product = modelMapper.map(productDTO, Product.class);
+        productFromDB.setProductName(product.getProductName());
+        productFromDB.setPrimaryBarcode(product.getPrimaryBarcode());
+        productFromDB.setInStockQuantity(product.getInStockQuantity());
+        productFromDB.setCategories(product.getCategories());
+        productFromDB.setVbrp(product.getVbrp());
+        productFromDB.setVbcp(product.getVbcp());
+
+        Product savedProduct = productRepository.save(productFromDB);
+
+        return modelMapper.map(savedProduct, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO deleteProduct(Long productId) throws ResourceNotFoundException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        productRepository.delete(product);
+        return modelMapper.map(product, ProductDTO.class);
     }
 
     private ProductDTO convertToDTO(Product product) {

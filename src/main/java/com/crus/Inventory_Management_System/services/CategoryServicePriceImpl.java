@@ -3,7 +3,7 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.config.AppConfig;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
-import com.crus.Inventory_Management_System.mappers.CategoryPriceSummaryDTO;
+import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,14 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     private AppConfig appConfig;
 
     @Override
-    public CategoryPriceSummaryDTO calculateCategoryTotalPrice(String categoryName) {
+    public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName) {
         Category category = appConfig.parseCategory(categoryName);
         List<Product> products = productRepository.findProductsByCategory(category);
 
         BigDecimal totalVbrp = calculateTotalVbrp(products);
         BigDecimal totalVbcp = calculateTotalVbcp(products);
 
-        CategoryPriceSummaryDTO summaryDTO = new CategoryPriceSummaryDTO();
+        CategoryPriceDTO summaryDTO = new CategoryPriceDTO();
         summaryDTO.setCategoryName(categoryName);
         summaryDTO.setTotalVbrp(formatAsDollarAmount(totalVbrp));
         summaryDTO.setTotalVbcp(formatAsDollarAmount(totalVbcp));
