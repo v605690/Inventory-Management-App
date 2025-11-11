@@ -17,16 +17,18 @@ import java.util.Set;
 public class ProductDTO {
     private Long id;
     @NotBlank(message = "Product name is required and cannot be empty")
-    @JsonProperty("Product Name")
+    @JsonProperty("productName")
     private String productName;
-    @JsonProperty("Primary Barcode")
+    @JsonProperty("primaryBarcode")
     private String primaryBarcode;
-    @JsonProperty("In Stock Quantity")
+    @JsonProperty("inStockQuantity")
     private Integer inStockQuantity;
-    @JsonProperty("Categories")
+
+    @JsonProperty("categories")
     private String categories;
-    @JsonProperty("Valuation Based on Base Unit Retail($)")
+
+    @JsonProperty("vbrp")
     private BigDecimal vbrp;
-    @JsonProperty("Valuation Based on Base Unit Cost($)")
+    @JsonProperty("vbcp")
     private BigDecimal vbcp;
 }

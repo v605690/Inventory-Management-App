@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -23,9 +24,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Transactional
     @PostMapping("/admin/product")
     public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
-//        log.info("Received product creation request: {}", productDTO);
+        log.info("Received product creation request: {}", productDTO);
+        System.out.println("Received ProductDTO: " + productDTO);
 
         ProductDTO savedProductDTO = productService.addProduct(productDTO);
         return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
@@ -64,6 +67,7 @@ public class ProductController {
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+    @Transactional
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO,
                                                     @PathVariable Long productId) throws ResourceNotFoundException {
@@ -71,6 +75,7 @@ public class ProductController {
         return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
     }
 
+    @Transactional
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long productId) throws ResourceNotFoundException {
         ProductDTO deletedProductDTO = productService.deleteProduct(productId);

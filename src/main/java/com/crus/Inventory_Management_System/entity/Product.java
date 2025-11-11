@@ -66,9 +66,4 @@ public class Product {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
-
-    public void setProductName(String productName) {
-        this.productName = productName != null ? productName.trim() : null;
-
-    }
 }

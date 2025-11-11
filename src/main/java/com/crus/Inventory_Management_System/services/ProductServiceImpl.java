@@ -110,8 +110,13 @@ public class ProductServiceImpl implements ProductService {
         productFromDB.setVbrp(product.getVbrp());
         productFromDB.setVbcp(product.getVbcp());
 
-        Product savedProduct = productRepository.save(productFromDB);
+        productFromDB.getCategories().clear();
+        if (productDTO.getCategories() != null && !productDTO.getCategories().isEmpty()) {
+            Category category = Category.valueOf(productDTO.getCategories().toUpperCase());
+            productFromDB.getCategories().add(category);
+        }
 
+        Product savedProduct = productRepository.save(productFromDB);
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
