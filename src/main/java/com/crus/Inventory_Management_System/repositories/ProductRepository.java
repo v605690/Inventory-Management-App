@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
     List<Product> findByVendorsId(Long id);
     Optional<Product> findByVendorsEmailAddress(String vendors_emailAddress);
     List<Product> findByVendorsContactName(String vendors_contactName);
     List<Product> findByVendorsPhoneNumber(Integer vendors_phoneNumber);
-    List<Product> findByProductNameLikeIgnoreCase(String keyword);
 
     @Query("SELECT p FROM Product p JOIN p.categories c WHERE c = :category")
     List<Product> findProductsByCategory(Category category);
-
+    List<Product> findByProductNameLikeIgnoreCase(String keyword);
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
 
 //    Product findProductsByProductId(Long productId);

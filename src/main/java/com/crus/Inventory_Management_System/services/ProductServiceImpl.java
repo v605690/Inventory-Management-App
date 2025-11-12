@@ -1,6 +1,5 @@
 package com.crus.Inventory_Management_System.services;
 
-import com.crus.Inventory_Management_System.config.AppConfig;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
@@ -27,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private AppConfig appConfig;
+    private CategoryService categoryService;
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO) {
@@ -37,8 +36,11 @@ public class ProductServiceImpl implements ProductService {
         if (StringUtils.hasText(productDTO.getCategories())) {
             Set<Category> categorySet = Arrays.stream(productDTO.getCategories().split(","))
                     .map(String::trim)
-                    .map(appConfig::parseCategory)
+                    .map(categoryService::parseCategory)
                     .collect(Collectors.toSet());
+            if (categorySet.size() > 1) {
+                System.out.println("Debug ");
+            }
             product.setCategories(categorySet);
         }
 
@@ -61,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductsByCategory(String categoryName) {
-        Category category = appConfig.parseCategory(categoryName);
+        Category category = categoryService.parseCategory(categoryName);
         List<Product> products = productRepository.findProductsByCategory(category);
 
         List<ProductDTO> productDTOS = products.stream()
@@ -110,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
         productFromDB.setVbrp(product.getVbrp());
         productFromDB.setVbcp(product.getVbcp());
 
+        // Clear categories before it set to something else during the update
         productFromDB.getCategories().clear();
         if (productDTO.getCategories() != null && !productDTO.getCategories().isEmpty()) {
             Category category = Category.valueOf(productDTO.getCategories().toUpperCase());

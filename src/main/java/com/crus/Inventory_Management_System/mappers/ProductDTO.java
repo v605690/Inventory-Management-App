@@ -1,14 +1,10 @@
 package com.crus.Inventory_Management_System.mappers;
 
-import com.crus.Inventory_Management_System.entity.Category;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

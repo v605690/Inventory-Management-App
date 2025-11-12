@@ -38,7 +38,7 @@ public enum Category {
     FASHION_WEAR,
     KITCHEN,
     LIQUOR,
-    @JsonProperty("FROZEN YOUGURT")
+    @JsonProperty("FROZEN YOGURT")
     FROZEN_YOGURT,
     @JsonProperty("DEPARTMENT NOT ON FILE")
     DEPARTMENT_NOT_ON_FILE;

@@ -1,6 +1,5 @@
 package com.crus.Inventory_Management_System.services;
 
-import com.crus.Inventory_Management_System.config.AppConfig;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
@@ -21,11 +20,11 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     ProductRepository productRepository;
 
     @Autowired
-    private AppConfig appConfig;
+    private CategoryService categoryService;
 
     @Override
     public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName) {
-        Category category = appConfig.parseCategory(categoryName);
+        Category category = categoryService.parseCategory(categoryName);
         List<Product> products = productRepository.findProductsByCategory(category);
 
         BigDecimal totalVbrp = calculateTotalVbrp(products);
