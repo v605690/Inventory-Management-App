@@ -1,5 +1,6 @@
 package com.crus.Inventory_Management_System.controllers;
 
+import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
@@ -35,14 +36,24 @@ public class ProductController {
     }
 
     @GetMapping("/public/products")
-    public ResponseEntity<ProductResponse> getAllProducts() {
-        ProductResponse productResponse = productService.getAllProducts();
+    public ResponseEntity<ProductResponse> getAllProducts(@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                          @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                                          @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                                                          @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+
+        ProductResponse productResponse = productService.getAllProducts(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
     @GetMapping("/public/products/category/{categoryName}")
-    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable String categoryName) throws ResourceNotFoundException {
-        ProductResponse productResponse = productService.getProductsByCategory(categoryName);
+    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable String categoryName,
+                                                                 @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                                 @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                                                 @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                                                                 @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder)
+            throws ResourceNotFoundException {
+
+        ProductResponse productResponse = productService.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 

@@ -8,6 +8,10 @@ import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -29,18 +33,25 @@ public class ProductServiceImpl implements ProductService {
     private CategoryService categoryService;
 
     @Override
+    // Method implements addProduct interface method and takes a ProductDTO and returns a ProductDTO
     public ProductDTO addProduct(ProductDTO productDTO) {
-
+        // Uses modelMapper to convert incoming ProductDTO to a product entity
         Product product = modelMapper.map(productDTO, Product.class);
-
+        // Checks if the category field in DTO contains actual text (not null, empty, or just whitespace)
+        // Splits the category string by commas
+        // Trims whitespace from each category name
+        // Parse each category string using categoryService.parseCategory() (Likely converts string to Category enum)
+        // Collects results into a Set<Category> to avoid duplicates
         if (StringUtils.hasText(productDTO.getCategories())) {
             Set<Category> categorySet = Arrays.stream(productDTO.getCategories().split(","))
                     .map(String::trim)
                     .map(categoryService::parseCategory)
                     .collect(Collectors.toSet());
+            // Debug to check for multiple categories
             if (categorySet.size() > 1) {
                 System.out.println("Debug ");
             }
+            // Assigns the processed category set to the product entity
             product.setCategories(categorySet);
         }
 
@@ -50,30 +61,46 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductDTO> productDTOS = products.stream()
+    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+        // Fetch all products using Data JPA findAll() method
+        Page<Product> page = productRepository.findAll(pageable);
+
+        // Uses stream to transform the list of Product entities
+        List<ProductDTO> productDTOS = page.stream()
+                // convertToDTO method handles the conversion from Product entity to ProductDTO
                 .map(this::convertToDTO)
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        return productResponse;
+        // Create a ProductResponse object to wrap the list of DTOs
+
+        return createProductResponse(productDTOS, page);
     }
 
     @Override
-    public ProductResponse getProductsByCategory(String categoryName) {
+    public ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        // Takes the input categoryName (a String) and converts it to a Category object and
+        // uses parseCategory method to handle the conversion
         Category category = categoryService.parseCategory(categoryName);
-        List<Product> products = productRepository.findProductsByCategory(category);
+        // Uses Data JPA to find all products by category and returns a list of Product
 
-        List<ProductDTO> productDTOS = products.stream()
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+
+        Page<Product> page = productRepository.findProductsByCategory(category, pageable);
+        
+        // Transform a list of Product into ProductDTO objects using Java Streams
+        List<ProductDTO> productDTOS = page.getContent()
+                .stream()
+                // Uses convertToDTO to convert each product
                 .map(this::convertToDTO)
                 .toList();
+        // Create a ProductResponse wrapper object
 
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-
-        return productResponse;
+        return createProductResponse(productDTOS, page);
     }
 
     @Override
@@ -100,11 +127,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
-
+        // Use Spring Data JPA findbyId method to fetch the product by its productId
         Product productFromDB = productRepository.findById(productId)
                 .orElseThrow(ResourceNotFoundException::new);
-
+        // Uses modelMapper to convert productDTO to Product entity
         Product product = modelMapper.map(productDTO, Product.class);
+        // Manually set each field from the mapped product to the database product
         productFromDB.setProductName(product.getProductName());
         productFromDB.setPrimaryBarcode(product.getPrimaryBarcode());
         productFromDB.setInStockQuantity(product.getInStockQuantity());
@@ -118,7 +146,8 @@ public class ProductServiceImpl implements ProductService {
             Category category = Category.valueOf(productDTO.getCategories().toUpperCase());
             productFromDB.getCategories().add(category);
         }
-
+        // Saved the updated product to the database
+        // Maps the saved entity back to a DTO and returns it
         Product savedProduct = productRepository.save(productFromDB);
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
@@ -129,6 +158,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(ResourceNotFoundException::new);
 
         productRepository.delete(product);
+        // Uses modelMapper to convert a product into a ProductDTO entity
         return modelMapper.map(product, ProductDTO.class);
     }
 
@@ -143,5 +173,18 @@ public class ProductServiceImpl implements ProductService {
 
         }
         return  productDTO;
+    }
+
+    private ProductResponse createProductResponse(List<ProductDTO> productDTOS, Page<?> page) {
+        ProductResponse productResponse = new ProductResponse();
+        // Sets the converted DTO list as the content
+        productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(page.getNumber());
+        productResponse.setPageSize(page.getSize());
+        productResponse.setTotalElements(page.getTotalElements());
+        productResponse.setTotalPages(page.getTotalPages());
+        productResponse.setLastPage(page.isLast());
+
+        return productResponse;
     }
 }

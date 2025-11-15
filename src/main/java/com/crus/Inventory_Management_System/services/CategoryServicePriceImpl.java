@@ -5,6 +5,8 @@ import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,9 +25,10 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     private CategoryService categoryService;
 
     @Override
-    public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName) {
+    public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Pageable pageable) {
         Category category = categoryService.parseCategory(categoryName);
-        List<Product> products = productRepository.findProductsByCategory(category);
+        Page<Product> page = productRepository.findProductsByCategory(category, pageable);
+        List<Product> products = page.getContent();
 
         BigDecimal totalVbrp = calculateTotalVbrp(products);
         BigDecimal totalVbcp = calculateTotalVbcp(products);

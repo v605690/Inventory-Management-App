@@ -8,9 +8,11 @@ public interface ProductService {
 
     ProductDTO addProduct(ProductDTO productDTO);
 
-    ProductResponse getAllProducts();
+    ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    ProductResponse getProductsByCategory(String categoryName);
+    //ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
+    ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     ProductResponse getProductByKeyword(String keyword);
 
