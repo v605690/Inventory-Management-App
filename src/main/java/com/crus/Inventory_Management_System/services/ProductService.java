@@ -3,6 +3,9 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 

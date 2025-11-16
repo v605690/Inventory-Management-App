@@ -23,11 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category"
     )
     Page<Product> findProductsByCategory(@Param("category") Category category, Pageable pageable);
-//    Page<Product> findByCategoriesContaining(Category category, Pageable pageable);
-//    List<Product> findByCategoriesContaining(Category category);
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
-
-//    Product findProductsByProductId(Long productId);
-
 }

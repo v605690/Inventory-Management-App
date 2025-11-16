@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>HK Inventory Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,6 +39,139 @@
 <body>
 <h1>Products List</h1>
 
+<div>
+    <style>
+        form.search-form {
+            margin-bottom: 15px; /* space below first form */
+        }
+    </style>
+<form class="search-form" th:action="@{/products}" method="get">
+    <span>
+    <label for="pageNumber">Page Number</label>
+    </span>
+    <span>
+    <input type="number" name="pageNumber" id="pageNumber" th:value="${pageNumber}" min="0"></input>
+    </span>
+
+    <span>
+    <label for="pageSize">Page Size</label>
+    </span>
+    <span>
+    <input type="number" name="pageSize" id="pageSize" th:value="${pageSize}" min="10" max="100"></input>
+    </span>
+
+    <datalist id="sortByOptions">
+        <option value="productName" label="Name"></option>
+        <option value="primaryBarcode" label="SKU"></option>
+        <option value="categories" label="Category"></option>
+        <option value="inStockQuantity" label="Quantity"></option>
+        <option value="vbcp" label="Price"></option>
+    </datalist>
+
+    <span>
+    <label for="sortBy">Sort By</label>
+    </span>
+    <span>
+    <input type="text" list="sortByOptions" name="sortBy" id="sortBy" th:value="${sortBy}"></input>
+    </span>
+    <button> Pagination </button>
+</form>
+
+    <style>
+        form.second-form {
+            margin-top: 15px; /* space above second form */
+        }
+    </style>
+<div>
+<form class="second-form" th:action="@{/products/keyword}" method="get">
+    <div>
+        <label for="keyword">Search Product</label>
+        <input
+            type="search"
+            id="keyword"
+            name="q"
+            placeholder="Search By Keyword…"
+            required
+        />
+    <button type="submit">Search</button>
+    <span class="validity" aria-live="polite"></span>
+   </div>
+</form>
+</div>
+
+<!-- Pagination Navigation aligned with forms -->
+<div th:if="${totalPages != null and totalPages > 0}" style="margin-top: 15px;">
+    <!-- Page Info -->
+    <p style="margin: 10px 0; font-size: 16px; color: #333;">
+        <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
+        <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
+    </p>
+
+    <!-- Bootstrap Pagination Navigation with Limited Pages -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- Previous Button -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" 
+                   th:href="${currentPage == 0} ? '#' : @{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                   tabindex="-1" 
+                   th:attr="aria-disabled=${currentPage == 0}">
+                    Previous
+                </a>
+            </li>
+
+            <!-- First Page -->
+            <li class="page-item" th:if="${currentPage > 2}">
+                <a class="page-link" 
+                   th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                    1
+                </a>
+            </li>
+
+            <!-- Ellipsis if needed -->
+            <li class="page-item disabled" th:if="${currentPage > 3}">
+                <span class="page-link">...</span>
+            </li>
+
+            <!-- Page Numbers (show 2 before, current, 2 after) -->
+            <th:block th:with="startPage=${currentPage > 2 ? currentPage - 2 : 0}, 
+                               endPage=${currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1}">
+                <li class="page-item" 
+                    th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" 
+                       th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+            </th:block>
+
+            <!-- Ellipsis if needed -->
+            <li class="page-item disabled" th:if="${currentPage + 3 < totalPages - 1}">
+                <span class="page-link">...</span>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
+                <a class="page-link" 
+                   th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                   th:text="${totalPages}">
+                    Last
+                </a>
+            </li>
+
+            <!-- Next Button -->
+            <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                <a class="page-link" 
+                   th:href="${currentPage + 1 >= totalPages} ? '#' : @{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</div>
+<div>
 <table>
     <thead>
     <tr>
@@ -58,5 +192,10 @@
     </tr>
     </tbody>
 </table>
+    <p style="margin: 10px 0; font-size: 16px; color: #333;">
+        <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
+        <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
+    </p>
+</div>
 </body>
 </html>

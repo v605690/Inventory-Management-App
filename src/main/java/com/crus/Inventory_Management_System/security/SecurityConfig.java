@@ -11,6 +11,7 @@ package com.crus.Inventory_Management_System.security;//package com.crus.Invento
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,8 +29,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                         .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**",
                                 "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/login/**","/register", "/register/**").permitAll()

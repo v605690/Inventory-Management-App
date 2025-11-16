@@ -1,5 +1,6 @@
 package com.crus.Inventory_Management_System.services;
 
+import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
@@ -19,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.crus.Inventory_Management_System.config.AppConstants.PAGE_NUMBER;
+import static com.crus.Inventory_Management_System.config.AppConstants.PAGE_SIZE;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -62,7 +66,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Sort.Direction direction = switch (sortOrder.toLowerCase()) {
+            case "desc" -> Sort.Direction.DESC;
+            case "asc" -> Sort.Direction.ASC;
+            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
+        };
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
         // Fetch all products using Data JPA findAll() method
@@ -91,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
         Page<Product> page = productRepository.findProductsByCategory(category, pageable);
-        
+
         // Transform a list of Product into ProductDTO objects using Java Streams
         List<ProductDTO> productDTOS = page.getContent()
                 .stream()
@@ -161,6 +170,7 @@ public class ProductServiceImpl implements ProductService {
         // Uses modelMapper to convert a product into a ProductDTO entity
         return modelMapper.map(product, ProductDTO.class);
     }
+
 
     private ProductDTO convertToDTO(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
