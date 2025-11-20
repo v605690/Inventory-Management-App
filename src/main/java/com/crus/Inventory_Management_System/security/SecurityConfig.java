@@ -29,12 +29,16 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**",
+                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/w3images/**",
                                 "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/login/**","/register", "/register/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/index/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET,"/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/graph/**", "/graph").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/meatPrice/**", "/meatPrice").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .logout(logout -> logout

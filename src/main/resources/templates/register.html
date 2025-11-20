@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<style>
+    /* This CSS rule targets all h2 elements */
+    h2 {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+</style>
+
+<h2>Register</h2>
+
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+<form action="#" th:action="@{/register}" th:object="${user}" method="post">
+
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <ul>
+            <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error message</li>
+        </ul>
+    </div>
+
+    <style>
+        /* This CSS rule targets all h2 elements */
+        label {
+            margin-left: 10px;
+        }
+    </style>
+
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" th:field="*{username}" required />
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
+    </div>
+    <div style="margin-bottom: 15px;"></div>
+    <div style="margin-top: 15px;"></div>
+
+    <div>
+        <label for="password" style="margin-left: 15px;">Password:</label>
+        <input type="password" id="password" th:field="*{password}" required />
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></span>
+    </div>
+    <div style="margin-bottom: 15px;"></div>
+    <div style="margin-top: 15px;"></div>
+
+    <style>
+        /* This CSS rule targets all h2 elements */
+        button {
+            margin-left: 10px;
+        }
+    </style>
+    <div>
+        <button type="submit">Register</button>
+    </div>
+</form>
+
+<style>
+    /* This CSS rule targets all h2 elements */
+    p {
+        margin-left: 10px;
+    }
+</style>
+<div style="margin-top: 20px;">
+    <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+    <p><a th:href="@{/}">Back to Home</a></p>
+</div>
+</body>
+</html>

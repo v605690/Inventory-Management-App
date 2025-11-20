@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:object-fit="http://www.w3.org/1999/xhtml"
+      xmlns:max-height="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head th:replace="fragments/head :: commonHeader"></head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
+<div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+    <a th:href="@{/products}" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Products</a>
+    <a href="#vendors" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Vendors</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
+</div>
+
+<div class="w3-container w3-content w3-padding-64" style="max-width:800px" id="products">
+    <h2 class="w3-wide w3-center">PRODUCTS</h2>
+    <p class="w3-opacity w3-center"><i>Our awesome products</i></p>
+    <!-- your products content here -->
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+
+    <!-- Automatic Slideshow Images -->
+    <div class="mySlides w3-display-container w3-center">
+        <img th:src="@{/w3images/hkm.jpg}" style="width:100%" max-height:600px; object-fit:cover>
+        <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            <h3>Hong Kong Food Market</h3>
+            <p><b>We bring the taste of asia to New Orleans</b></p>
+        </div>
+    </div>
+    <div class="mySlides w3-display-container w3-center">
+        <img th:src="@{/w3images/hkm5.jpg}" style="width:100%" max-height:600px; object-fit:cover>
+        <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            <h3>New Orleans</h3>
+            <p><b>The atmosphere in New Orleans is livid.</b></p>
+        </div>
+    </div>
+    <div class="mySlides w3-display-container w3-center">
+        <img th:src="@{/w3images/hkm6.jpg}" style="width:100%" max-height:600px; object-fit:cover>
+        <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            <h3>Terrytown</h3>
+            <p><b>Flavor town.</b></p>
+        </div>
+    </div>
+
+    <!-- The Band Section -->
+    <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="vendors">
+        <h2 class="w3-wide">HONG KONG MARKET</h2>
+        <p class="w3-opacity"><i>Efficiency at its best</i></p>
+        <p class="w3-justify">Welcome to Hong Kong Supermarket 香港超市
+            Hong Kong Supermarket brings you the best of Asian cooking, with a range of products including groceries, fresh fruit & veg,
+            deli & eggs, baked goods, frozen, liquor, butchery, household, and health & beauty. We pride ourselves on our wide range of products –
+            our customers tell us if you can’t find it in Hong Kong, you can’t find it in New Orleans! </p>
+        <div class="w3-row w3-padding-32">
+            <div class="w3-third">
+                <p>HKM</p>
+                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
+            </div>
+            <div class="w3-third">
+                <p>HKM</p>
+                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
+            </div>
+            <div class="w3-third">
+                <p>HKM</p>
+                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round" alt="Random Name" style="width:60%">
+            </div>
+        </div>
+    </div>
+
+    <!-- The Contact Section -->
+    <div class="w3-container w3-content w3-padding-64" style="max-width:800px" id="contact">
+        <h2 class="w3-wide w3-center">CONTACT</h2>
+        <p class="w3-opacity w3-center"><i>Fan? Drop a note!</i></p>
+        <div class="w3-row w3-padding-32">
+            <div class="w3-col m6 w3-large w3-margin-bottom">
+                <i class="fa fa-map-marker" style="width:30px"></i> Terrytown LA, US<br>
+                <i class="fa fa-phone" style="width:30px"></i> Phone: +1 504-394-7075<br>
+                <i class="fa fa-envelope" style="width:30px"> </i> Email: contact@hkmarketnola.com<br>
+            </div>
+            <div class="w3-col m6">
+                <form action="/action_page.php" target="_blank">
+                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                        <div class="w3-half">
+                            <label>
+                                <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
+                            </label>
+                        </div>
+                        <div class="w3-half">
+                            <label>
+                                <input class="w3-input w3-border" type="text" placeholder="Email" required name="Email">
+                            </label>
+                        </div>
+                    </div>
+                    <label>
+                        <input class="w3-input w3-border" type="text" placeholder="Message" required name="Message">
+                    </label>
+                    <button class="w3-button w3-black w3-section w3-right" type="submit">SEND</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Analytics -->
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
+    <a th:href="@{/graph}" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+        <i class="fa fa-bar-chart"></i> View Product Analytics
+    </a>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
+    <a th:href="@{/meatPrice}" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
+        <i class="fa fa-bar-chart"></i> View Meat Pricing
+    </a>
+</div>
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-large">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+    // Automatic Slideshow - change image every 4 seconds
+    var myIndex = 0;
+    carousel();
+
+    function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        myIndex++;
+        if (myIndex > x.length) {myIndex = 1}
+        x[myIndex-1].style.display = "block";
+        setTimeout(carousel, 4000);
+    }
+
+    // Used to toggle the menu on small screens when clicking on the menu button
+    function myFunction() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") === -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+</script>
+
+</body>
+</html>

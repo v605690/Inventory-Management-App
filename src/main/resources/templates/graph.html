@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Break Down</title>
+    <!--Load the AJAX API-->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Category')
+            data.addColumn('number', 'Count');
+            data.addRows([
+                ['Bakery', 195],
+                ['BBQ', 10],
+                ['Beer_Wine', 3562],
+                ['Cosmetics', 49],
+                ['Dairy', 4719],
+                ['Frozen Foods', 10109],
+                ['Grocery', 81732],
+                ['Juice_Cocktail', 0],
+                ['Meat', 262],
+                ['Medicine', 10],
+                ['Non Food', 18482],
+                ['Online Lotto', 2],
+                ['Prepared Food', 49],
+                ['Produce', 2640],
+                ['Scratch offs', 8],
+                ['Seafood', 256],
+                ['Soft Drinks', 5021],
+                ['Energy Drinks', 147],
+                ['Tobacco', 240],
+                ['Hot Food', 4],
+                ['IceCream', 66],
+                ['Fashion Wear', 1],
+                ['Kitchen', 1249],
+                ['Liquor', 4279],
+                ['Frozen Yogurt', 1],
+                ['Department Not On File', 24]
+            ]);
+
+            // Set chart options
+            var options = {'title':'Product Categories Distribution',
+                'width':600,
+                'height':400};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+<h1>Inventory Break Down</h1>
+<div id="chart_div"></div>
+</body>
+</html>
