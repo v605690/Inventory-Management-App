@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hong Kong Market Inventory App - Overview</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+            padding-top: 80px;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .content-section {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .benefit-item {
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+        }
+        .use-case-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .challenge-item {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .enhancement-tag {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+        }
+        .icon-box {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Hero Section -->
+<div class="section-header">
+    <h1 class="w3-xxxlarge"><i class="fa fa-shopping-basket"></i> Grocery Inventory App</h1>
+    <p class="w3-large">Comprehensive Overview & Documentation</p>
+</div>
+
+<!-- Main Content -->
+<div class="content-section">
+
+    <!-- Section 1: What is it? -->
+    <div class="w3-container">
+        <h2><i class="fa fa-question-circle"></i> 1. What is a Grocery Inventory App?</h2>
+        <div class="w3-panel w3-leftbar w3-light-grey w3-large">
+            <p>A <strong>Grocery Inventory App</strong> is a digital tool designed to help manage and track the inventory of a grocery store or retail business. It allows users to monitor stock levels, manage product information, track sales, and streamline inventory operations.</p>
+        </div>
+    </div>
+
+    <!-- Section 2: Purpose -->
+    <div class="w3-container">
+        <h2><i class="fa fa-bullseye"></i> 2. Purpose of a Grocery Inventory App</h2>
+        <p>The primary purpose of a grocery inventory app is to <strong>streamline inventory management</strong> and <strong>improve operational efficiency</strong> in a retail or grocery business. Key purposes include:</p>
+
+        <div class="w3-row-padding w3-margin-top">
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-clock-o"></i></div>
+                    <h4>Real-time Tracking</h4>
+                    <p>Keep track of stock levels in real time</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-trash"></i></div>
+                    <h4>Reduce Waste</h4>
+                    <p>Identify and manage perishable items before expiry</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-check-square-o"></i></div>
+                    <h4>Order Accuracy</h4>
+                    <p>Ensure right quantity and quality of products</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="w3-row-padding w3-margin-top">
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-refresh"></i></div>
+                    <h4>Automate Reordering</h4>
+                    <p>Enable automatic alerts when stock is low</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-bar-chart"></i></div>
+                    <h4>Data Analysis</h4>
+                    <p>Provide insights into sales trends and inventory turnover</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m6 s12">
+                <div class="stat-box feature-card">
+                    <div class="icon-box"><i class="fa fa-users"></i></div>
+                    <h4>Customer Experience</h4>
+                    <p>Ensure product availability and reduce stockouts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Why is it Needed? -->
+    <div class="w3-container">
+        <h2><i class="fa fa-exclamation-circle"></i> 3. Why is a Grocery Inventory App Needed?</h2>
+
+        <div class="w3-card-4 w3-margin-top">
+            <div class="w3-container w3-blue">
+                <h3><i class="fa fa-hand-o-right"></i> a. Manual Inventory Management is Inefficient</h3>
+            </div>
+            <div class="w3-container">
+                <ul>
+                    <li>Manual tracking is time-consuming, error-prone, and difficult to scale.</li>
+                    <li>It becomes harder to manage as the number of products and locations increases.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="w3-card-4 w3-margin-top">
+            <div class="w3-container w3-teal">
+                <h3><i class="fa fa-hand-o-right"></i> b. High Turnover of Inventory</h3>
+            </div>
+            <div class="w3-container">
+                <ul>
+                    <li>Grocery stores have high product turnover, with items frequently being restocked and sold.</li>
+                    <li>Real-time tracking is crucial to avoid overstocking or stockouts.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="w3-card-4 w3-margin-top">
+            <div class="w3-container w3-green">
+                <h3><i class="fa fa-hand-o-right"></i> c. Perishable Products</h3>
+            </div>
+            <div class="w3-container">
+                <ul>
+                    <li>Many grocery items are perishable, and managing their shelf life is critical to avoid waste.</li>
+                    <li>An inventory app can flag expiring items and help in planning sales or discounts.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="w3-card-4 w3-margin-top">
+            <div class="w3-container w3-orange">
+                <h3><i class="fa fa-hand-o-right"></i> d. Data-Driven Decisions</h3>
+            </div>
+            <div class="w3-container">
+                <p>Inventory data helps in making informed decisions about purchasing, pricing, and promotions.</p>
+            </div>
+        </div>
+
+        <div class="w3-card-4 w3-margin-top">
+            <div class="w3-container w3-purple">
+                <h3><i class="fa fa-hand-o-right"></i> e. Multi-User Access and Collaboration</h3>
+            </div>
+            <div class="w3-container">
+                <p>A digital app allows multiple users (e.g., store managers, staff, suppliers) to access and update inventory data simultaneously.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Key Features -->
+    <div class="w3-container">
+        <h2><i class="fa fa-star"></i> 4. Key Features of a Grocery Inventory App</h2>
+
+        <div class="w3-row-padding">
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-blue">
+                        <h3><i class="fa fa-cube"></i> Product Management</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>Add, edit, or delete products</li>
+                            <li>Track product details (name, category, price, unit, description, image, etc.)</li>
+                            <li>Assign unique identifiers (SKU, barcode)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-teal">
+                        <h3><i class="fa fa-list"></i> Inventory Tracking</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>View current stock levels</li>
+                            <li>Set minimum stock thresholds</li>
+                            <li>Enable low stock alerts</li>
+                            <li>Track inventory by location (shelf, fridge, warehouse)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-green">
+                        <h3><i class="fa fa-shopping-cart"></i> Sales Integration</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>Sync with point-of-sale (POS) systems</li>
+                            <li>Update inventory in real time after sales</li>
+                            <li>Generate sales reports and inventory turnover reports</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-orange">
+                        <h3><i class="fa fa-truck"></i> Supplier Management</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>Maintain a list of suppliers</li>
+                            <li>Track supplier orders and delivery schedules</li>
+                            <li>Generate purchase orders automatically when stock is low</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-red">
+                        <h3><i class="fa fa-line-chart"></i> Reporting & Analytics</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>Inventory value reports</li>
+                            <li>Sales trends analysis</li>
+                            <li>Stock turnover metrics</li>
+                            <li>Popular items identification</li>
+                            <li>Expiring items alerts</li>
+                            <li>Inventory movement history</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-col l6 m12">
+                <div class="w3-card-4 w3-margin-top feature-card">
+                    <header class="w3-container w3-purple">
+                        <h3><i class="fa fa-user"></i> User Management</h3>
+                    </header>
+                    <div class="w3-container">
+                        <ul>
+                            <li>Assign roles and permissions to users</li>
+                            <li>Enable multi-user access and collaboration</li>
+                            <li>Admin, manager, and staff roles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Requirements -->
+    <div class="w3-container">
+        <h2><i class="fa fa-cogs"></i> 5. Requirements for a Grocery Inventory App</h2>
+
+        <h3 class="w3-text-blue"><i class="fa fa-wrench"></i> a. Functional Requirements</h3>
+        <div class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+            <ul>
+                <li>User authentication and authorization</li>
+                <li>Product management system</li>
+                <li>Inventory tracking and alerts</li>
+                <li>Sales and inventory integration</li>
+                <li>Reporting and analytics</li>
+                <li>Supplier and order management</li>
+                <li>Multi-user support</li>
+                <li>Mobile compatibility</li>
+            </ul>
+        </div>
+
+        <h3 class="w3-text-teal"><i class="fa fa-shield"></i> b. Non-Functional Requirements</h3>
+        <div class="w3-panel w3-pale-green w3-leftbar w3-border-teal">
+            <ul>
+                <li><strong>Performance</strong> – Fast and responsive, even with large datasets</li>
+                <li><strong>Security</strong> – Data encryption, secure user authentication, and role-based access</li>
+                <li><strong>Scalability</strong> – Ability to handle increasing numbers of products, users, and locations</li>
+                <li><strong>Usability</strong> – Intuitive and user-friendly interface</li>
+                <li><strong>Reliability</strong> – Minimal downtime and robust data backup</li>
+            </ul>
+        </div>
+
+        <h3 class="w3-text-orange"><i class="fa fa-code"></i> c. Technical Requirements</h3>
+        <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-orange">
+            <ul>
+                <li><strong>Frontend:</strong> HTML, CSS, JavaScript (Thymeleaf, W3.CSS)</li>
+                <li><strong>Backend:</strong> Java Spring Boot, Spring MVC, Spring Data JPA</li>
+                <li><strong>Database:</strong> MySQL, PostgreSQL, or similar</li>
+                <li><strong>Security:</strong> Spring Security</li>
+                <li><strong>Hosting:</strong> Cloud platforms like AWS, Google Cloud, or Azure</li>
+                <li><strong>APIs:</strong> RESTful APIs for integration with other systems</li>
+                <li><strong>Mobile App:</strong> React Native or native iOS/Android (optional)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Section 6: Benefits -->
+    <div class="w3-container">
+        <h2><i class="fa fa-thumbs-up"></i> 6. Benefits of Using a Grocery Inventory App</h2>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-bolt"></i> Increased Efficiency</h4>
+            <p>Automate repetitive tasks and reduce manual errors.</p>
+        </div>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-balance-scale"></i> Better Stock Control</h4>
+            <p>Maintain optimal stock levels and avoid overstocking or stockouts.</p>
+        </div>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-smile-o"></i> Improved Customer Experience</h4>
+            <p>Ensure product availability and reduce wait times.</p>
+        </div>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-dollar"></i> Cost Savings</h4>
+            <p>Reduce waste, optimize purchasing, and improve inventory turnover.</p>
+        </div>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-lightbulb-o"></i> Data-Driven Decisions</h4>
+            <p>Use analytics to make informed business decisions.</p>
+        </div>
+
+        <div class="benefit-item">
+            <h4><i class="fa fa-arrows-alt"></i> Scalability</h4>
+            <p>Easily scale operations as the business grows.</p>
+        </div>
+    </div>
+
+    <!-- Section 7: Use Cases -->
+    <div class="w3-container">
+        <h2><i class="fa fa-briefcase"></i> 7. Use Cases for a Grocery Inventory App</h2>
+
+        <div class="use-case-box">
+            <h4><i class="fa fa-shopping-basket"></i> Small Grocery Store</h4>
+            <p>A small grocery store owner wants to track stock levels and manage reordering efficiently.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h4><i class="fa fa-building"></i> Grocery Chain</h4>
+            <p>A chain of grocery stores needs to manage inventory across multiple locations with centralized control.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h4><i class="fa fa-cubes"></i> Wholesale Supplier</h4>
+            <p>A wholesale supplier wants to monitor inventory levels for their retail clients and streamline distribution.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h4><i class="fa fa-cutlery"></i> Restaurant Management</h4>
+            <p>A restaurant owner uses the app to manage inventory for their kitchen and dining supplies.</p>
+        </div>
+    </div>
+
+    <!-- Section 8: Challenges -->
+    <div class="w3-container">
+        <h2><i class="fa fa-warning"></i> 8. Challenges in Developing a Grocery Inventory App</h2>
+
+        <div class="challenge-item">
+            <h4><i class="fa fa-database"></i> Data Accuracy</h4>
+            <p>Ensuring that the data entered is correct and up to date requires proper validation and user training.</p>
+        </div>
+
+        <div class="challenge-item">
+            <h4><i class="fa fa-plug"></i> Integration with POS Systems</h4>
+            <p>Seamless integration with existing point-of-sale systems can be technically challenging.</p>
+        </div>
+
+        <div class="challenge-item">
+            <h4><i class="fa fa-users"></i> User Adoption</h4>
+            <p>Getting staff to adopt and use the app regularly requires training and change management.</p>
+        </div>
+
+        <div class="challenge-item">
+            <h4><i class="fa fa-lock"></i> Data Security</h4>
+            <p>Protecting sensitive business data from breaches requires robust security measures.</p>
+        </div>
+
+        <div class="challenge-item">
+            <h4><i class="fa fa-sliders"></i> Customization</h4>
+            <p>Meeting the specific needs of different types of grocery businesses requires flexible architecture.</p>
+        </div>
+    </div>
+
+    <!-- Section 9: Future Enhancements -->
+    <div class="w3-container">
+        <h2><i class="fa fa-rocket"></i> 9. Future Enhancements (Optional Features)</h2>
+
+        <div class="w3-panel w3-pale-green">
+            <div style="padding: 20px;">
+                <span class="enhancement-tag"><i class="fa fa-brain"></i> AI-based demand forecasting</span>
+                <span class="enhancement-tag"><i class="fa fa-barcode"></i> Barcode scanning support</span>
+                <span class="enhancement-tag"><i class="fa fa-refresh"></i> Inventory reordering automation</span>
+                <span class="enhancement-tag"><i class="fa fa-heart"></i> Customer loyalty integration</span>
+                <span class="enhancement-tag"><i class="fa fa-microphone"></i> Voice command support</span>
+                <span class="enhancement-tag"><i class="fa fa-cloud"></i> Cloud synchronization</span>
+                <span class="enhancement-tag"><i class="fa fa-mobile"></i> Mobile app with offline mode</span>
+                <span class="enhancement-tag"><i class="fa fa-bell"></i> Smart notifications</span>
+            </div>
+        </div>
+
+        <div class="w3-panel w3-leftbar w3-border-green w3-pale-green">
+            <p><strong>Predict future inventory needs</strong> based on sales trends, seasonality, and market conditions using machine learning algorithms.</p>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="w3-container w3-center" style="margin-top: 60px; margin-bottom: 40px;">
+        <div class="w3-card-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 10px;">
+            <h2 class="w3-text-white"><i class="fa fa-check-circle"></i> Ready to Get Started?</h2>
+            <p class="w3-text-white w3-large">Experience the power of efficient inventory management</p>
+            <a th:href="@{/register}" class="w3-button w3-white w3-large w3-round" style="margin: 10px;">
+                <i class="fa fa-user-plus"></i> Register Now
+            </a>
+            <a th:href="@{/products}" class="w3-button w3-border w3-border-white w3-text-white w3-large w3-round" style="margin: 10px;">
+                <i class="fa fa-cubes"></i> View Products
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-center w3-black">
+    <p>© 2025 Grocery Inventory Management System. All rights reserved.</p>
+    <p>Powered by Spring Boot & Thymeleaf</p>
+</footer>
+
+</body>
+</html>

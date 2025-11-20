@@ -1,22 +1,23 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:background-color="http://www.w3.org/1999/xhtml" xmlns:color="http://www.w3.org/1999/xhtml"
-      xmlns:border="http://www.w3.org/1999/xhtml">
+      xmlns:border="http://www.w3.org/1999/xhtml" xmlns:margin-right="http://www.w3.org/1999/xhtml">
 <body>
 
 <div th:fragment="header" class="w3-top">
     <div class="w3-bar w3-black w3-card">
         <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
         <a th:href="@{/}" class="w3-bar-item w3-button w3-padding-large">Home</a>
+        <a th:href="@{/overview}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Overview</a>
 
-        <div class="w3-dropdown-hover w3-hide-small">
+        <div class="w3-dropdown-hover w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">
             <button class="w3-padding-large w3-button" title="Mange Product">Manage Products<i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
             <a th:href="@{/products}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Products List</a>
-                <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Add Product</a>
+                <a th:href="@{/new}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Add Product</a>
             </div>
         </div>
 
-        <a href="#vendors" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors</a>
+        <a href="#vendors" class="w3-bar-item w3-button w3-padding-large w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">Vendors</a>
         <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
         <div class="w3-dropdown-hover w3-hide-small">
             <button class="w3-padding-large w3-button" title="More">More<i class="fa fa-caret-down"></i></button>
@@ -30,7 +31,8 @@
 
 <!--        </div>-->
         <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
-        <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right">Login</a>
+        <a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right" style="margin-right: 25px;">Logout</a>
+        <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right" style="margin-right: 25px;">Login</a>
         <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register an Account</a>
 <!--        <a th:href="@{/login}" class="btn btn-primary mb-2">Login</a>-->
 <!--        <a th:href="@{/register}" class="btn btn-outline-primary">Register an Account</a>-->

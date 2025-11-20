@@ -1,6 +1,4 @@
 package com.crus.Inventory_Management_System.services;
-
-import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
@@ -20,9 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.crus.Inventory_Management_System.config.AppConstants.PAGE_NUMBER;
-import static com.crus.Inventory_Management_System.config.AppConstants.PAGE_SIZE;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -135,6 +130,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponse getProductByKeywordAndBarcode(String keyword, String barcode) {
+        List<Product> products = productRepository.findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith('%' + keyword + '%', barcode);
+        List<ProductDTO> productDTOS = products.stream().map((element) -> modelMapper.map(element, ProductDTO.class))
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        return productResponse;
+    }
+
+    @Override
+    public Product saveProduct(Product product) {
+        return null;
+    }
+
+    @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
         // Use Spring Data JPA findbyId method to fetch the product by its productId
         Product productFromDB = productRepository.findById(productId)
@@ -170,7 +181,6 @@ public class ProductServiceImpl implements ProductService {
         // Uses modelMapper to convert a product into a ProductDTO entity
         return modelMapper.map(product, ProductDTO.class);
     }
-
 
     private ProductDTO convertToDTO(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);

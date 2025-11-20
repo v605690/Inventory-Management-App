@@ -78,6 +78,12 @@ public class ProductController {
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/public/products/keyword/{keyword}/barcode/{barcode}")
+    public ResponseEntity<ProductResponse> getProductsByKeywordAndBarcode(@PathVariable String keyword, @PathVariable String barcode) {
+        ProductResponse productResponse = productService.getProductByKeywordAndBarcode(keyword, barcode);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
+
     @Transactional
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO,

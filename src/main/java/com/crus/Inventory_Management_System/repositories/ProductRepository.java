@@ -25,4 +25,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findProductsByCategory(@Param("category") Category category, Pageable pageable);
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
+    List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);
 }
