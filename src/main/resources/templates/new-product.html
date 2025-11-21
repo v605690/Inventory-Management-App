@@ -37,7 +37,7 @@
                 <td>SKU:</td>
                 <td>
                     <label>
-                        <input type="email" th:field="*{primaryBarcode}"
+                        <input type="text" th:field="*{primaryBarcode}"
                                required/>
                     </label>
                 </td>
@@ -55,7 +55,7 @@
                 <td>Category:</td>
                 <td>
                     <label>
-                        <input type="number" th:field="*{categories}"
+                        <input type="text" th:field="*{categories}"
                                required/>
                     </label>
                 </td>
@@ -64,7 +64,7 @@
                 <td>Retail Price:</td>
                 <td>
                     <label>
-                        <input type="number" th:field="*{vbrp}"
+                        <input type="number" step="0.01" th:field="*{vbrp}"
                                required/>
                     </label>
                 </td>
@@ -73,7 +73,7 @@
                 <td>Cost Price:</td>
                 <td>
                     <label>
-                        <input type="number" th:field="*{vbcp}"
+                        <input type="number" step="0.01" th:field="*{vbcp}"
                                required/>
                     </label>
                 </td>

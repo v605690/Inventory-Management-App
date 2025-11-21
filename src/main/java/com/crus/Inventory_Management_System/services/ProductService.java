@@ -28,5 +28,5 @@ public interface ProductService {
 
     ProductResponse getProductByKeywordAndBarcode(String keyword, String barcode);
 
-    Product saveProduct(Product product);
+    Product saveProduct(ProductDTO productDTO);
 }

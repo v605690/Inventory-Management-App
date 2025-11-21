@@ -12,14 +12,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -141,9 +144,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product saveProduct(Product product) {
-        return null;
+    @Transactional
+    public Product saveProduct(ProductDTO productDTO) {
+        Product product = modelMapper.map(productDTO, Product.class);
+
+        if (StringUtils.hasText(productDTO.getCategories())) {
+            Set<Category> categorySet = Arrays.stream(productDTO.getCategories().split(","))
+                    .map(String::trim)
+                    .map(categoryService::parseCategory)
+                    .collect(Collectors.toSet());
+
+            product.setCategories(categorySet);
+        } else {
+            product.setCategories(new HashSet<>());
+        }
+       return productRepository.save(product);
     }
+
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {

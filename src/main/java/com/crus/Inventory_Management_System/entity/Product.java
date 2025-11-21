@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "in_stock_quantity")
     private Integer inStockQuantity;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)

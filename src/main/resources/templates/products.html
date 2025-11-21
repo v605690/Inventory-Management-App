@@ -161,10 +161,12 @@
     </tr>
     </tbody>
 </table>
+    <div th:if="${currentPage != null and totalPages != null}">
     <p style="margin: 10px 0; font-size: 16px; color: #333;">
         <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
         <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
     </p>
+    </div>
 </div>
 </div>
 </body>

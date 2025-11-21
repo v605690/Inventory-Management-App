@@ -69,7 +69,7 @@ public class ProductViewController {
 
         return "products";
     }
-    @GetMapping("products/keyword")
+    @GetMapping("/products/keyword")
     public String searchProductByKeyword(Model model, @RequestParam("q") String keyword) {
         final List<ProductDTO> productDTOList = productServiceImpl.getProductByKeyword(keyword).getContent();
 
@@ -103,19 +103,17 @@ public class ProductViewController {
     }
 
     @PostMapping(value = "/save")
-    public String saveProduct(@ModelAttribute("product") Product product, Model model) {
-        if (product == null) {
+    public String saveProduct(@ModelAttribute("product") ProductDTO productDTO, Model model) {
+        if (productDTO == null) {
             model.addAttribute("message", "Product cannot be null");
-
             return "error";
         }
-        if (product.getProductName() == null || product.getProductName().isEmpty()) {
+        if (productDTO.getProductName() == null || productDTO.getProductName().isEmpty()) {
             model.addAttribute("message", "Product name cannot be empty");
-
             return "error";
         }
 
-        productService.saveProduct(product);
-        return "redirect:/new-product";
+        productService.saveProduct(productDTO);
+        return "redirect:/";
     }
 }
