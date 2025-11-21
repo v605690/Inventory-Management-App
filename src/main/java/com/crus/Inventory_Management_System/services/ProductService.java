@@ -29,4 +29,8 @@ public interface ProductService {
     ProductResponse getProductByKeywordAndBarcode(String keyword, String barcode);
 
     Product saveProduct(ProductDTO productDTO);
+
+    ProductDTO getProductById(Long productId);
+
+    void deleteItem(Long productId);
 }

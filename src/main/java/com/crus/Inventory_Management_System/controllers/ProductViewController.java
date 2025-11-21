@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
@@ -115,5 +116,38 @@ public class ProductViewController {
 
         productService.saveProduct(productDTO);
         return "redirect:/";
+    }
+
+    @GetMapping("/edit/{productId}")
+    public String showEditProductPage(@PathVariable(name = "productId") Long productId, Model model) throws ResourceNotFoundException {
+
+       ProductDTO productDTO = productService.getProductById(productId);
+
+        if (productDTO == null) {
+            model.addAttribute("message", "Product not found");
+            return "error";
+        }
+        model.addAttribute("product", productDTO);
+
+        return "edit-product";
+    }
+
+    @PostMapping("/update/{productId}")
+    public String updateProduct(@PathVariable(name = "productId") Long productId,
+                                @ModelAttribute("product") ProductDTO productDTO, Model model) {
+        productDTO.setId(productId);
+
+        if (productDTO.getProductName() == null || productDTO.getProductName().isEmpty()) {
+            model.addAttribute("message", "Product name cannot be empty");
+            return "edit-product";
+        }
+        productService.saveProduct(productDTO);
+        return "redirect:/products";
+    }
+
+    @RequestMapping("/delete/{productId}")
+    public String deleteProduct(@PathVariable(name = "productId") Long productId) {
+        productService.deleteItem(productId);
+        return "redirect:/products";
     }
 }

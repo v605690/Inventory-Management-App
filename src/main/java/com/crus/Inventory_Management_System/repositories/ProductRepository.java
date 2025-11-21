@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.repositories;
 
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);
+
+    ProductDTO findProductsById(Long id);
+
+    void deleteProductById(Long id);
 }

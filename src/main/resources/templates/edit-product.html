@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+    <meta charset="utf-8" />
+    <title>Edit Customer</title>
+</head>
+<body>
+<div align="center">
+    <h1>Edit Product</h1>
+    <br />
+    <!--
+    The form below uses a structure similar to the new-customer page.
+    But this time, since the Customer object fields were populated
+    before it was added to the model, their values populate the fields
+    here. The content of the fields then POST to the update endpoint.
+    -->
+    <form action="#" th:action="@{'/update/' + ${productId}}"
+          th:object="${product}" method="post">
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Product ID:</td>
+                <td>
+                    <input type="text" th:field="*{id}" readonly/>
+                </td>
+            </tr>
+            <tr>
+                <td>Product Name:</td>
+                <td>
+                    <input type="text" th:field="*{productName}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+                <td>SKU:</td>
+                <td>
+                    <input type="text" th:field="*{primaryBarcode}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+                <td>Quantity:</td>
+                <td>
+                    <input type="number" th:field="*{inStockQuantity}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+                <td>Category:</td>
+                <td>
+                    <input type="text" th:field="*{categories}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+            <tr>
+                <td>Retail Price:</td>
+                <td>
+                    <input type="number" step="0.01" th:field="*{vbrp}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+            <tr>
+                <td>Cost Price:</td>
+                <td>
+                    <input type="number" step="0.01" th:field="*{vbcp}"
+                           required/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit">Save</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

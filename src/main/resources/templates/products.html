@@ -2,10 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="fragments/head :: commonHeader"></head>
+<head>
+    <th:block th:replace="fragments/head :: commonHeader" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div style="margin: 20px; margin-top: 50px;" >
+<div style="margin: 50px 20px 20px;" >
 <h1>HKM Products List</h1>
 
 <div>
@@ -149,6 +153,7 @@
         <th>Category</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -158,6 +163,12 @@
         <td th:text="${product.categories}">Category</td>
         <td th:text="${product.inStockQuantity}">0</td>
         <td th:text="'$' + ${product.getVbcp}">$0.00</td>
+        <td>
+            <a th:href="@{'/edit/' + ${product.id}}" class="btn-circle-edit" title="Edit"> &#9998;
+            <a th:href="@{'/delete/' + ${product.id}}" class="btn-circle-delete" title="Delete"> &#9998;
+            </a>
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>

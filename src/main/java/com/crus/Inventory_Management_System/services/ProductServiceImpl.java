@@ -161,6 +161,19 @@ public class ProductServiceImpl implements ProductService {
        return productRepository.save(product);
     }
 
+    @Override
+    public ProductDTO getProductById(Long productId) {
+        return productRepository.findById(productId)
+                .map(this::convertToDTO)
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(Long productId) {
+        productRepository.deleteProductById(productId);
+    }
+
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
