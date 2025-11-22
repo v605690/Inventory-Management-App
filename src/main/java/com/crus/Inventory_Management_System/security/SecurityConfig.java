@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/graph/**", "/graph").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/meatPrice/**", "/meatPrice").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/price/**", "/price").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
