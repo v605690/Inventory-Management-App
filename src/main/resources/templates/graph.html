@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Inventory Break Down</title>
     <!--Load the AJAX API-->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
+    <script th:inline="javascript">
         // Load the Visualization API and the corechart package.
         google.charts.load('current', {'packages':['corechart']});
 
@@ -17,10 +17,29 @@
 
         function drawChart() {
 
+            var serverData = /*[[${tableData}]]*/ [];
+
+            console.log("Raw Data from Server:", serverData);
+
             // Create the data table.
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Category')
             data.addColumn('number', 'Count');
+
+            // 3. Parse Data
+            // if (serverData && serverData.length > 0) {
+            //     var rows = [];
+            //     serverData.forEach(function(item) {
+            //         rows.push([
+            //             item.categoryName,
+            //             item.count
+            //         ]);
+            //     });
+            //     data.addRows(rows);
+            // } else {
+            //     data.addRow(['No Data', 0, 0]);
+            // }
+
             data.addRows([
                 ['Bakery', 195],
                 ['BBQ', 10],

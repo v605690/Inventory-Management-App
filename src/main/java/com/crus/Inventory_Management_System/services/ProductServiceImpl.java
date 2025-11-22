@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -173,7 +170,6 @@ public class ProductServiceImpl implements ProductService {
     public void deleteItem(Long productId) {
         productRepository.deleteProductById(productId);
     }
-
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {

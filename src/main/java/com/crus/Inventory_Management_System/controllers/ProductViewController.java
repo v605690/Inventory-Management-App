@@ -1,17 +1,13 @@
 package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.config.AppConstants;
-import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
-import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.services.CategoryServicePriceImpl;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +22,7 @@ public class ProductViewController {
 
     @Autowired
     CategoryServicePriceImpl categoryServiceImpl;
+
     @Autowired
     private ProductService productService;
 
