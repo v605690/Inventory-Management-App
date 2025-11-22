@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -40,6 +41,19 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
         summaryDTO.setProductCount(products.size());
 
         return summaryDTO;
+    }
+
+    @Override
+    public List<CategoryPriceDTO> getAllCategoryPrices(Pageable pageable) {
+        List<CategoryPriceDTO> result = new ArrayList<>();
+        for (Category category : Category.values()) {
+            try {
+                result.add(calculateCategoryTotalPrice(category.name(), pageable));
+            } catch (Exception ignored) {
+
+            }
+        }
+        return result;
     }
 
     private String formatAsDollarAmount(BigDecimal amount) {

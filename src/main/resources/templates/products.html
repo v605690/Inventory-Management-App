@@ -165,10 +165,12 @@
         <td th:text="'$' + ${product.getVbcp}">$0.00</td>
         <td>
             <div class="action-buttons">
+                <a th:href="@{/new}" class="btn-circle-edit" title="Add">
+                    &#43;
+                </a>
             <a th:href="@{'/edit/' + ${product.id}}" class="btn-circle-edit" title="Edit">
                 &#9998;
             </a>
-
             <form th:action="@{'/delete/' + ${product.id}}" method="post"
                   onsubmit="return confirm('Are you sure you want to delete this product?  This action cannot be undone.');">
                <button type="submit" class="btn-circle-delete" title="Delete">

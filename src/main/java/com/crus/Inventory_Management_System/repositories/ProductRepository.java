@@ -28,7 +28,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);
 
-    ProductDTO findProductsById(Long id);
-
     void deleteProductById(Long id);
 }
