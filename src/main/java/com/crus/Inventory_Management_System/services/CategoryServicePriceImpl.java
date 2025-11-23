@@ -38,7 +38,7 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
         summaryDTO.setCategoryName(categoryName);
         summaryDTO.setTotalVbrp(formatAsDollarAmount(totalVbrp));
         summaryDTO.setTotalVbcp(formatAsDollarAmount(totalVbcp));
-        summaryDTO.setProductCount(products.size());
+        summaryDTO.setProductCount((int) page.getTotalElements());
 
         return summaryDTO;
     }

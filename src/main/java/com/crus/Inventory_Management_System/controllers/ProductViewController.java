@@ -2,16 +2,21 @@ package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
+import com.crus.Inventory_Management_System.services.CategoryPriceService;
 import com.crus.Inventory_Management_System.services.CategoryServicePriceImpl;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -25,6 +30,8 @@ public class ProductViewController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CategoryPriceService categoryPriceService;
 
     @GetMapping("/")
     public String viewIndexPage() {
@@ -78,7 +85,23 @@ public class ProductViewController {
     }
 
     @GetMapping("/graph")
-    public String viewGraphPage() {
+    public String viewGraphPage(Model model, Pageable pageable) {
+        List<CategoryPriceDTO> categoryData = categoryPriceService.getAllCategoryPrices(pageable);
+
+        List<List<Object>> graphData = new ArrayList<>();
+
+        if (categoryData != null) {
+        for (CategoryPriceDTO dto : categoryData) {
+            String name = dto.getCategoryName();
+            int count = (dto.getProductCount() != null) ? dto.getProductCount() : 0;
+
+            if (count >= 0 && count <= 100000) {
+            graphData.add(Arrays.asList(name, count));
+                }
+            }
+        }
+
+        model.addAttribute("chartData", graphData);
         return "graph";
     }
 
@@ -112,7 +135,7 @@ public class ProductViewController {
         }
 
         productService.saveProduct(productDTO);
-        return "redirect:/";
+        return "redirect:/products";
     }
 
     @GetMapping("/edit/{productId}")
