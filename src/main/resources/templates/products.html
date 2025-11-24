@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-
 <head>
     <th:block th:replace="fragments/head :: commonHeader" />
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <title></title>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -190,5 +190,6 @@
     </div>
 </div>
 </div>
+<div th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>

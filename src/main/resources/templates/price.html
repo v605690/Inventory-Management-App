@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Category Prices</title>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script th:inline="javascript">
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
@@ -99,5 +100,6 @@
     </tbody>
 </table>
 </div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>

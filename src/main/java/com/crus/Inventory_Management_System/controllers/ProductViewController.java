@@ -102,7 +102,7 @@ public class ProductViewController {
         }
 
         model.addAttribute("chartData", graphData);
-        return "graph";
+        return "category";
     }
 
     @GetMapping("/meatPrice")

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+
 <head>
     <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <meta charset="utf-8" />
     <title>Create New Product</title>
 </head>
-<body>
-<div align="center">
+<body class="d-flex flex-column min-vh-100">
+<div align="center" class="flex-grow-1">
     <h1>Create New Product</h1>
-
 
     <br />
     <!--
@@ -86,5 +87,6 @@
         </table>
     </form>
 </div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>

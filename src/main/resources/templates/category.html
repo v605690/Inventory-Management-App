@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <title>Inventory Break Down</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <div style="margin: 50px 20px 20px;" >
-        Loading Chart...
-    </div>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <!--Load the AJAX API-->
 
     <script type="text/javascript" th:inline="javascript">
@@ -32,13 +31,13 @@
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Category');
-            data.addColumn('number', 'Total Elements');
+            data.addColumn('number', 'Total Items');
 
             // Add the rows directly
             data.addRows(backendData);
 
             var options = {
-                title: 'Total Elements per Category',
+                title: 'Total Items per Category',
                 hAxis: { title: 'Category' },
                 vAxis: { title: 'Count', minValue: 0 },
                 legend: { position: 'none' }
@@ -52,6 +51,9 @@
 </head>
 <body>
 <div style="margin: 50px 20px 20px;" >
+
+    Loading Chart...
+
 <h1>Inventory Break Down</h1>
 
 <div style="margin-top: 20px;">
@@ -65,7 +67,7 @@
         <thead>
         <tr>
             <th style="padding: 10px;">Category</th>
-            <th style="padding: 10px;">Total Elements</th>
+            <th style="padding: 10px;">Total Items</th>
         </tr>
         </thead>
         <tbody>
@@ -76,5 +78,6 @@
         </tbody>
     </table>
 </div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>
