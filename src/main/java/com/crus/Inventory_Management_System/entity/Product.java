@@ -42,11 +42,11 @@ public class Product {
     @Column(name = "category")
     private Set<Category> categories = new HashSet<>();
 
-    @Column(name = "vbrp", precision = 10, scale = 2)
-    private BigDecimal vbrp;
+    @Column(name = "vbrp")
+    private Double vbrp;
 
-    @Column(name = "vbcp", precision = 10, scale = 2)
-    private BigDecimal vbcp;
+    @Column(name = "vbcp")
+    private Double vbcp;
 
     @ManyToMany(mappedBy = "products")
     private Set<Vendor> vendors = new HashSet<>();

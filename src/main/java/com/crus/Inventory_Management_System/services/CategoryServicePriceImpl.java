@@ -9,12 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 @Service
 public class CategoryServicePriceImpl implements CategoryPriceService {
@@ -31,8 +29,8 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
         Page<Product> page = productRepository.findProductsByCategory(category, pageable);
         List<Product> products = page.getContent();
 
-        BigDecimal totalVbrp = calculateTotalVbrp(products);
-        BigDecimal totalVbcp = calculateTotalVbcp(products);
+        Double totalVbrp = calculateTotalVbrp(products);
+        Double totalVbcp = calculateTotalVbcp(products);
 
         CategoryPriceDTO summaryDTO = new CategoryPriceDTO();
         summaryDTO.setCategoryName(categoryName);
@@ -56,22 +54,35 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
         return result;
     }
 
-    private String formatAsDollarAmount(BigDecimal amount) {
+    private String formatAsDollarAmount(Double amount) {
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         return currencyFormatter.format(amount);
     }
 
-    private BigDecimal calculateTotalVbrp(List<Product> products) {
-        return products.stream()
-                .map(Product::getVbrp)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    private Double calculateTotalVbrp(List<Product> products) {
+        double total = 0.0;
+
+        for (Product product : products) {
+            Double vbrp = product.getVbrp();
+
+            if (vbrp != null) {
+                total += vbrp;
+            }
+        }
+        return total;
     }
 
-    private BigDecimal calculateTotalVbcp(List<Product> products) {
-        return products.stream()
-                .map(Product::getVbcp)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    private Double calculateTotalVbcp(List<Product> products) {
+        double total = 0.0;
+
+        for (Product product : products) {
+            Double vbcp = product.getVbcp();
+
+            if (vbcp != null) {
+                total += vbcp;
+            }
+        }
+
+        return total;
     }
 }
