@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:object-fit="http://www.w3.org/1999/xhtml"
-      xmlns:max-height="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
-<head th:replace="fragments/head :: commonHeader"></head>
+      xmlns:max-height="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/category.css}"/>
+    <title></title>
+</head>
 <body>
 
 <!-- Navbar -->
@@ -14,14 +19,14 @@
     <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Contact</a>
 </div>
 
-<div class="w3-container w3-content w3-padding-64" style="max-width:800px" id="products">
+<div class="w3-container w3-content w3-padding-top-64" style="max-width:800px" id="products">
     <h2 class="w3-wide w3-center">PRODUCTS</h2>
     <p class="w3-opacity w3-center"><i>Our awesome products</i></p>
     <!-- your products content here -->
 </div>
 
 <!-- Page content -->
-<div class="w3-content" style="max-width:2000px;margin-top:46px">
+<div class="w3-content" style="max-width:2000px;margin-top:16px">
 
     <!-- Automatic Slideshow Images -->
     <div class="mySlides w3-display-container w3-center">
@@ -46,82 +51,272 @@
         </div>
     </div>
 
-    <!-- The Band Section -->
-    <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="vendors">
+    <!-- The Grocery Section -->
+    <div class="w3-container w3-content w3-center w3-padding-32" style="max-width:800px" id="vendors">
         <h2 class="w3-wide">HONG KONG MARKET</h2>
         <p class="w3-opacity"><i>Efficiency at its best</i></p>
         <p class="w3-justify">Welcome to Hong Kong Supermarket 香港超市
             Hong Kong Supermarket brings you the best of Asian cooking, with a range of products including groceries, fresh fruit & veg,
             deli & eggs, baked goods, frozen, liquor, butchery, household, and health & beauty. We pride ourselves on our wide range of products –
             our customers tell us if you can’t find it in Hong Kong, you can’t find it in New Orleans! </p>
-        <div class="w3-row w3-padding-32">
-            <div class="w3-third">
-                <p>HKM</p>
-                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
-            </div>
-            <div class="w3-third">
-                <p>HKM</p>
-                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round w3-margin-bottom" alt="Random Name" style="width:60%">
-            </div>
-            <div class="w3-third">
-                <p>HKM</p>
-                <img th:src="@{/w3images/hkm3.jpg}" class="w3-round" alt="Random Name" style="width:60%">
-            </div>
         </div>
     </div>
 
     <!-- The Contact Section -->
-    <div class="w3-container w3-content w3-padding-64" style="max-width:800px" id="contact">
-        <h2 class="w3-wide w3-center">CONTACT</h2>
-        <p class="w3-opacity w3-center"><i>Fan? Drop a note!</i></p>
-        <div class="w3-row w3-padding-32">
-            <div class="w3-col m6 w3-large w3-margin-bottom">
-                <i class="fa fa-map-marker" style="width:30px"></i> Terrytown LA, US<br>
-                <i class="fa fa-phone" style="width:30px"></i> Phone: +1 504-394-7075<br>
-                <i class="fa fa-envelope" style="width:30px"> </i> Email: contact@hkmarketnola.com<br>
+<div class="container">
+    <div class="page-header">
+        <h1>Product Categories</h1>
+        <p>Browse through our diverse range of products</p>
+    </div>
+
+    <div class="row">
+        <!-- Row 1 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Bakery</h3>
+                <a th:href="@{/products/categories/bakery}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
-            <div class="w3-col m6">
-                <form action="/action_page.php" target="_blank">
-                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
-                        <div class="w3-half">
-                            <label>
-                                <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
-                            </label>
-                        </div>
-                        <div class="w3-half">
-                            <label>
-                                <input class="w3-input w3-border" type="text" placeholder="Email" required name="Email">
-                            </label>
-                        </div>
-                    </div>
-                    <label>
-                        <input class="w3-input w3-border" type="text" placeholder="Message" required name="Message">
-                    </label>
-                    <button class="w3-button w3-black w3-section w3-right" type="submit">SEND</button>
-                </form>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">BBQ</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Beer Wine</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Cosmetics</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Dairy</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Frozen Foods</h3>
+                <a th:href="@{/products/categories/frozen_foods}">
+                    <button class="btn category-btn">View More</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Grocery</h3>
+                <a th:href="@{/products/categories/grocery}">
+                    <button class="btn category-btn">View More</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Juice & Cocktail</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Meat</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Medicine</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Non Food</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Online Lotto</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Prepared Food</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Produce</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Scratch Offs</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Seafood</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Soft Drinks</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Energy Drinks</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Tobacco</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Hot Food</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 6 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Ice Cream</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Fashion Wear</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Kitchen</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+            </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Liquor</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <!-- Row 7 -->
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Frozen Yogurt</h3>
+                <button class="btn category-btn">View More</button>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 category-card">
+            <div class="category-item">
+                <h3 class="category-title">Department Not On File</h3>
+                <button class="btn category-btn">View More</button>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .grid-container {
+        width: 1100px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: auto auto auto;
+        grid-gap: 10px;
+        padding: 10px;
+        background-color: #b3b3b3;
+    }
+
+    .grid-container > div {
+        background-color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        padding: 10px;
+        font-size: 30px;
+    }
+
+</style>
+
 <!-- Product Analytics -->
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
-    <a th:href="@{/graph}" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
-        <i class="fa fa-bar-chart"></i> View Product Analytics
-    </a>
+<div class="row w3-center pb-md-2 w3-padding-16">
+    <div class="grid-container">
+
+        <!-- Button 1 Column -->
+        <div class="col d-flex justify-content-center mb-4">
+            <a th:href="@{/graph}" class="w3-round-xlarge w3-black w3-padding-large w3-large">
+                <i class="fa fa-bar-chart"></i> View Product Analytics
+            </a>
+        </div>
+
+        <!-- Button 2 Column -->
+        <div class="col d-flex justify-content-center mb-4">
+            <a th:href="@{/price}" class="w3-round-xlarge w3-black w3-padding-large w3-large">
+                <i class="fa fa-bar-chart"></i> View Product Category Pricing
+            </a>
+        </div>
+
+        <!-- Button 3 Column -->
+        <div class="col d-flex justify-content-center mb-4">
+            <a th:href="@{/meatPrice}" class="w3-round-xlarge w3-black w3-padding-large w3-large">
+                <i class="fa fa-bar-chart"></i> View Meat Pricing
+            </a>
+        </div>
+</div>
+<div>
+    <br>
+</div>
 </div>
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
-    <a th:href="@{/price}" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
-        <i class="fa fa-bar-chart"></i> View Product Category Pricing
-    </a>
-</div>
-
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;">
-    <a th:href="@{/meatPrice}" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">
-        <i class="fa fa-bar-chart"></i> View Meat Pricing
-    </a>
-</div>
 <div th:insert="fragments/footer :: inventory-footer"></div>
 
 <script>
