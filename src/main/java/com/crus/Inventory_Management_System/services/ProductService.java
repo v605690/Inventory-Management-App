@@ -4,11 +4,6 @@ import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface ProductService {
 
@@ -23,6 +18,10 @@ public interface ProductService {
     ProductResponse getProductByKeyword(String keyword);
 
     ProductResponse getProductByBarcodePartial(String barcode);
+
+    void increaseProductQuantity(String username, Long productId) throws ResourceNotFoundException;
+
+    ProductDTO getProductByQuantity(Long productId);
 
     ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
 

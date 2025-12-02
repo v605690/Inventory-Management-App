@@ -1,6 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
-      xmlns:background-color="http://www.w3.org/1999/xhtml" xmlns:color="http://www.w3.org/1999/xhtml"
-      xmlns:border="http://www.w3.org/1999/xhtml" xmlns:margin-right="http://www.w3.org/1999/xhtml">
+>
 <body>
 
 <div th:fragment="header" class="w3-top">
@@ -31,8 +30,12 @@
 <!--        </div>-->
         <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
         <a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right" style="margin-right: 25px;">Logout</a>
+        <th:block sec:authorize="!isAuthenticated()">
         <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right" style="margin-right: 25px;">Login</a>
+        </th:block>
+        <th:block sec:authorize="!isAuthenticated()">
         <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register an Account</a>
+        </th:block>
 <!--        <a th:href="@{/login}" class="btn btn-primary mb-2">Login</a>-->
 <!--        <a th:href="@{/register}" class="btn btn-outline-primary">Register an Account</a>-->
     </div>

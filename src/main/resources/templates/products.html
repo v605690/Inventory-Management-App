@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="us">
 
 <head>
     <th:block th:replace="fragments/head :: commonHeader" />
@@ -9,9 +9,10 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div style="margin: 50px 20px 20px;" >
+<div style="margin: 50px 200px 200px;">
+    <br>
 <h1>HKM Products List</h1>
-
+    <br>
 <div>
     <style>
         form.search-form {
@@ -38,41 +39,35 @@
         <option value="primaryBarcode" label="SKU"></option>
         <option value="categories" label="Category"></option>
         <option value="inStockQuantity" label="Quantity"></option>
-        <option value="vbcp" label="Price"></option>
+        <option value="vbrp" label="Price"></option>
     </datalist>
-
-    <span>
-    <label for="sortBy">Sort By</label>
-    </span>
-    <span>
-    <input type="text" list="sortByOptions" name="sortBy" id="sortBy" th:value="${sortBy}"></input>
-    </span>
-    <button> Search </button>
-</form>
-
+    <br>
+    </form>
+    <div>
+    <form class="second-form" th:action="@{/products/keyword}" method="get">
+        <div>
+            <label for="keyword">Search Product</label>
+            <input
+                type="search"
+                id="keyword"
+                name="q"
+                placeholder="Search By Keyword…"
+                required
+            />
+        <label for="sortByKeyword">Sort By</label>
+        <input type="text" list="sortByOptions" name="sortBy" id="sortByKeyword" th:value="${sortBy}" placeholder="Sort...">
+        <button type="submit">Search</button>
+        <span class="validity" aria-live="polite"></span>
+       </div>
+    </form>
+    </div>
     <style>
         form.second-form {
             margin-top: 15px; /* space above second form */
         }
     </style>
-<div>
-<form class="second-form" th:action="@{/products/keyword}" method="get">
-    <div>
-        <label for="keyword">Search Product</label>
-        <input
-            type="search"
-            id="keyword"
-            name="q"
-            placeholder="Search By Keyword…"
-            required
-        />
-    <button type="submit">Search</button>
-    <span class="validity" aria-live="polite"></span>
-   </div>
-</form>
-</div>
 
-<!-- Pagination Navigation aligned with forms -->
+    <!-- Pagination Navigation aligned with forms -->
 <div th:if="${totalPages != null and totalPages > 0}" style="margin-top: 15px;">
     <!-- Page Info -->
     <p style="margin: 10px 0; font-size: 16px; color: #333;">
@@ -142,8 +137,8 @@
         </ul>
     </nav>
 </div>
-
 </div>
+    <br>
 <div>
 <table>
     <thead>
@@ -154,6 +149,9 @@
         <th>Quantity</th>
         <th>Price</th>
         <th>Actions</th>
+        <a th:href="@{/new}" class="btn btn-primary" title="Add">
+            Add
+        </a>
     </tr>
     </thead>
     <tbody>
@@ -162,12 +160,9 @@
         <td th:text="${product.primaryBarcode}">SKU123</td>
         <td th:text="${product.categories}">Category</td>
         <td th:text="${product.inStockQuantity}">0</td>
-        <td th:text="'$' + ${product.getVbcp}">$0.00</td>
+        <td th:text="'$' + ${product.getVbrp}">$0.00</td>
         <td>
             <div class="action-buttons">
-                <a th:href="@{/new}" class="btn-circle-edit" title="Add">
-                    &#43;
-                </a>
             <a th:href="@{'/edit/' + ${product.id}}" class="btn-circle-edit" title="Edit">
                 &#9998;
             </a>

@@ -31,6 +31,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryService categoryService;
 
+    private Long convertUsernameToId(String username) {
+        return Math.abs((long) username.hashCode());
+    }
+
     @Override
     // Method implements addProduct interface method and takes a ProductDTO and returns a ProductDTO
     public ProductDTO addProduct(ProductDTO productDTO) {
@@ -127,6 +131,21 @@ public class ProductServiceImpl implements ProductService {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
         return productResponse;
+    }
+
+    @Override
+    public void increaseProductQuantity(String username, Long productId) throws ResourceNotFoundException {
+        Long userId = convertUsernameToId(username);
+        ProductDTO currentQuantity = getProductByQuantity(productId);
+        int quantity = currentQuantity.getInStockQuantity();
+        quantity += 1;
+        currentQuantity.setInStockQuantity(quantity);
+        updateProduct(productId, currentQuantity);
+    }
+
+    @Override
+    public ProductDTO getProductByQuantity(Long productId) {
+        return null;
     }
 
     @Override

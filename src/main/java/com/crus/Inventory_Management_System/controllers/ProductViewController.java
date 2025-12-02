@@ -5,12 +5,10 @@ import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
-import com.crus.Inventory_Management_System.services.CategoryPriceService;
-import com.crus.Inventory_Management_System.services.CategoryServicePriceImpl;
-import com.crus.Inventory_Management_System.services.ProductService;
-import com.crus.Inventory_Management_System.services.ProductServiceImpl;
+import com.crus.Inventory_Management_System.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +28,12 @@ public class ProductViewController {
 
     @Autowired
     private ProductService productService;
+
     @Autowired
     private CategoryPriceService categoryPriceService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/")
     public String viewIndexPage() {
@@ -170,6 +172,17 @@ public class ProductViewController {
         }
         productService.saveProduct(productDTO);
         return "redirect:/products";
+    }
+
+    @GetMapping("/increase/{productId}")
+    public String increaseQuantity(Model model, @PathVariable Long productId, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            productServiceImpl.increaseProductQuantity(username, productId);
+            return "redirect:/products";
+        } catch (Exception e) {
+            return "redirect:/products?error=true";
+        }
     }
 
     @RequestMapping("/delete/{productId}")
