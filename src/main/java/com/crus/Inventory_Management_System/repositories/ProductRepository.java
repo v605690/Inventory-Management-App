@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -24,6 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category"
     )
     Page<Product> findProductsByCategory(@Param("category") Category category, Pageable pageable);
+    Page<Product> findProductsByCategoriesContains(@Param("Bakery") Category category, Pageable pageable);
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);

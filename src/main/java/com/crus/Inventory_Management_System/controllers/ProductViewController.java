@@ -1,6 +1,7 @@
 package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.config.AppConstants;
+import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
@@ -13,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ProductViewController {
@@ -69,10 +68,16 @@ public class ProductViewController {
                                    @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                    @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
-        List<ProductDTO> productDTOList = productServiceImpl.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder).getContent();
+        ProductResponse productResponse = productServiceImpl.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder);
+
+        List<ProductDTO> productDTOList = productResponse.getContent();
 
         model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("currentCategory", categoryName);
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalPages", productResponse.getTotalPages());
+        model.addAttribute("currentPage", productResponse.getPageNumber());
+        model.addAttribute("totalElements", productResponse.getTotalElements());
 
         return "products";
     }
@@ -182,6 +187,8 @@ public class ProductViewController {
             return "redirect:/products";
         } catch (Exception e) {
             return "redirect:/products?error=true";
+        } catch (ResourceNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
