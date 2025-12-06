@@ -26,8 +26,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
 
-    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category")
-    List<Product> findProductsByCategory(@Param("category") Category category, String keyword);
+//    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (p.productName LIKE %:keyword% OR p.primaryBarcode LIKE %:keyword%)")
+@Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.primaryBarcode) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Product> findProductsByCategory(@Param("category") Category category, String keyword,
+                                         Pageable pageable);
 
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);

@@ -124,19 +124,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory) {
+    public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Category category = categoryService.parseCategory(allowedCategory);
 
-        List<Product> products = productRepository.findProductsByCategory(category, keyword);
+        Sort.Direction direction = switch (sortOrder.toLowerCase()) {
+            case "desc" -> Sort.Direction.DESC;
+            case "asc" -> Sort.Direction.ASC;
+            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
+        };
 
-        List<ProductDTO> productDTOS = products.stream()
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+
+        Page<Product> page = productRepository.findProductsByCategory(category, keyword, pageable);
+
+//        List<Product> products = productRepository.findProductsByCategory(category, keyword, pageNumber, pageSize, sortBy, sortOrder);
+
+        List<ProductDTO> productDTOS = page.stream()
                 .filter(p -> !StringUtils.hasText(keyword) || (p.getProductName() != null && p.getProductName().toLowerCase().contains(keyword.toLowerCase())))
                 .map((element) -> modelMapper.map(element, ProductDTO.class))
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        return productResponse;
+//        ProductResponse productResponse = new ProductResponse();
+//        productResponse.setContent(productDTOS);
+        return createProductResponse(productDTOS, page);
     }
 
     @Override

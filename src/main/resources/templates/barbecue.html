@@ -12,27 +12,14 @@
 <div style="margin: 50px 200px 200px;">
     <br>
     <h1>HKM Products List</h1>
-    <br>
+    <hr>
     <div>
         <style>
             form.search-form {
-                margin-bottom: 15px; /* space below first form */
+                margin-bottom: 25px; /* space below first form */
             }
         </style>
-        <form class="search-form" th:action="@{/products-results}" method="get">
-    <span>
-    <label for="pageNumber">Page Number</label>
-    </span>
-            <span>
-    <input type="number" name="pageNumber" id="pageNumber" th:value="${pageNumber}" min="0"></input>
-    </span>
-
-            <span>
-    <label for="pageSize">Page Size</label>
-    </span>
-            <span>
-    <input type="number" name="pageSize" id="pageSize" th:value="${pageSize}" min="10" max="100"></input>
-    </span>
+        <form class="search-form" th:action="@{/barbecue}" method="get">
 
             <datalist id="sortByOptions">
                 <option value="productName" label="Name"></option>
@@ -41,16 +28,19 @@
                 <option value="inStockQuantity" label="Quantity"></option>
                 <option value="vbrp" label="Price"></option>
             </datalist>
-            <br>
+<!--            <br>-->
         </form>
         <div>
-            <form class="second-form" th:action="@{/api/products/searchBakery}" method="get">
+            <form class="second-form" th:action="@{/api/products/searchBBQ}" method="get">
                 <div>
+<!--                    <input type="hidden" name="pageNumber" value="0" />-->
+<!--                    <input type="hidden" name="pageSize" value="50">-->
                     <label for="keyword">Search Product</label>
                     <input
                             type="search"
                             id="keyword"
                             name="keyword"
+                            th:value="${keyword}"
                             placeholder="Search By Keyword…"
                             required
                     />
@@ -58,7 +48,7 @@
 <!--                    <input type="text" list="sortByOptions" name="sortBy" id="sortByKeyword" th:value="${sortBy}" placeholder="Sort...">-->
                     <button type="submit">Search</button>
                     <span class="validity" aria-live="polite"></span>
-                    <a th:href="@{/api/products/searchBakery}" class="btn btn-secondary btn-sm">Clear / Show All</a>
+                    <a th:href="@{/api/products/searchBBQ}" class="btn btn-secondary btn-sm">Clear / Show All</a>
                 </div>
             </form>
         </div>
@@ -82,7 +72,7 @@
                     <!-- Previous Button -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=${currentPage > 0 ? currentPage - 1 : 0}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:href="@{/api/products/searchBBQ(pageNumber=${currentPage > 0 ? currentPage - 1 : 0}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword})}"
                            tabindex="-1"
                            th:attr="aria-disabled=${currentPage == 0}">
                             Previous
@@ -92,7 +82,7 @@
                     <!-- First Page -->
                     <li class="page-item" th:if="${currentPage > 2}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                           th:href="@{/api/products/searchBBQ(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword})}">
                             1
                         </a>
                     </li>
@@ -109,7 +99,7 @@
                             th:each="i : ${#numbers.sequence(startPage, endPage)}"
                             th:classappend="${i == currentPage} ? 'active'">
                             <a class="page-link"
-                               th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                               th:href="@{/api/products/searchBBQ(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword})}"
                                th:text="${i + 1}">1</a>
                         </li>
                     </th:block>
@@ -122,7 +112,7 @@
                     <!-- Last Page -->
                     <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:href="@{/api/products/searchBBQ(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword})}"
                            th:text="${totalPages}">
                             Last
                         </a>
@@ -131,7 +121,7 @@
                     <!-- Next Button -->
                     <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=${currentPage + 1 >= totalPages ? totalPages - 1 : currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                           th:href="@{/api/products/searchBBQ(pageNumber=${currentPage + 1 >= totalPages ? totalPages - 1 : currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword})}">
                             Next
                         </a>
                     </li>

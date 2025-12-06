@@ -68,7 +68,7 @@
     </style>
 
     <!-- Pagination Navigation aligned with forms -->
-<div th:if="${totalPages != null and totalPages > 0}" style="margin-top: 15px;">
+<div th:if="${totalPages > 0}" style="margin-top: 15px;">
     <!-- Page Info -->
     <p style="margin: 10px 0; font-size: 16px; color: #333;">
         <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
