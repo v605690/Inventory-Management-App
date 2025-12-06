@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -98,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
-        Page<Product> page = productRepository.findProductsByCategory(category, pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
 
         // Transform a list of Product into ProductDTO objects using Java Streams
         List<ProductDTO> productDTOS = page.getContent()
@@ -123,6 +124,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory) {
+        Category category = categoryService.parseCategory(allowedCategory);
+
+        List<Product> products = productRepository.findProductsByCategory(category, keyword);
+
+        List<ProductDTO> productDTOS = products.stream()
+                .filter(p -> !StringUtils.hasText(keyword) || (p.getProductName() != null && p.getProductName().toLowerCase().contains(keyword.toLowerCase())))
+                .map((element) -> modelMapper.map(element, ProductDTO.class))
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        return productResponse;
+    }
+
+    @Override
     public ProductResponse getProductByBarcodePartial(String barcode) {
         List<Product> products = productRepository.findProductByPrimaryBarcodeStartingWith(barcode);
         List<ProductDTO> productDTOS = products.stream().map((element) -> modelMapper.map(element, ProductDTO.class))
@@ -137,6 +154,11 @@ public class ProductServiceImpl implements ProductService {
     public void increaseProductQuantity(String username, Long productId) throws ResourceNotFoundException {
         Long userId = convertUsernameToId(username);
         ProductDTO currentQuantity = getProductByQuantity(productId);
+
+        // Add check to prevent NullPointerException
+        if (currentQuantity == null) {
+            throw new ResourceNotFoundException();
+        }
         int quantity = currentQuantity.getInStockQuantity();
         quantity += 1;
         currentQuantity.setInStockQuantity(quantity);
@@ -145,7 +167,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getProductByQuantity(Long productId) {
-        return null;
+        // Fixed: Implement actual retrieval instead of returning null
+        return getProductById(productId);
     }
 
     @Override

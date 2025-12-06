@@ -26,7 +26,7 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     @Override
     public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Pageable pageable) {
         Category category = categoryService.parseCategory(categoryName);
-        Page<Product> page = productRepository.findProductsByCategory(category, pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
         List<Product> products = page.getContent();
 
         Double totalVbrp = calculateTotalVbrp(products);

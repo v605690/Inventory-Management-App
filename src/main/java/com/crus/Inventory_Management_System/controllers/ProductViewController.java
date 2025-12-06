@@ -197,4 +197,6 @@ public class ProductViewController {
         productService.deleteItem(productId);
         return "redirect:/products";
     }
+
+
 }

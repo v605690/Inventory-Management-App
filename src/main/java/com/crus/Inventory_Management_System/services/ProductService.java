@@ -35,4 +35,5 @@ public interface ProductService {
 
     void deleteItem(Long productId);
 
+    ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory);
 }

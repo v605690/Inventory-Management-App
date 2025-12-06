@@ -2,7 +2,6 @@ package com.crus.Inventory_Management_System.repositories;
 
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
-import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -24,9 +22,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             value = "SELECT p FROM Product p JOIN p.categories c WHERE c = :category",
             countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category"
     )
-    Page<Product> findProductsByCategory(@Param("category") Category category, Pageable pageable);
-    Page<Product> findProductsByCategoriesContains(@Param("Bakery") Category category, Pageable pageable);
+    Page<Product> findProductsByCategoryName(@Param("category") Category category, Pageable pageable);
+
     List<Product> findByProductNameLikeIgnoreCase(String keyword);
+
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category")
+    List<Product> findProductsByCategory(@Param("category") Category category, String keyword);
+
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);
 
