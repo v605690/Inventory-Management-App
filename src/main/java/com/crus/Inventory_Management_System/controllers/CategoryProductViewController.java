@@ -55,6 +55,7 @@ public class CategoryProductViewController {
     private static final String LIQUOR = "liquor";
     private static final String FROZEN_YOGURT = "frozen_yogurt";
     private static final String DEPARTMENT_NOT_ON_FILE = "department_not_on_file";
+
     @Autowired
     private CategoryProductServiceImpl categoryProductServiceImpl;
 
