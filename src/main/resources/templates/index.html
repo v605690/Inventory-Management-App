@@ -91,14 +91,18 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Beer Wine</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/api/products/searchBeerWine}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Cosmetics</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/api/products/searchCosmetics}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 

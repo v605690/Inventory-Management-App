@@ -66,20 +66,29 @@ public class CategoryProductViewController {
                                    @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                    @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
-        ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, BAKERY, pageNumber, pageSize, sortBy, sortOrder);
+        productItems(model, keyword, pageNumber, pageSize, sortBy, sortOrder, BAKERY);
+
+        return "bakery";
+    }
+
+    private void productItems(Model model, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                              @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                              @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                              @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                              @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, String bakery) {
+
+        ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, bakery, pageNumber, pageSize, sortBy, sortOrder);
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("categoryName", BAKERY);
+        model.addAttribute("categoryName", bakery);
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
-
-        return "bakery";
     }
 
     @GetMapping("/searchBBQ")
@@ -89,19 +98,32 @@ public class CategoryProductViewController {
                                    @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                    @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
-        ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, BBQ, pageNumber, pageSize, sortBy, sortOrder);
-        final List<ProductDTO> productDTOList = productResponse.getContent();
-
-        model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("categoryName", BBQ);
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("totalPages", productResponse.getTotalPages());
-        model.addAttribute("currentPage", productResponse.getPageNumber());
-        model.addAttribute("totalElements", productResponse.getTotalElements());
+        productItems(model, keyword, pageNumber, pageSize, sortBy, sortOrder, BBQ);
 
         return "barbecue";
+    }
+
+    @GetMapping("/searchBeerWine")
+    public String searchOnlyBeerWine(Model model,
+                                @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                                @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+        productItems(model, keyword, pageNumber, pageSize, sortBy, sortOrder, BEER_WINE);
+
+        return "beerWine";
+    }
+
+    @GetMapping("/searchCosmetics")
+    public String searchOnlyCosmetics(Model model,
+                                     @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                     @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                     @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                     @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                                     @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+        productItems(model, keyword, pageNumber, pageSize, sortBy, sortOrder, COSMETICS);
+
+        return "cosmetics";
     }
 }
