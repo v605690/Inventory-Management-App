@@ -11,13 +11,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.crus.Inventory_Management_System.config.AppConfig.createProductResponse;
 
 @Service
 @Transactional
@@ -121,32 +122,6 @@ public class ProductServiceImpl implements ProductService {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
         return productResponse;
-    }
-
-    @Override
-    public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Category category = categoryService.parseCategory(allowedCategory);
-
-        Sort.Direction direction = switch (sortOrder.toLowerCase()) {
-            case "desc" -> Sort.Direction.DESC;
-            case "asc" -> Sort.Direction.ASC;
-            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
-        };
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
-
-        Page<Product> page = productRepository.findProductsByCategory(category, keyword, pageable);
-
-//        List<Product> products = productRepository.findProductsByCategory(category, keyword, pageNumber, pageSize, sortBy, sortOrder);
-
-        List<ProductDTO> productDTOS = page.stream()
-                .filter(p -> !StringUtils.hasText(keyword) || (p.getProductName() != null && p.getProductName().toLowerCase().contains(keyword.toLowerCase())))
-                .map((element) -> modelMapper.map(element, ProductDTO.class))
-                .toList();
-
-//        ProductResponse productResponse = new ProductResponse();
-//        productResponse.setContent(productDTOS);
-        return createProductResponse(productDTOS, page);
     }
 
     @Override
@@ -271,18 +246,5 @@ public class ProductServiceImpl implements ProductService {
 
         }
         return  productDTO;
-    }
-
-    private ProductResponse createProductResponse(List<ProductDTO> productDTOS, Page<?> page) {
-        ProductResponse productResponse = new ProductResponse();
-        // Sets the converted DTO list as the content
-        productResponse.setContent(productDTOS);
-        productResponse.setPageNumber(page.getNumber());
-        productResponse.setPageSize(page.getSize());
-        productResponse.setTotalElements(page.getTotalElements());
-        productResponse.setTotalPages(page.getTotalPages());
-        productResponse.setLastPage(page.isLast());
-
-        return productResponse;
     }
 }

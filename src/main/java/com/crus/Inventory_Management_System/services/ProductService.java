@@ -35,5 +35,5 @@ public interface ProductService {
 
     void deleteItem(Long productId);
 
-    ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+//    ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 }

@@ -3,10 +3,7 @@ package com.crus.Inventory_Management_System.controllers;
 import com.crus.Inventory_Management_System.config.AppConstants;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
-import com.crus.Inventory_Management_System.services.CategoryPriceService;
-import com.crus.Inventory_Management_System.services.CategoryServicePriceImpl;
-import com.crus.Inventory_Management_System.services.ProductService;
-import com.crus.Inventory_Management_System.services.ProductServiceImpl;
+import com.crus.Inventory_Management_System.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +55,28 @@ public class CategoryProductViewController {
     private static final String LIQUOR = "liquor";
     private static final String FROZEN_YOGURT = "frozen_yogurt";
     private static final String DEPARTMENT_NOT_ON_FILE = "department_not_on_file";
+    @Autowired
+    private CategoryProductServiceImpl categoryProductServiceImpl;
+
+    private void productItems(Model model, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                              @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                              @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                              @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                              @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, String categoryName) {
+
+        ProductResponse productResponse = categoryProductServiceImpl.getProductByKeywordAndCategory(keyword, categoryName, pageNumber, pageSize, sortBy, sortOrder);
+        final List<ProductDTO> productDTOList = productResponse.getContent();
+
+        model.addAttribute("productDTOList", productDTOList);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryName", categoryName);
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("totalPages", productResponse.getTotalPages());
+        model.addAttribute("currentPage", productResponse.getPageNumber());
+        model.addAttribute("totalElements", productResponse.getTotalElements());
+    }
 
     @GetMapping("/searchBakery")
     public String searchOnlyBakery(Model model,
@@ -69,26 +88,6 @@ public class CategoryProductViewController {
         productItems(model, keyword, pageNumber, pageSize, sortBy, sortOrder, BAKERY);
 
         return "bakery";
-    }
-
-    private void productItems(Model model, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-                              @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-                              @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-                              @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
-                              @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, String bakery) {
-
-        ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, bakery, pageNumber, pageSize, sortBy, sortOrder);
-        final List<ProductDTO> productDTOList = productResponse.getContent();
-
-        model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("categoryName", bakery);
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("totalPages", productResponse.getTotalPages());
-        model.addAttribute("currentPage", productResponse.getPageNumber());
-        model.addAttribute("totalElements", productResponse.getTotalElements());
     }
 
     @GetMapping("/searchBBQ")
