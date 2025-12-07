@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="us">
 
 <head>
-    <th:block th:replace="fragments/head :: commonHeader" />
+    <th:block th:replace="fragments/head :: commonHeader"/>
 
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <title></title>
 </head>
 <body>
@@ -28,13 +28,13 @@
                 <option value="inStockQuantity" label="Quantity"></option>
                 <option value="vbrp" label="Price"></option>
             </datalist>
-<!--            <br>-->
+            <!--            <br>-->
         </form>
         <div>
             <form class="second-form" th:action="@{/api/products/searchBakery}" method="get">
                 <div>
-<!--                    <input type="hidden" name="pageNumber" value="0" />-->
-<!--                    <input type="hidden" name="pageSize" value="50">-->
+                    <!--                    <input type="hidden" name="pageNumber" value="0" />-->
+                    <!--                    <input type="hidden" name="pageSize" value="50">-->
                     <label for="keyword">Search Product</label>
                     <input
                             type="search"
@@ -44,8 +44,8 @@
                             placeholder="Search By Keyword…"
                             required
                     />
-<!--                    <label for="sortByKeyword">Sort By</label>-->
-<!--                    <input type="text" list="sortByOptions" name="sortBy" id="sortByKeyword" th:value="${sortBy}" placeholder="Sort...">-->
+                    <!--                    <label for="sortByKeyword">Sort By</label>-->
+                    <!--                    <input type="text" list="sortByOptions" name="sortBy" id="sortByKeyword" th:value="${sortBy}" placeholder="Sort...">-->
                     <button type="submit">Search</button>
                     <span class="validity" aria-live="polite"></span>
                     <a th:href="@{/api/products/searchBakery}" class="btn btn-secondary btn-sm">Clear / Show All</a>
@@ -62,7 +62,8 @@
         <div th:if="${totalPages != null and totalPages > 0}" style="margin-top: 15px;">
             <!-- Page Info -->
             <p style="margin: 10px 0; font-size: 16px; color: #333;">
-                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
+                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span
+                        th:text="${totalPages}">1</span></strong>
                 <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
             </p>
 
@@ -170,7 +171,8 @@
         </table>
         <div th:if="${currentPage != null and totalPages != null}">
             <p style="margin: 10px 0; font-size: 16px; color: #333;">
-                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span></strong>
+                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span
+                        th:text="${totalPages}">1</span></strong>
                 <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
             </p>
         </div>
