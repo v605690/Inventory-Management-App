@@ -37,7 +37,8 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Category category = categoryService.parseCategory(allowedCategory);
 
-        Sort.Direction direction = switch (sortOrder.toLowerCase()) {
+        String normalSortOrder = sortOrder.toLowerCase();
+        Sort.Direction direction = switch (normalSortOrder) {
             case "desc" -> Sort.Direction.DESC;
             case "asc" -> Sort.Direction.ASC;
             default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
