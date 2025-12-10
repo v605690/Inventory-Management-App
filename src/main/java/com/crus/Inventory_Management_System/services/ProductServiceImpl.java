@@ -247,4 +247,47 @@ public class ProductServiceImpl implements ProductService {
         }
         return  productDTO;
     }
+
+    public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Category category = categoryService.parseCategory(allowedCategory);
+
+        String normalSortOrder = sortOrder.toLowerCase();
+        Sort.Direction direction = switch (normalSortOrder) {
+            case "desc" -> Sort.Direction.DESC;
+            case "asc" -> Sort.Direction.ASC;
+            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
+        };
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+
+        Page<Product> page = productRepository.findProductsByCategory(category, keyword, pageable);
+
+        List<ProductDTO> productDTOS = page.stream()
+                .filter(p -> !StringUtils.hasText(keyword) || p.getProductName().toLowerCase().contains(keyword.toLowerCase()))
+                .map((element) -> modelMapper.map(element, ProductDTO.class))
+                .toList();
+
+        return createProductResponse(productDTOS, page);
+    }
+
+    public ProductResponse getProductByCategory(String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Category category = categoryService.parseCategory(allowedCategory);
+
+        String normalSortOrder = sortOrder.toLowerCase();
+        Sort.Direction direction = switch (normalSortOrder) {
+            case "desc" -> Sort.Direction.DESC;
+            case "asc" -> Sort.Direction.ASC;
+            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
+        };
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+
+        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
+
+        List<ProductDTO> productDTOS = page.stream()
+                .map((element) -> modelMapper.map(element, ProductDTO.class))
+                .toList();
+
+        return createProductResponse(productDTOS, page);
+    }
 }

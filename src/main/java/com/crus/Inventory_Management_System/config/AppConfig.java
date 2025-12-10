@@ -1,11 +1,13 @@
 package com.crus.Inventory_Management_System.config;
 
+import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 

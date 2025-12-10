@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <div style="margin: 50px 200px 200px;">
     <br>
-    <h1>HKM Products List</h1>
+    <h1 th:text="${title}"></h1>
     <hr>
     <div>
         <style>
@@ -20,19 +20,6 @@
             }
         </style>
         <form class="search-form" th:action="@{/products}" method="get">
-            <!--    <span>-->
-            <!--    <label for="pageNumber">Page Number</label>-->
-            <!--    </span>-->
-            <!--    <span>-->
-            <!--    <input type="number" name="pageNumber" id="pageNumber" th:value="${pageNumber}" min="0"></input>-->
-            <!--    </span>-->
-
-            <!--    <span>-->
-            <!--    <label for="pageSize">Page Size</label>-->
-            <!--    </span>-->
-            <!--    <span>-->
-            <!--    <input type="number" name="pageSize" id="pageSize" th:value="${pageSize}" min="10" max="100"></input>-->
-            <!--    </span>-->
 
             <datalist id="sortByOptions">
                 <option value="productName" label="Name"></option>
@@ -44,21 +31,20 @@
 
         </form>
         <div>
-            <form class="second-form" th:action="@{/products/keyword}" method="get">
+            <form class="second-form" th:action="@{|/products/keyword/${category}|}" method="get">
                 <div>
                     <label for="keyword">Search Product</label>
                     <input
                             type="search"
                             id="keyword"
-                            name="q"
+                            name="keyword"
+                            th:value="${keyword}"
                             placeholder="Search By Keyword…"
                             required
                     />
-                    <label for="sortByKeyword">Sort By</label>
-                    <input type="text" list="sortByOptions" name="sortBy" id="sortByKeyword" th:value="${sortBy}"
-                           placeholder="Sort...">
                     <button type="submit">Search</button>
                     <span class="validity" aria-live="polite"></span>
+                    <a th:href="@{|/products/keyword/${category}|}" class="btn btn-secondary btn-sm">Clear / Show All</a>
                 </div>
             </form>
         </div>
@@ -69,7 +55,7 @@
         </style>
 
         <!-- Pagination Navigation aligned with forms -->
-        <div th:if="${totalPages > 0}" style="margin-top: 15px;">
+        <div th:if="${totalPages != null and totalPages > 0}" style="margin-top: 15px;">
             <!-- Page Info -->
             <p style="margin: 10px 0; font-size: 16px; color: #333;">
                 <strong>Page <span th:text="${currentPage + 1}">1</span> of <span
@@ -83,7 +69,7 @@
                     <!-- Previous Button -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link"
-                           th:href="${currentPage == 0} ? '#' : @{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:href="${currentPage == 0} ? '#' : @{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
                            tabindex="-1"
                            th:attr="aria-disabled=${currentPage == 0}">
                             Previous
@@ -93,7 +79,7 @@
                     <!-- First Page -->
                     <li class="page-item" th:if="${currentPage > 2}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                           th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
                             1
                         </a>
                     </li>
@@ -110,7 +96,7 @@
                             th:each="i : ${#numbers.sequence(startPage, endPage)}"
                             th:classappend="${i == currentPage} ? 'active'">
                             <a class="page-link"
-                               th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                               th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
                                th:text="${i + 1}">1</a>
                         </li>
                     </th:block>
@@ -123,7 +109,7 @@
                     <!-- Last Page -->
                     <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
                            th:text="${totalPages}">
                             Last
                         </a>
@@ -132,7 +118,7 @@
                     <!-- Next Button -->
                     <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                         <a class="page-link"
-                           th:href="${currentPage + 1 >= totalPages} ? '#' : @{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                           th:href="${currentPage + 1 >= totalPages} ? '#' : @{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
                             Next
                         </a>
                     </li>
@@ -140,7 +126,6 @@
             </nav>
         </div>
     </div>
-    <br>
     <div>
         <table class="table table-hover">
             <thead>

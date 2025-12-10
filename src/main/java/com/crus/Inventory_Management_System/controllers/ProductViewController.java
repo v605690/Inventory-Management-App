@@ -1,7 +1,6 @@
 package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.config.AppConstants;
-import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
@@ -14,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class ProductViewController {
@@ -44,9 +45,18 @@ public class ProductViewController {
                                @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
-                               @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+                               @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder,
+                               @RequestParam(name = "category", defaultValue = "all", required = false) String category) {
 
-        ProductResponse productResponse = productServiceImpl.getAllProducts(pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse;
+
+        if (category.equalsIgnoreCase("all"))
+            productResponse = productServiceImpl.getAllProducts(pageNumber, pageSize, sortBy, sortOrder);
+        else {
+            productResponse = productServiceImpl.getProductByCategory(category, pageNumber, pageSize, sortBy, sortOrder);
+        }
+
+
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
         model.addAttribute("productDTOList", productDTOList);
@@ -57,8 +67,11 @@ public class ProductViewController {
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
+        model.addAttribute("category", category);
+        model.addAttribute("title", category + " List");
 
         return "products";
+
     }
 
     @GetMapping("/products/categories/{categoryName}")
@@ -81,12 +94,27 @@ public class ProductViewController {
 
         return "products";
     }
-    @GetMapping("/products/keyword")
-    public String searchProductByKeyword(Model model, @RequestParam("q") String keyword) {
-        final List<ProductDTO> productDTOList = productServiceImpl.getProductByKeyword(keyword).getContent();
+
+    @GetMapping("/products/keyword/{category}")
+    public String searchProductByKeyword(@PathVariable String category,
+                                         @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                         @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                         @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                         @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+                                         @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Model model) {
+        ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, category, pageNumber, pageSize, sortBy, sortOrder);
+        final List<ProductDTO> productDTOList = productResponse.getContent();
 
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("category", category);
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("totalPages", productResponse.getTotalPages());
+        model.addAttribute("currentPage", productResponse.getPageNumber());
+        model.addAttribute("totalElements", productResponse.getTotalElements());
+        model.addAttribute("title", category + " List");
 
         return "products";
     }
