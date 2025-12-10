@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/login/**","/register", "/register/**", "/overview", "/overview/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/index/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
                         .requestMatchers(HttpMethod.GET,"/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
