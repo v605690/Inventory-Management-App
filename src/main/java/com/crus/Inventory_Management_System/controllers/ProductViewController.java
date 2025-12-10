@@ -50,12 +50,12 @@ public class ProductViewController {
 
         ProductResponse productResponse;
 
-        if (category.equalsIgnoreCase("all"))
+        if (category == null || category.trim().isEmpty() || "null".equalsIgnoreCase(category) || "all".equalsIgnoreCase(category)) {
+            category = "all";
             productResponse = productServiceImpl.getAllProducts(pageNumber, pageSize, sortBy, sortOrder);
-        else {
+        } else {
             productResponse = productServiceImpl.getProductByCategory(category, pageNumber, pageSize, sortBy, sortOrder);
         }
-
 
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
@@ -68,10 +68,13 @@ public class ProductViewController {
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
         model.addAttribute("category", category);
-        model.addAttribute("title", category + " List");
 
+        if ("all".equals(category)) {
+            model.addAttribute("title", "HKM Product List");
+        } else {
+            model.addAttribute("title", category + " List");
+        }
         return "products";
-
     }
 
     @GetMapping("/products/categories/{categoryName}")
@@ -81,6 +84,7 @@ public class ProductViewController {
                                    @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                    @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+
         ProductResponse productResponse = productServiceImpl.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder);
 
         List<ProductDTO> productDTOList = productResponse.getContent();
@@ -131,13 +135,13 @@ public class ProductViewController {
 
         if (categoryData != null) {
             // It retrieves the category name and count from each DTO
-        for (CategoryPriceDTO dto : categoryData) {
-            String name = dto.getCategoryName();
-            int count = (dto.getProductCount() != null) ? dto.getProductCount() : 0;
+            for (CategoryPriceDTO dto : categoryData) {
+                String name = dto.getCategoryName();
+                int count = (dto.getProductCount() != null) ? dto.getProductCount() : 0;
 
-            // It applies a filter: a category is only added to graphData if its product count is between 0 and 100,000 (inclusive).
-            if (count >= 0 && count <= 100000) {
-            graphData.add(Arrays.asList(name, count));
+                // It applies a filter: a category is only added to graphData if its product count is between 0 and 100,000 (inclusive).
+                if (count >= 0 && count <= 100000) {
+                    graphData.add(Arrays.asList(name, count));
                 }
             }
         }
@@ -181,9 +185,9 @@ public class ProductViewController {
     }
 
     @GetMapping("/edit/{productId}")
-    public String showEditProductPage(@PathVariable(name = "productId") Long productId, Model model) throws ResourceNotFoundException {
+    public String showEditProductPage(@PathVariable Long productId, Model model) throws ResourceNotFoundException {
 
-       ProductDTO productDTO = productService.getProductById(productId);
+        ProductDTO productDTO = productService.getProductById(productId);
 
         if (productDTO == null) {
             model.addAttribute("message", "Product not found");
@@ -195,7 +199,7 @@ public class ProductViewController {
     }
 
     @PostMapping("/update/{productId}")
-    public String updateProduct(@PathVariable(name = "productId") Long productId,
+    public String updateProduct(@PathVariable Long productId,
                                 @ModelAttribute("product") ProductDTO productDTO, Model model) {
         productDTO.setId(productId);
 
@@ -221,10 +225,8 @@ public class ProductViewController {
     }
 
     @RequestMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable(name = "productId") Long productId) {
+    public String deleteProduct(@PathVariable Long productId) {
         productService.deleteItem(productId);
         return "redirect:/products";
     }
-
-
 }

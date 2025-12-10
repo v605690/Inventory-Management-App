@@ -110,14 +110,16 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Dairy</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Dairy')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Frozen Foods</h3>
-                <a th:href="@{/products/categories/frozen_foods}">
+                <a th:href="@{/products(category='Frozen Foods')}">
                     <button class="btn category-btn">View More</button>
                 </a>
             </div>
@@ -126,7 +128,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Grocery</h3>
-                <a th:href="@{/products/categories/grocery}">
+                <a th:href="@{/products(category='Grocery')}">
                     <button class="btn category-btn">View More</button>
                 </a>
             </div>
@@ -135,7 +137,9 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Juice & Cocktail</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Juice Cocktail')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 
@@ -143,7 +147,9 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Meat</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Meat')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 

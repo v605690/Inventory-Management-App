@@ -44,7 +44,8 @@
                     />
                     <button type="submit">Search</button>
                     <span class="validity" aria-live="polite"></span>
-                    <a th:href="@{|/products/keyword/${category}|}" class="btn btn-secondary btn-sm">Clear / Show All</a>
+                    <a th:href="${category == 'all'} ? @{/products} : @{'/products/keyword/' + ${category}}"
+                       class="btn btn-secondary btn-sm">Clear / Show All</a>
                 </div>
             </form>
         </div>
@@ -69,7 +70,7 @@
                     <!-- Previous Button -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link"
-                           th:href="${currentPage == 0} ? '#' : @{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
+                           th:href="${currentPage == 0} ? '#' : @{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category}, keyword=${keyword})}"
                            tabindex="-1"
                            th:attr="aria-disabled=${currentPage == 0}">
                             Previous
@@ -79,7 +80,7 @@
                     <!-- First Page -->
                     <li class="page-item" th:if="${currentPage > 2}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
+                           th:href="${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">>
                             1
                         </a>
                     </li>
@@ -96,7 +97,7 @@
                             th:each="i : ${#numbers.sequence(startPage, endPage)}"
                             th:classappend="${i == currentPage} ? 'active'">
                             <a class="page-link"
-                               th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
+                               th:href="${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
                                th:text="${i + 1}">1</a>
                         </li>
                     </th:block>
@@ -109,7 +110,7 @@
                     <!-- Last Page -->
                     <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
                         <a class="page-link"
-                           th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
+                           th:href="${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
                            th:text="${totalPages}">
                             Last
                         </a>
@@ -118,7 +119,7 @@
                     <!-- Next Button -->
                     <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                         <a class="page-link"
-                           th:href="${currentPage + 1 >= totalPages} ? '#' : @{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
+                           th:href="${currentPage + 1 >= totalPages} ? '#' : (${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})})">
                             Next
                         </a>
                     </li>

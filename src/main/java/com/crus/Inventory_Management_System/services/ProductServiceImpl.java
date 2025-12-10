@@ -7,10 +7,7 @@ import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -249,7 +246,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Category category = categoryService.parseCategory(allowedCategory);
 
         String normalSortOrder = sortOrder.toLowerCase();
         Sort.Direction direction = switch (normalSortOrder) {
@@ -259,8 +255,27 @@ public class ProductServiceImpl implements ProductService {
         };
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+        Page<Product> page;
 
-        Page<Product> page = productRepository.findProductsByCategory(category, keyword, pageable);
+        if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
+            List<Product> list = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
+
+            int start = (int) pageable.getOffset();
+            List<Product> pageContent;
+
+            if (start > list.size()) {
+                pageContent = new ArrayList<>();
+            } else {
+                int end = Math.min((start + pageSize), list.size());
+
+                pageContent = list.subList(start, end);
+            }
+            page = new PageImpl<>(pageContent, pageable, list.size());
+
+        } else {
+            Category category = categoryService.parseCategory(allowedCategory);
+            page = productRepository.findProductsByCategory(category, keyword, pageable);
+        }
 
         List<ProductDTO> productDTOS = page.stream()
                 .filter(p -> !StringUtils.hasText(keyword) || p.getProductName().toLowerCase().contains(keyword.toLowerCase()))
@@ -273,8 +288,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductByCategory(String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Category category = categoryService.parseCategory(allowedCategory);
 
-        String normalSortOrder = sortOrder.toLowerCase();
-        Sort.Direction direction = switch (normalSortOrder) {
+        String newSortOrder = sortOrder.toLowerCase();
+        Sort.Direction direction = switch (newSortOrder) {
             case "desc" -> Sort.Direction.DESC;
             case "asc" -> Sort.Direction.ASC;
             default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);

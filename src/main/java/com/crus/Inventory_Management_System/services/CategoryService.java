@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     public Category parseCategory(String categoryName) {
+        if (categoryName == null || categoryName.trim().isEmpty() || "null".equalsIgnoreCase(categoryName.trim())) {
+            throw new IllegalArgumentException("Category name cannot be null or empty");
+        }
+
         String normalizeName = categoryName.trim().toUpperCase()
                 .replace("-", "_")
                 .replace(" ", "_")
