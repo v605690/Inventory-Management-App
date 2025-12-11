@@ -63,12 +63,6 @@ public class UserService implements UserDetailsService {
             userDetails.setAuthorities(
                     Collections.singletonList(userRole));
 
-//            if (userDetails.getCustomer() == null) {
-//                Customer customer = new Customer();
-//                Customer savedCustomer = customerRepository.save(customer);
-//                userDetails.setCustomer(customer);
-//            }
-
             checkPassword(userDetails.getPassword());
             userDetails.setPassword(encoder.encode(userDetails.getPassword()));
 
@@ -90,13 +84,5 @@ public class UserService implements UserDetailsService {
         if (password.length() < 8) {
             throw new IllegalStateException("Password must be at least 8 characters");
         }
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
     }
 }
