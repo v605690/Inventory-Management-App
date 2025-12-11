@@ -1,14 +1,5 @@
 package com.crus.Inventory_Management_System.security;//package com.crus.Inventory_Management_System.security;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.Customizer;
-//import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,9 +25,10 @@ public class SecurityConfig {
                         .requestMatchers("/login/**","/register", "/register/**", "/overview", "/overview/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/index/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/products/keyword").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/graph/**", "/graph").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/meatPrice/**", "/meatPrice").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/price/**", "/price").hasRole("ADMIN")

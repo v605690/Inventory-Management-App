@@ -2,6 +2,8 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.helpers.PaginationHelper;
+import com.crus.Inventory_Management_System.helpers.SortHelper;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
@@ -15,7 +17,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.crus.Inventory_Management_System.config.AppConfig.createProductResponse;
+import static com.crus.Inventory_Management_System.helpers.AppConfig.createProductResponse;
 
 @Service
 @Transactional
@@ -29,6 +31,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SortHelper sortHelper;
+
+    @Autowired
+    PaginationHelper paginationHelper;
 
     private Long convertUsernameToId(String username) {
         return Math.abs((long) username.hashCode());
@@ -247,30 +255,13 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        String normalSortOrder = sortOrder.toLowerCase();
-        Sort.Direction direction = switch (normalSortOrder) {
-            case "desc" -> Sort.Direction.DESC;
-            case "asc" -> Sort.Direction.ASC;
-            default -> throw new IllegalArgumentException("Invalid sort order " + sortOrder);
-        };
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+        Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
         Page<Product> page;
 
         if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
             List<Product> list = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
 
-            int start = (int) pageable.getOffset();
-            List<Product> pageContent;
-
-            if (start > list.size()) {
-                pageContent = new ArrayList<>();
-            } else {
-                int end = Math.min((start + pageSize), list.size());
-
-                pageContent = list.subList(start, end);
-            }
-            page = new PageImpl<>(pageContent, pageable, list.size());
+            page = paginationHelper.newPageList(list, pageable);
 
         } else {
             Category category = categoryService.parseCategory(allowedCategory);

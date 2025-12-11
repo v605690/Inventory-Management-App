@@ -156,21 +156,27 @@
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Medicine</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Medicine')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Non Food</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Non Food')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-4 col-lg-3 category-card">
             <div class="category-item">
                 <h3 class="category-title">Online Lotto</h3>
-                <button class="btn category-btn">View More</button>
+                <a th:href="@{/products(category='Online Lotto')}">
+                    <button class="btn category-btn">View More</button>
+                </a>
             </div>
         </div>
 

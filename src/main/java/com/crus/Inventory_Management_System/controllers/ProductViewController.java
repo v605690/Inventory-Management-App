@@ -1,6 +1,6 @@
 package com.crus.Inventory_Management_System.controllers;
 
-import com.crus.Inventory_Management_System.config.AppConstants;
+import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
@@ -74,6 +74,7 @@ public class ProductViewController {
         } else {
             model.addAttribute("title", category + " List");
         }
+
         return "products";
     }
 
@@ -118,7 +119,12 @@ public class ProductViewController {
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
-        model.addAttribute("title", category + " List");
+
+        if ("all".equals(category)) {
+            model.addAttribute("title", "HKM Product List");
+        } else {
+            model.addAttribute("title", category + " List");
+        }
 
         return "products";
     }

@@ -1,6 +1,6 @@
 package com.crus.Inventory_Management_System.controllers;
 
-import com.crus.Inventory_Management_System.config.AppConstants;
+import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;

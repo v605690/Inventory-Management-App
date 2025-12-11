@@ -1,4 +1,4 @@
-package com.crus.Inventory_Management_System.config;
+package com.crus.Inventory_Management_System.helpers;
 
 import com.crus.Inventory_Management_System.entity.Role;
 import com.crus.Inventory_Management_System.entity.User;

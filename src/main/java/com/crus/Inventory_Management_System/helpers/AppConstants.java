@@ -1,4 +1,4 @@
-package com.crus.Inventory_Management_System.config;
+package com.crus.Inventory_Management_System.helpers;
 
 public class AppConstants {
     public static final String PAGE_NUMBER = "0";
