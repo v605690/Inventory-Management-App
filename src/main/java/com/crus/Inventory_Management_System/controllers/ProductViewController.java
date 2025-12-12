@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.helpers.DisplayKeywordTitle;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
@@ -24,13 +25,13 @@ public class ProductViewController {
     ProductServiceImpl productServiceImpl;
 
     @Autowired
-    CategoryServicePriceImpl categoryServiceImpl;
-
-    @Autowired
     private ProductService productService;
 
     @Autowired
     private CategoryPriceService categoryPriceService;
+
+    @Autowired
+    DisplayKeywordTitle displayKeywordTitle;
 
     @GetMapping("/")
     public String viewIndexPage() {
@@ -57,7 +58,6 @@ public class ProductViewController {
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
         model.addAttribute("productDTOList", productDTOList);
-
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortBy", sortBy);
@@ -122,6 +122,8 @@ public class ProductViewController {
         } else {
             model.addAttribute("title", category + " List");
         }
+
+        model.addAttribute("title", displayKeywordTitle.displayTitle(keyword));
 
         return "products";
     }

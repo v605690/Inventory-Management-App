@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html"
 >
 <body>
 
@@ -25,21 +25,36 @@
             </div>
         </div>
 
-<!--        <div sec:authorize="!isAuthenticated()" class="d-flex flex-column align-items-center mb-3">-->
+        <form class="w3-bar-item w3-right w3-hide-small"
+              style="padding: 8px 16px; display: inline-flex; gap: 8px; align-items: center;"
+              th:action="@{|/products/keyword/${category}|}" method="get">
 
-<!--        </div>-->
-        <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
+            <label for="keyword"></label><input
+                    type="search"
+                    id="keyword"
+                    name="keyword"
+                    th:value="${keyword}"
+                    placeholder="Search…"
+                    required
+                    style="max-width: 200px;" />
+            <button type="submit" class="w3-button w3-black" style="padding: 4px 8px;">
+                <i class="fa fa-search"></i>
+            </button>
+
+        </form>
+
         <th:block sec:authorize="isAuthenticated()">
         <a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right" style="margin-right: 25px;">Logout</a>
         </th:block>
+
         <th:block sec:authorize="!isAuthenticated()">
         <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right" style="margin-right: 25px;">Login</a>
         </th:block>
+
         <th:block sec:authorize="!isAuthenticated()">
         <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register an Account</a>
         </th:block>
-<!--        <a th:href="@{/login}" class="btn btn-primary mb-2">Login</a>-->
-<!--        <a th:href="@{/register}" class="btn btn-outline-primary">Register an Account</a>-->
+
     </div>
 </div>
 
