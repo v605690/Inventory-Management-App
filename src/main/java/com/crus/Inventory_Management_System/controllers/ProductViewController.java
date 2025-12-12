@@ -32,9 +32,6 @@ public class ProductViewController {
     @Autowired
     private CategoryPriceService categoryPriceService;
 
-    @Autowired
-    UserService userService;
-
     @GetMapping("/")
     public String viewIndexPage() {
         return "index";

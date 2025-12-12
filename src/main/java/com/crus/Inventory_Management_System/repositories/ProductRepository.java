@@ -24,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     )
     Page<Product> findProductsByCategoryName(@Param("category") Category category, Pageable pageable);
 
-    List<Product> findByProductNameLikeIgnoreCase(String keyword);
+    Page<Product> findByProductNameLikeIgnoreCase(String keyword, Pageable pageable);
 
 //    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (p.productName LIKE %:keyword% OR p.primaryBarcode LIKE %:keyword%)")
 @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.primaryBarcode) LIKE LOWER(CONCAT('%', :keyword, '%')))")

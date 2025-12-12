@@ -67,8 +67,8 @@ public class ProductController {
     }
 
     @GetMapping("/public/products/keyword/{keyword}")
-    public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword) throws ResourceNotFoundException {
-        ProductResponse productResponse = productService.getProductByKeyword(keyword);
+    public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) throws ResourceNotFoundException {
+        ProductResponse productResponse = productService.getProductByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 

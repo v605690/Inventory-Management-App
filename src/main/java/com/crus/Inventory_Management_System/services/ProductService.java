@@ -15,7 +15,7 @@ public interface ProductService {
 
     ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    ProductResponse getProductByKeyword(String keyword);
+    ProductResponse getProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     ProductResponse getProductByBarcodePartial(String barcode);
 

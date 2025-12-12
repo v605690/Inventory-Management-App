@@ -2,7 +2,6 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
-import com.crus.Inventory_Management_System.helpers.PaginationHelper;
 import com.crus.Inventory_Management_System.helpers.SortHelper;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
@@ -34,9 +33,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private SortHelper sortHelper;
-
-    @Autowired
-    PaginationHelper paginationHelper;
 
     private Long convertUsernameToId(String username) {
         return Math.abs((long) username.hashCode());
@@ -119,8 +115,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getProductByKeyword(String keyword) {
-        List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
+    public ProductResponse getProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
+        Page<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageable);
         List<ProductDTO> productDTOS = products.stream().map((element) -> modelMapper.map(element, ProductDTO.class))
                 .toList();
 
@@ -259,9 +256,8 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> page;
 
         if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
-            List<Product> list = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
 
-            page = paginationHelper.newPageList(list, pageable);
+            page = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageable);
 
         } else {
             Category category = categoryService.parseCategory(allowedCategory);
