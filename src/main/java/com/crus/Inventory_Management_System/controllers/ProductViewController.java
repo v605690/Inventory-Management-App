@@ -31,7 +31,7 @@ public class ProductViewController {
     private CategoryPriceService categoryPriceService;
 
     @Autowired
-    DisplayKeywordTitle displayKeywordTitle;
+    private DisplayKeywordTitle displayKeywordTitle;
 
     @GetMapping("/")
     public String viewIndexPage() {
@@ -93,6 +93,7 @@ public class ProductViewController {
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
+        model.addAttribute("title", categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1) + " List");
 
         return "products";
     }
@@ -117,13 +118,7 @@ public class ProductViewController {
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
 
-        if ("all".equals(category)) {
-            model.addAttribute("title", "HKM Product List");
-        } else {
-            model.addAttribute("title", category + " List");
-        }
-
-        model.addAttribute("title", displayKeywordTitle.displayTitle(keyword));
+        model.addAttribute("title", displayKeywordTitle.displayTitle(category, keyword));
 
         return "products";
     }
