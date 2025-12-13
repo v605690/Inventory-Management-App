@@ -1,11 +1,11 @@
 package com.crus.Inventory_Management_System.helpers;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class SortHelper {
 
     public Sort.Direction parseSort(String sortOrder) {
