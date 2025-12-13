@@ -40,7 +40,7 @@ body {
 }
 .enhancement-tag {
     display: inline-block;
-    background-color: lightslategray;
+    background-color: gray;
     color: white;
     padding: 8px 15px;
     margin: 5px;
