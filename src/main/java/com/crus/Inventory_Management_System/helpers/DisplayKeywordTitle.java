@@ -22,9 +22,8 @@ public class DisplayKeywordTitle {
 
         String displayCategory = (category == null) ? "" : category.trim();
 
-        // Treat "all", "null", or empty as showing all products
         if (displayCategory.isEmpty() || "all".equalsIgnoreCase(displayCategory) || "null".equalsIgnoreCase(displayCategory)) {
-            return "HKM Products";
+            return "All HKM Products";
         }
 
         return displayCategory.substring(0, 1).toUpperCase() + displayCategory.substring(1);
