@@ -1,16 +1,25 @@
 services:
-  # Our PostgreSQL database
-  db:
-    # Using the latest PostgreSQL image
-    image: postgres:latest
+  # Spring Boot Application
+  app:
+    # Using OpenJDK for Spring Boot application
+    image: openjdk:17-slim
     ports:
-      - "5432:5432"
+      - "8080:8080"
     restart: always
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/ims-db
-      POSTGRES_DB: ims-db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      # AWS RDS Connection Details
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ims-db.c4r8amqe400z.us-east-1.rds.amazonaws.com:5432/ims_db
+      SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
+      RDS_USERNAME: ${RDS_USERNAME}
+      RDS_PASSWORD: ${RDS_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      DATABASE_URL: postgres://postgres:password@db:5432/ims-db
+#      POSTGRES_DB: ims-db
+#      DATABASE_URL: postgresql://postgres:Urz8zL5205oFoyR!@db:5432/ims_db
+#      POSTGRES_DB: ims_db
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: Urz8zL5205oFoyR!
 
   # Database management interface
   adminer:
