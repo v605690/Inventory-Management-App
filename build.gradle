@@ -5,6 +5,10 @@ plugins {
 	id 'war'
 }
 
+bootWar {
+	archiveFileName = 'ROOT.war'
+}
+
 group = 'com.crus'
 version = '0.0.1-SNAPSHOT'
 description = 'Project for Spring Boot'

@@ -8,6 +8,7 @@ build/
 /src/main/resources/application.properties
 .env
 docker-compose.yml
+.DS_Store
 
 ### STS ###
 .apt_generated
