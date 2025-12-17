@@ -217,8 +217,6 @@ public class ProductViewController {
             return "redirect:/products";
         } catch (Exception e) {
             return "redirect:/products?error=true";
-        } catch (ResourceNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 
