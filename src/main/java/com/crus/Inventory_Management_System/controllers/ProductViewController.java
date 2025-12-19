@@ -81,9 +81,9 @@ public class ProductViewController {
                                    @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                    @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                    @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
-                                   @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+                                   @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Long userId) {
 
-        ProductResponse productResponse = productServiceImpl.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse = productServiceImpl.getProductsByCategory(categoryName, userId, pageNumber, pageSize, sortBy, sortOrder);
 
         List<ProductDTO> productDTOList = productResponse.getContent();
 

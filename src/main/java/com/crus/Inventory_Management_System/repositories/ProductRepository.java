@@ -19,17 +19,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByVendorsPhoneNumber(Integer vendors_phoneNumber);
 
     @Query(
-            value = "SELECT p FROM Product p JOIN p.categories c WHERE c = :category",
-            countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category"
+            value = "SELECT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId",
+            countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId"
     )
-    Page<Product> findProductsByCategoryName(@Param("category") Category category, Pageable pageable);
+    Page<Product> findProductsByCategoryName(@Param("category") Category category, @Param("userId") Long userId, Pageable pageable);
 
     Page<Product> findByProductNameLikeIgnoreCase(String keyword, Pageable pageable);
 
-//    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (p.productName LIKE %:keyword% OR p.primaryBarcode LIKE %:keyword%)")
-@Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND (LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.primaryBarcode) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    Page<Product> findProductsByCategory(@Param("category") Category category, String keyword,
-                                         Pageable pageable);
+    Page<Product> findByProductNameLikeIgnoreCaseAndUser_UserId(String keyword, Long userId, Pageable pageable);
+
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId AND (LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.primaryBarcode) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Product> findProductsByCategory(@Param("category") Category category, @Param("userId") Long userId, String keyword, Pageable pageable);
 
     List<Product> findProductByPrimaryBarcodeStartingWith(String primaryBarcode);
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);

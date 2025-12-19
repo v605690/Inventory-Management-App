@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.helpers.SortHelper;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
@@ -33,6 +34,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private SortHelper sortHelper;
+
+    @Autowired
+    private AccessHelper accessHelper;
 
     private Long convertUsernameToId(String username) {
         return Math.abs((long) username.hashCode());
@@ -91,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse getProductsByCategory(String categoryName, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         // Takes the input categoryName (a String) and converts it to a Category object and
         // uses parseCategory method to handle the conversion
         Category category = categoryService.parseCategory(categoryName);
@@ -101,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
-        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, accessHelper.getLoggedInUserDetails(), pageable);
 
         // Transform a list of Product into ProductDTO objects using Java Streams
         List<ProductDTO> productDTOS = page.getContent()
@@ -257,11 +261,11 @@ public class ProductServiceImpl implements ProductService {
 
         if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
 
-            page = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageable);
+            page = productRepository.findByProductNameLikeIgnoreCaseAndUser_UserId('%' + keyword + '%', accessHelper.getLoggedInUserDetails(), pageable);
 
         } else {
             Category category = categoryService.parseCategory(allowedCategory);
-            page = productRepository.findProductsByCategory(category, keyword, pageable);
+            page = productRepository.findProductsByCategory(category, accessHelper.getLoggedInUserDetails(), keyword, pageable);
         }
 
         List<ProductDTO> productDTOS = page.stream()
@@ -284,7 +288,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
-        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, accessHelper.getLoggedInUserDetails(), pageable);
 
         List<ProductDTO> productDTOS = page.stream()
                 .map((element) -> modelMapper.map(element, ProductDTO.class))

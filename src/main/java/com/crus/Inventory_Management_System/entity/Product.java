@@ -51,6 +51,10 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private Set<Vendor> vendors = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
