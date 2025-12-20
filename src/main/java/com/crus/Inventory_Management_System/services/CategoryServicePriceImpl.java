@@ -2,11 +2,13 @@ package com.crus.Inventory_Management_System.services;
 
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
@@ -24,9 +26,9 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     private CategoryService categoryService;
 
     @Override
-    public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Pageable pageable) {
+    public CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Long userId, Pageable pageable) {
         Category category = categoryService.parseCategory(categoryName);
-        Page<Product> page = productRepository.findProductsByCategoryName(category, pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, userId, pageable);
         List<Product> products = page.getContent();
 
         Double totalVbrp = calculateTotalVbrp(products);
@@ -44,14 +46,21 @@ public class CategoryServicePriceImpl implements CategoryPriceService {
     @Override
     public List<CategoryPriceDTO> getAllCategoryPrices(Pageable pageable) {
         List<CategoryPriceDTO> result = new ArrayList<>();
+
+        Long currentUserId = getCurrentUserId();
+
         for (Category category : Category.values()) {
             try {
-                result.add(calculateCategoryTotalPrice(category.name(), pageable));
+                result.add(calculateCategoryTotalPrice(category.name(), currentUserId, pageable));
             } catch (Exception ignored) {
 
             }
         }
         return result;
+    }
+
+    private Long getCurrentUserId() {
+        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
     }
 
     private String formatAsDollarAmount(Double amount) {

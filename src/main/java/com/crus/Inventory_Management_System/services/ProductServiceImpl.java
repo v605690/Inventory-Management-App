@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getProductsByCategory(String categoryName, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         // Takes the input categoryName (a String) and converts it to a Category object and
         // uses parseCategory method to handle the conversion
         Category category = categoryService.parseCategory(categoryName);

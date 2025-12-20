@@ -40,6 +40,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
+    @Builder.Default
     private Set<Category> categories = new HashSet<>();
 
     @Column(name = "vbrp")
@@ -49,6 +50,7 @@ public class Product {
     private Double vbcp;
 
     @ManyToMany(mappedBy = "products")
+    @Builder.Default
     private Set<Vendor> vendors = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

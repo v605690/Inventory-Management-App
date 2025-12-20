@@ -68,24 +68,24 @@ public class DataInitializer implements CommandLineRunner {
             log.info("Created admin user with password");
         }
 
-//        if (userRepository.findByUsername("user") == null) {
-//            Role userRole = roleRepository.findByRole(Role.Roles.ROLE_USER);
-//
-//            List<Role> userAuthorities = new ArrayList<>();
-//            userAuthorities.add(userRole);
-//
-//            User user = User.builder()
-//                    .username("user")
-//                    .password(passwordEncoder.encode("!QAZ2wsx"))
-//                    .isAccountNonLocked(true)
-//                    .isCredentialsNonExpired(true)
-//                    .isAccountNonExpired(true)
-//                    .isEnabled(true)
-//                    .authorities(userAuthorities)
-//                    .build();
-//
-//            userRepository.save(user);
-//            log.info("Created regular user with password");
-//        }
+        if (userRepository.findByUsername("user") == null) {
+            Role userRole = roleRepository.findByRole(Role.Roles.ROLE_USER);
+
+            List<Role> userAuthorities = new ArrayList<>();
+            userAuthorities.add(userRole);
+
+            User user = User.builder()
+                    .username("user")
+                    .password(passwordEncoder.encode("!QAZ2wsx"))
+                    .isAccountNonLocked(true)
+                    .isCredentialsNonExpired(true)
+                    .isAccountNonExpired(true)
+                    .isEnabled(true)
+                    .authorities(userAuthorities)
+                    .build();
+
+            userRepository.save(user);
+            log.info("Created regular user with password");
+        }
     }
 }

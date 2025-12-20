@@ -15,7 +15,7 @@ public class AccessHelper {
 
         Long currentUserId = null;
         if ((authentication != null) && !(authentication instanceof AnonymousAuthenticationToken)) {
-            boolean isNotAdmin = authentication.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+            boolean isNotAdmin = authentication.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ADMIN"));
 
             if (isNotAdmin) {
                 Object principal = authentication.getPrincipal();

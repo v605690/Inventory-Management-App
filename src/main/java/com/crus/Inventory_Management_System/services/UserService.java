@@ -49,7 +49,7 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("User role not found");
             }
 
-            userDetails.setId(null);
+            userDetails.setUserId(null);
 
             if (userDetails.getAuthorities() != null) {
                 userDetails.getAuthorities().clear();
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
             userDetails.setPassword(encoder.encode(userDetails.getPassword()));
 
             User savedUser = userRepository.save(userDetails);
-            System.out.println("User saved with ID : " + savedUser.getId());
+            System.out.println("User saved with ID : " + savedUser.getUserId());
 
             return savedUser;
         } catch (Exception e) {

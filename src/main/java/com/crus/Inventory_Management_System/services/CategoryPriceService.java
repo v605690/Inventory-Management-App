@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface CategoryPriceService {
 
-    CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Pageable pageable);
+    CategoryPriceDTO calculateCategoryTotalPrice(String categoryName, Long userId, Pageable pageable);
 
     List<CategoryPriceDTO> getAllCategoryPrices(Pageable pageable);
 }
