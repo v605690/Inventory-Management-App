@@ -2,14 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
 
 <head>
-    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <meta charset="utf-8" />
+
+    <th:block th:replace="fragments/head :: commonHeader" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}" />
+
     <title>Create New Product</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
 <div align="center" class="flex-grow-1">
-    <h1>Create New Product</h1>
+    <h1 style="color: black">Create New Product</h1>
 
     <br />
     <!--
@@ -24,67 +29,69 @@
         These input fields are used to collect the information
         required to complete the referenced Customer object.
         -->
-        <table border="0" cellpadding="10">
-            <tr>
-                <td>Product Name:</td>
-                <td>
-                    <label>
-                        <input type="text" th:field="*{productName}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>SKU:</td>
-                <td>
-                    <label>
-                        <input type="text" th:field="*{primaryBarcode}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Quantity:</td>
-                <td>
-                    <label>
-                        <input type="number" th:field="*{inStockQuantity}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Category:</td>
-                <td>
-                    <label>
-                        <input type="text" th:field="*{categories}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Retail Price:</td>
-                <td>
-                    <label>
-                        <input type="number" step="0.01" th:field="*{vbrp}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Cost Price:</td>
-                <td>
-                    <label>
-                        <input type="number" step="0.01" th:field="*{vbcp}"
-                               required/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button type="submit">Save</button>
-                </td>
-            </tr>
-        </table>
+        <div style="display: inline-block; max-width: 600px;">
+            <table border="0" cellpadding="10">
+                <tr>
+                    <td>Product Name:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{productName}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>SKU:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{primaryBarcode}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Quantity:</td>
+                    <td>
+                        <label>
+                            <input type="number" th:field="*{inStockQuantity}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Category:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{categories}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Retail Price:</td>
+                    <td>
+                        <label>
+                            <input type="number" step="0.01" th:field="*{vbrp}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Cost Price:</td>
+                    <td>
+                        <label>
+                            <input type="number" step="0.01" th:field="*{vbcp}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </form>
 </div>
 <div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
