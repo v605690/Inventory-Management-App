@@ -3,20 +3,25 @@
 <body>
 
 <div th:fragment="header" class="w3-top">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/stackingOrder.css}"/>
     <div class="w3-bar w3-black w3-card">
-        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right"
+           href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                class="fa fa-bars"></i></a>
         <a th:href="@{/}" class="w3-bar-item w3-button w3-padding-large">Home</a>
         <a th:href="@{/overview}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Overview</a>
 
         <div class="w3-dropdown-hover w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">
-            <button class="w3-padding-large w3-button" title="Mange Product">Manage Products<i class="fa fa-caret-down"></i></button>
+            <button class="w3-padding-large w3-button" title="Mange Product">Manage Products<i
+                    class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
-            <a th:href="@{/products}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Products List</a>
+                <a th:href="@{/products}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Products List</a>
                 <a th:href="@{/new}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Add Product</a>
             </div>
         </div>
 
-        <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">Vendors</a>
+        <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small"
+           sec:authorize="hasRole('ROLE_ADMIN')">Vendors</a>
         <div class="w3-dropdown-hover w3-hide-small">
             <button class="w3-padding-large w3-button" title="More">More<i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -30,13 +35,13 @@
               th:action="@{|/products/keyword/${category}|}" method="get">
 
             <label for="keyword"></label><input
-                    type="search"
-                    id="keyword"
-                    name="keyword"
-                    th:value="${keyword}"
-                    placeholder="Search…"
-                    required
-                    style="max-width: 200px;" />
+                type="search"
+                id="keyword"
+                name="keyword"
+                th:value="${keyword}"
+                placeholder="Search…"
+                required
+                style="max-width: 200px;"/>
             <button type="submit" class="w3-button w3-black" style="padding: 4px 8px;">
                 <i class="fa fa-search"></i>
             </button>
@@ -44,15 +49,18 @@
         </form>
 
         <th:block sec:authorize="isAuthenticated()">
-        <a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right" style="margin-right: 25px;">Logout</a>
+            <a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right"
+               style="margin-right: 25px;">Logout</a>
         </th:block>
 
         <th:block sec:authorize="!isAuthenticated()">
-        <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right" style="margin-right: 25px;">Login</a>
+            <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right"
+               style="margin-right: 25px;">Login</a>
         </th:block>
 
         <th:block sec:authorize="!isAuthenticated()">
-        <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register an Account</a>
+            <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register an
+                Account</a>
         </th:block>
 
     </div>
