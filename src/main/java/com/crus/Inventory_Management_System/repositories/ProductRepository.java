@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByVendorsId(Long id);
     Optional<Product> findByVendorsEmailAddress(String vendors_emailAddress);
     List<Product> findByVendorsContactName(String vendors_contactName);
-    List<Product> findByVendorsPhoneNumber(Integer vendors_phoneNumber);
+    List<Product> findByVendorsPhoneNumber(String vendors_phoneNumber);
 
     @Query(
             value = "SELECT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId",
