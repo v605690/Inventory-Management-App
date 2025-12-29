@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
+
+    <title>Vendors</title>
+
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5" th:each="vendor : ${vendors}"> <!-- This controls the card width -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-black text-white">
+                    <h5 class="mb-0" th:text="${vendor.contactName}">Vendor Name</h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Example Code Start-->
+                    <form class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Account Number</label>
+                            <input type="number" class="form-control" th:value="${vendor.accountNumber}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" th:value="${vendor.address}"
+                                   placeholder="1234 Main St">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Contact Name</label>
+                            <input type="text" class="form-control" th:value="${vendor.contactName}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Email Address</label>
+                            <input type="text" class="form-control" th:value="${vendor.emailAddress}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" th:value="${vendor.phoneNumber}">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-dark me-2">Save</button>
+                            <button type="submit" class="btn btn-dark ms-2">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
+</body>
+</html>

@@ -29,7 +29,7 @@ public class Vendor {
 
 
     @Column(name = "phoneNumber", nullable = false)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "emailAddress", nullable = true)
     private String emailAddress;

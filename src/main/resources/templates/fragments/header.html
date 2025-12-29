@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <a href="#vendors" class="w3-bar-item w3-button w3-padding-large w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">Vendors</a>
+        <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small" sec:authorize="hasRole('ROLE_ADMIN')">Vendors</a>
         <div class="w3-dropdown-hover w3-hide-small">
             <button class="w3-padding-large w3-button" title="More">More<i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
