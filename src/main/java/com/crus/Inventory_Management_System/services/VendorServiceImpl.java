@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.services;
 
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.exceptions.APIException;
+import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -21,7 +22,8 @@ public class VendorServiceImpl implements VendorService {
     private ModelMapper modelMapper;
 
     @Override
-    public Vendor saveVendor(Vendor vendor) {
+    @Transactional
+    public Vendor addVendor(Vendor vendor) {
         Vendor vendorList = modelMapper.map(vendor, Vendor.class);
         Vendor vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
         if (vendorFromDB != null) {
@@ -39,5 +41,36 @@ public class VendorServiceImpl implements VendorService {
             throw new APIException("No vendors found");
         }
         return vendors;
+    }
+
+    @Override
+    @Transactional
+    public void deleteVendor(Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Vendor", "vendorId", vendorId));
+
+        vendorRepository.delete(vendor);
+
+    }
+
+    @Override
+    @Transactional
+    public void savedVendor(Vendor vendor) {
+        vendorRepository.save(vendor);
+    }
+
+    @Override
+    @Transactional
+    public Vendor updateVendor(Vendor vendor, String accountNumber) {
+        Vendor savedVendor = vendorRepository.findById(vendor.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor", "id", vendor.getId()));
+
+        savedVendor.setAccountNumber(vendor.getAccountNumber());
+        savedVendor.setAddress(vendor.getAddress());
+        savedVendor.setContactName(vendor.getContactName());
+        savedVendor.setPhoneNumber(vendor.getPhoneNumber());
+        savedVendor.setEmailAddress(vendor.getEmailAddress());
+
+        return vendorRepository.save(savedVendor);
     }
 }

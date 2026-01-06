@@ -7,8 +7,13 @@ import java.util.List;
 
 @Service
 public interface VendorService {
-    Vendor saveVendor(Vendor vendor);
+    Vendor addVendor(Vendor vendor);
 
     List<Vendor> getAllVendors();
 
+    void deleteVendor(Long vendorId);
+
+    void savedVendor(Vendor vendor);
+
+    Vendor updateVendor(Vendor vendor, String accountNumber);
 }

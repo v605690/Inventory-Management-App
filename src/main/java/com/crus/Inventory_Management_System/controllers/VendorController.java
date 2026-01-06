@@ -23,7 +23,7 @@ public class VendorController {
     public ResponseEntity<Vendor> saveVendor(@Valid @RequestBody Vendor vendor) {
         log.info("Saving vendor with account number: {}", vendor.getAccountNumber());
 
-        Vendor savedVendor = vendorService.saveVendor(vendor);
+        Vendor savedVendor = vendorService.addVendor(vendor);
         return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
     }
 

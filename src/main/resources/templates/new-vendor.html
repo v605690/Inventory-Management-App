@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+
+<head>
+
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
+
+    <title>Create New Vendor</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div align="center" class="flex-grow-1">
+    <h1 style="color: black">Create New Vendor</h1>
+
+    <br/>
+    <div th:if="${error}" class="alert alert-danger" role="alert" style="max-width: 600px; margin: 0 auto;">
+        <span th:text="${error}"></span>
+    </div>
+    <form action="#" th:action="@{/vendors/saveVendor}"
+          th:object="${vendor}" method="post">
+        <div style="display: inline-block; max-width: 600px;">
+            <table border="0" cellpadding="10">
+                <tr>
+                    <td>Account Number:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{accountNumber}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Contact Name:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{contactName}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{address}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Phone Number:</td>
+                    <td>
+                        <label>
+                            <input type="text" th:field="*{phoneNumber}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email Address:</td>
+                    <td>
+                        <label>
+                            <input type="email" th:field="*{emailAddress}"
+                                   required/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                        <a th:href="@{/vendors}" class="btn btn-secondary">Cancel</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
+</body>
+</html>

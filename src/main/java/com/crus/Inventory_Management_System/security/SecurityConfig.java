@@ -22,19 +22,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/w3images/**",
                                 "/favicon.ico", "/error").permitAll()
-                        .requestMatchers("/login/**","/register", "/register/**", "/overview", "/overview/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/index/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products/keyword/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products/keyword").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/graph/**", "/graph").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/meatPrice/**", "/meatPrice").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/price/**", "/price").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
+                        .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/graph/**", "/graph").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/meatPrice/**", "/meatPrice").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/price/**", "/price").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
+//                .formLogin(formLogin -> formLogin
+//                        .loginPage("/login")
+//                        .defaultSuccessUrl("/overview")
+//                        .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                         .permitAll());
