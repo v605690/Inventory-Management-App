@@ -2,11 +2,13 @@ package com.crus.Inventory_Management_System.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.proxy.HibernateProxy;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -31,7 +33,7 @@ public class Vendor {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "emailAddress", nullable = true)
+    @Column(name = "emailAddress", nullable = false)
     private String emailAddress;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
