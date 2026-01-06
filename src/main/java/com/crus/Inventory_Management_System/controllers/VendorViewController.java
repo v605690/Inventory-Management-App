@@ -47,20 +47,33 @@ public class VendorViewController {
 
     @PostMapping("/updateVendor")
     public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model) {
-        if (vendor == null ||
-            vendor.getAccountNumber() == null || vendor.getAccountNumber().isEmpty() ||
-            vendor.getContactName() == null || vendor.getContactName().isEmpty() ||
-            vendor.getAddress() == null || vendor.getAddress().isEmpty() ||
-            vendor.getPhoneNumber() == null || vendor.getPhoneNumber().isEmpty() ||
-            vendor.getEmailAddress() == null || vendor.getEmailAddress().isEmpty()) {
+        try {
+            if (vendor == null ||
+                vendor.getAccountNumber() == null || vendor.getAccountNumber().isEmpty() ||
+                vendor.getContactName() == null || vendor.getContactName().isEmpty() ||
+                vendor.getAddress() == null || vendor.getAddress().isEmpty() ||
+                vendor.getPhoneNumber() == null || vendor.getPhoneNumber().isEmpty() ||
+                vendor.getEmailAddress() == null || vendor.getEmailAddress().isEmpty()) {
 
-            model.addAttribute("message", "Please fill in all required fields correctly.");
+                model.addAttribute("error", "Please fill in all required fields correctly.");
+                model.addAttribute("vendors", vendorService.getAllVendors());
+                return "vendors";
+            }
+
+            // Ensure we have a valid ID before updating
+            if (vendor.getId() == 0) {
+                model.addAttribute("error", "Invalid vendor ID for update operation.");
+                model.addAttribute("vendors", vendorService.getAllVendors());
+                return "vendors";
+            }
+
+            vendorService.updateVendor(vendor, vendor.getAccountNumber());
+            return "redirect:/vendors";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to update vendor: " + e.getMessage());
             model.addAttribute("vendors", vendorService.getAllVendors());
             return "vendors";
         }
-
-        vendorService.updateVendor(vendor, vendor.getAccountNumber());
-        return "redirect:/vendors";
     }
 
     @GetMapping()

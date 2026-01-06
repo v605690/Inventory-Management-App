@@ -24,13 +24,15 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public Vendor addVendor(Vendor vendor) {
-        Vendor vendorList = modelMapper.map(vendor, Vendor.class);
         Vendor vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
         if (vendorFromDB != null) {
             throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
         }
-        Vendor savedVendor = vendorRepository.save(vendorList);
-        return modelMapper.map(savedVendor, Vendor.class);
+
+        // Ensure the ID is 0 so the database will auto-generate a new one
+        vendor.setId(0);
+        Vendor savedVendor = vendorRepository.save(vendor);
+        return savedVendor;
     }
 
     @Override
@@ -56,14 +58,32 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public void savedVendor(Vendor vendor) {
+        // This method is only for creating new vendors
+        // Check if ID is not 0, which would indicate an update attempt
+        if (vendor.getId() != 0) {
+            throw new APIException("Cannot create vendor with existing ID. Use update method instead.");
+        }
         vendorRepository.save(vendor);
     }
 
     @Override
     @Transactional
     public Vendor updateVendor(Vendor vendor, String accountNumber) {
+        // Ensure we have a valid ID for update
+        if (vendor.getId() == 0) {
+            throw new APIException("Cannot update vendor without a valid ID.");
+        }
+
         Vendor savedVendor = vendorRepository.findById(vendor.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vendor", "id", vendor.getId()));
+
+        // Only update if account number hasn't changed, or if new account number doesn't exist
+        if (!savedVendor.getAccountNumber().equals(vendor.getAccountNumber())) {
+            Vendor existingVendor = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
+            if (existingVendor != null && existingVendor.getId() != vendor.getId()) {
+                throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
+            }
+        }
 
         savedVendor.setAccountNumber(vendor.getAccountNumber());
         savedVendor.setAddress(vendor.getAddress());

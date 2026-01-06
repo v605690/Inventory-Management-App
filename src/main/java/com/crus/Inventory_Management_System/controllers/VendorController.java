@@ -1,6 +1,7 @@
 package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.entity.Vendor;
+import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.services.VendorService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,16 @@ public class VendorController {
     private VendorService vendorService;
 
     @PostMapping("/vendors")
-    public ResponseEntity<Vendor> saveVendor(@Valid @RequestBody Vendor vendor) {
+    public ResponseEntity<?> saveVendor(@Valid @RequestBody Vendor vendor) {
         log.info("Saving vendor with account number: {}", vendor.getAccountNumber());
 
-        Vendor savedVendor = vendorService.addVendor(vendor);
-        return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
+        try {
+            Vendor savedVendor = vendorService.addVendor(vendor);
+            return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
+        } catch (APIException e) {
+            log.error("Error saving vendor: {}", e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/getMyVendors")
