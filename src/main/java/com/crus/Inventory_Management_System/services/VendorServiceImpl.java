@@ -29,7 +29,6 @@ public class VendorServiceImpl implements VendorService {
         if (vendorFromDB != null) {
             throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
         }
-
         Vendor savedVendor = vendorRepository.save(vendorList);
         return modelMapper.map(savedVendor, Vendor.class);
     }
@@ -57,32 +56,14 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public void savedVendor(Vendor vendor) {
-        // This method is only for creating new vendors
-        // Check if ID is not 0, which would indicate an update attempt
-        if (vendor.getId() != 0) {
-            throw new APIException("Cannot create vendor with existing ID. Use update method instead.");
-        }
         vendorRepository.save(vendor);
     }
 
     @Override
     @Transactional
     public Vendor updateVendor(Vendor vendor, String accountNumber) {
-        // Ensure we have a valid ID for update
-        if (vendor.getId() == 0) {
-            throw new APIException("Cannot update vendor without a valid ID.");
-        }
-
         Vendor savedVendor = vendorRepository.findById(vendor.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vendor", "id", vendor.getId()));
-
-        // Only update if account number hasn't changed, or if new account number doesn't exist
-        if (!savedVendor.getAccountNumber().equals(vendor.getAccountNumber())) {
-            Vendor existingVendor = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
-            if (existingVendor != null && existingVendor.getId() != vendor.getId()) {
-                throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
-            }
-        }
 
         savedVendor.setAccountNumber(vendor.getAccountNumber());
         savedVendor.setAddress(vendor.getAddress());
