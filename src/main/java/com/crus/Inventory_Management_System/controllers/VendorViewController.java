@@ -39,18 +39,8 @@ public class VendorViewController {
             return "redirect:/vendors";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to save vendor: " + e.getMessage());
-            String errorMessage = e.getMessage();
-            if (errorMessage != null && errorMessage.contains("duplicate key")) {
-                model.addAttribute("error", "Vendor with account number " + vendor.getAccountNumber() + " already exists");
-            } else {
-                model.addAttribute("error", "Failed to save vendor: " + e.getMessage());
-            }
             model.addAttribute("vendor", vendor);
-            try {
             model.addAttribute("vendors", vendorService.getAllVendors());
-            } catch (Exception ex) {
-                model.addAttribute("vendors", vendorService.getAllVendors());
-            }
             return "vendors";
         }
     }

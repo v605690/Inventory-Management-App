@@ -56,7 +56,6 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public void savedVendor(Vendor vendor) {
-        vendor.setId(0);
         vendorRepository.save(vendor);
     }
 
