@@ -24,15 +24,14 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public Vendor addVendor(Vendor vendor) {
+        Vendor vendorList = modelMapper.map(vendor, Vendor.class);
         Vendor vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
         if (vendorFromDB != null) {
             throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
         }
 
-        // Ensure the ID is 0 so the database will auto-generate a new one
-        vendor.setId(0);
-        Vendor savedVendor = vendorRepository.save(vendor);
-        return savedVendor;
+        Vendor savedVendor = vendorRepository.save(vendorList);
+        return modelMapper.map(savedVendor, Vendor.class);
     }
 
     @Override
