@@ -2,6 +2,8 @@ package com.crus.Inventory_Management_System.repositories;
 
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByProductNameLikeIgnoreCase(String keyword, Pageable pageable);
 
-    Page<Product> findByProductNameLikeIgnoreCaseAndUser_UserId(String keyword, Long userId, Pageable pageable);
+    @Query("SELECT p FROM Product p WHERE UPPER(p.productName) LIKE UPPER(:keyword) AND p.user.userId = :userId")
+    Page<Product> findByKeywordAndUserId(@Param("keyword") String keyword, @Param("userId") Long userId, Pageable pageable);
+
+    Page<Product> findByProductNameLikeIgnoreCaseAndUser_UserId(@NotBlank(message = "Product name is required and cannot be empty") @Size(min = 1, max = 255, message = "Product name must be between 1 and 255 characters") String productName, Long user_userId, Pageable pageable);
 
     @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId AND (LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.primaryBarcode) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<Product> findProductsByCategory(@Param("category") Category category, @Param("userId") Long userId, String keyword, Pageable pageable);

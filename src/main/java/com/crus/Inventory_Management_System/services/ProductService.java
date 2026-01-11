@@ -1,6 +1,5 @@
 package com.crus.Inventory_Management_System.services;
 
-import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
@@ -13,7 +12,7 @@ public interface ProductService {
 
     //ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse getProductsByCategory(String categoryName, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     ProductResponse getProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
@@ -29,7 +28,7 @@ public interface ProductService {
 
     ProductResponse getProductByKeywordAndBarcode(String keyword, String barcode);
 
-    Product saveProduct(ProductDTO productDTO);
+    ProductDTO saveProduct(ProductDTO productDTO, Long userId);
 
     ProductDTO getProductById(Long productId);
 

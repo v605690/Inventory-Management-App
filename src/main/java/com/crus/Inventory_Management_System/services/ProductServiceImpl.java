@@ -1,20 +1,30 @@
 package com.crus.Inventory_Management_System.services;
+
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.helpers.SortHelper;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
+import com.crus.Inventory_Management_System.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.crus.Inventory_Management_System.helpers.AppConfig.createProductResponse;
@@ -25,6 +35,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -43,10 +56,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     // Method implements addProduct interface method and takes a ProductDTO and returns a ProductDTO
     public ProductDTO addProduct(ProductDTO productDTO) {
         // Uses modelMapper to convert incoming ProductDTO to a product entity
         Product product = modelMapper.map(productDTO, Product.class);
+
+        Long userId = accessHelper.getLoggedInUserDetails();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        product.setUser(user);
+
         // Checks if the category field in DTO contains actual text (not null, empty, or just whitespace)
         // Splits the category string by commas
         // Trims whitespace from each category name
@@ -57,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
                     .map(String::trim)
                     .map(categoryService::parseCategory)
                     .collect(Collectors.toSet());
+
             // Debug to check for multiple categories
             if (categorySet.size() > 1) {
                 System.out.println("Debug ");
@@ -65,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategories(categorySet);
         }
 
-        Product savedProduct = productRepository.save(product);
+        Product savedProduct = productRepository.saveAndFlush(product);
 
         return convertToDTO(savedProduct);
     }
@@ -95,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getProductsByCategory(String categoryName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse getProductsByCategory(String categoryName, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         // Takes the input categoryName (a String) and converts it to a Category object and
         // uses parseCategory method to handle the conversion
         Category category = categoryService.parseCategory(categoryName);
@@ -121,13 +144,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
-        Page<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageable);
-        List<ProductDTO> productDTOS = products.stream().map((element) -> modelMapper.map(element, ProductDTO.class))
+
+        String searchPattern = "%" + keyword.trim() + "%";
+        Long currentUserId = accessHelper.getLoggedInUserDetails();
+
+        System.out.println("DEBUG SEARCH - User ID: [" + currentUserId + "] | Keyword Pattern: [" + searchPattern + "]");
+
+        Page<Product> products = productRepository.findByKeywordAndUserId(
+                searchPattern,
+                currentUserId,
+                pageable
+        );
+
+        List<ProductDTO> productDTOS = products.getContent().stream()
+                .map(this::convertToDTO)
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        return productResponse;
+        return createProductResponse(productDTOS, products);
     }
 
     @Override
@@ -175,8 +208,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product saveProduct(ProductDTO productDTO) {
-        Product product = modelMapper.map(productDTO, Product.class);
+    public ProductDTO saveProduct(ProductDTO productDTO, Long userId) {
+        Product product;
+
+        if (productDTO.getId() != null) {
+            product = productRepository.findById(productDTO.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productDTO.getId()));
+
+            modelMapper.map(productDTO, product);
+
+        } else {
+            product = modelMapper.map(productDTO, Product.class);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        product.setUser(user);
 
         if (StringUtils.hasText(productDTO.getCategories())) {
             Set<Category> categorySet = Arrays.stream(productDTO.getCategories().split(","))
@@ -188,7 +236,8 @@ public class ProductServiceImpl implements ProductService {
         } else {
             product.setCategories(new HashSet<>());
         }
-       return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
     @Override
@@ -200,9 +249,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteItem(Long productId) {
-        productRepository.deleteProductById(productId);
-    }
+    public void deleteItem(Long productId) { productRepository.deleteProductById(productId); }
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
@@ -234,7 +281,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO deleteProduct(Long productId) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
         productRepository.delete(product);
         // Uses modelMapper to convert a product into a ProductDTO entity
@@ -251,21 +298,25 @@ public class ProductServiceImpl implements ProductService {
             productDTO.setCategories(categoriesString);
 
         }
-        return  productDTO;
+        return productDTO;
     }
 
     public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
         Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
+        Long userId = accessHelper.getLoggedInUserDetails();
+        String searchPattern = "%" + (keyword != null ? keyword.trim() : "") + "%";
+
+        System.out.println("DEBUG: getProductByKeywordAndCategory called. User: " + userId + " Keyword: " + searchPattern);
         Page<Product> page;
 
         if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
 
-            page = productRepository.findByProductNameLikeIgnoreCaseAndUser_UserId('%' + keyword + '%', accessHelper.getLoggedInUserDetails(), pageable);
+            page = productRepository.findByProductNameLikeIgnoreCaseAndUser_UserId ('%' + keyword + '%', accessHelper.getLoggedInUserDetails(), pageable);
 
         } else {
             Category category = categoryService.parseCategory(allowedCategory);
-            page = productRepository.findProductsByCategory(category, accessHelper.getLoggedInUserDetails(), keyword, pageable);
+            page = productRepository.findProductsByCategory(category, userId, keyword, pageable);
         }
 
         List<ProductDTO> productDTOS = page.stream()

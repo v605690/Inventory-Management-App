@@ -1,8 +1,8 @@
 package com.crus.Inventory_Management_System.controllers;
 
-import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.services.ProductService;
@@ -46,14 +46,14 @@ public class ProductController {
     }
 
     @GetMapping("/public/products/category/{categoryName}")
-    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable String categoryName,
+    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable String categoryName, Long userId,
                                                                  @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                                                  @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                                                  @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                                                  @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder)
             throws ResourceNotFoundException {
 
-        ProductResponse productResponse = productService.getProductsByCategory(categoryName, pageNumber, pageSize, sortBy, sortOrder);
+        ProductResponse productResponse = productService.getProductsByCategory(categoryName, userId, pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
@@ -72,7 +72,6 @@ public class ProductController {
                                                                 @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                                                 @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                                                 @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder)
-
             throws ResourceNotFoundException {
 
         ProductResponse productResponse = productService.getProductByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder);

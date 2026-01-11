@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+
 <head>
+
     <th:block th:replace="fragments/head :: commonHeader"/>
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
@@ -23,6 +25,7 @@
     -->
     <form action="#" th:action="@{'/update/' + ${productId}}"
           th:object="${product}" method="post">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
 
         <div style="display: inline-block; max-width: 600px;">
             <table border="0" cellpadding="10">
