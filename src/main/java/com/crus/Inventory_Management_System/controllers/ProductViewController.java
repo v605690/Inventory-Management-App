@@ -14,6 +14,7 @@ import com.crus.Inventory_Management_System.services.CategoryPriceService;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.ProductServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +22,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@RequestMapping("/products")
 @Controller
 public class ProductViewController {
 
@@ -51,12 +53,7 @@ public class ProductViewController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/")
-    public String viewIndexPage() {
-        return "index";
-    }
-
-    @GetMapping("/products")
+    @GetMapping()
     public String viewHomePage(Model model,
                                @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
@@ -93,7 +90,7 @@ public class ProductViewController {
         return "products";
     }
 
-    @GetMapping("/products/categories/{categoryName}")
+    @GetMapping("/categories/{categoryName}")
     public String viewCategoryPage(Model model,
                                    @PathVariable String categoryName,
                                    @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -115,7 +112,7 @@ public class ProductViewController {
         return "products";
     }
 
-    @GetMapping("/products/keyword/{category}")
+    @GetMapping("/keyword/{category}")
     public String searchProductByKeyword(@PathVariable String category,
                                          @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
                                          @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -178,6 +175,21 @@ public class ProductViewController {
         return "overview";
     }
 
+    /**
+     * Handles GET requests to display the new product page.
+     * Initializes a new ProductDTO object and adds it to the model
+     * for use in the view.
+     *
+     * The showNewProductPage method is annotated with @GetMapping annotation, this maps a GET request to /new URL
+     *
+     * FLOW:
+     * User clicks Add Product -> which uses a GET request to /new URL of which -> showNewProductPage() executes
+     * Where the method calls to display new-product.html form -> User fills form -> Submits ->
+     * which uses a POST request to /save URL of which -> saveProduct() executes
+     *
+     * @param model the model object used to pass data to the view
+     * @return the name of the view template for the new product page
+     */
     @GetMapping("/new")
     public String showNewProductPage(Model model) {
         ProductDTO productDTO = new ProductDTO();
@@ -186,26 +198,43 @@ public class ProductViewController {
         return "new-product";
     }
 
-    @PostMapping(value = "/save")
+    /**
+     * The @PostMapping annotation maps a POST request to /save URL; The @PostMapping ("/save") method is triggered
+     * when a user submits the "Create New Product" form and saves the product details.  It is triggered by the
+     * "Add Product" button, of which is noted in the @GetMapping ("/new") method.
+     *
+     * @param productDTO
+     * @param model
+     * @return
+     */
+    @PostMapping()
     public String saveProduct(@ModelAttribute("product") ProductDTO productDTO, Model model) {
-
+        // Map ProductDTO to Product entity (converts the productDTO to an entity for JPA persistence)
         Product product = modelMapper.map(productDTO, Product.class);
 
+        // Retrieve the logged-in user's details
         Long userId = accessHelper.getLoggedInUserDetails();
+        // Fetch the user from the database or throw an exception if not found
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userId));
-
+        // Set the user for the product
         product.setUser(user);
 
+        // Validate product name
         if (productDTO.getProductName() == null || productDTO.getProductName().isEmpty()) {
             model.addAttribute("message", "Product name cannot be empty");
             return "error";
         }
 
+        // Save the product to the service layer; takes in DTO and userId for processing,
+        // finally redirect to the edit page
         ProductDTO savedProduct = productService.saveProduct(productDTO, userId);
-        return "redirect:/edit/" + savedProduct.getId();
+        return "redirect:/products/edit/" + savedProduct.getId();
     }
-
+    // This method is not called, invoked by Spring’s DispatcherServlet when an HTTP request matches its route
+    // Spring will call this method when the browser requests the edit page for a specific product,
+    // it is also called via a redirect after creating a product; saveProduct redirects to edit page,
+    // which triggers showEditProductPage
     @GetMapping("/edit/{productId}")
     public String showEditProductPage(@PathVariable Long productId, Model model, HttpServletRequest request) throws ResourceNotFoundException {
 
@@ -216,6 +245,7 @@ public class ProductViewController {
             return "error";
         }
         model.addAttribute("product", productDTO);
+        model.addAttribute("productId", productId);
 
         String referer = request.getHeader("Referer");
         model.addAttribute("returnUrl", referer);
@@ -223,25 +253,68 @@ public class ProductViewController {
         return "edit-product";
     }
 
-    @PostMapping("/update/{productId}")
-    public String updateProduct(@PathVariable Long productId,
-                                @RequestParam(name = "returnUrl", required = false) String returnUrl,
-                                @ModelAttribute("product") ProductDTO productDTO, Model model) {
+    /**
+     * The @PostMapping annotation maps a POST request to /update/{productId} URL; The @PostMapping ("/update/{productId}")
+     * method is triggered when a user submits the "Update Product" form and updates the product details,
+     * method is called from the edit-product.html form.
+     *
+     * The form in the template has an action attribute: th:action="@{'/update/' + ${productId}}"`
+     * When a user fills out the form and clicks the "Save" button, the form submits via HTTP POST to the endpoint
+     * mapped by the @PostMapping ("/update/{productId}") annotation.
+     *
+     * FLOW:
+     * User navigates to `/edit/{productId}` (handled by `showEditProductPage` method)
+     * - The edit form loads with existing product data
+     * - User modifies the product details and clicks "Save"
+     * - Form submits to `/update/{productId}` → **this method executes**
+     *
+     * @param productId
+     * @param returnUrl
+     * @param productDTO
+     * @param model
+     * @return
+     */
 
-        Long userId = accessHelper.getLoggedInUserDetails();
-        productDTO.setId(productId);
+    @PostMapping("/update")
+                                // Optional URL to redirect back to after update, return to the previous page
+    public String updateProduct(@RequestParam(name = "returnUrl", required = false) String returnUrl,
+                                // The product data from the form, automatically bound to a ProductDTO object
+                                @Valid @ModelAttribute("product") ProductDTO productDTO,
+                                // Used to check if the product DTO is valid and contains necessary data
+                                BindingResult bindingResult,
+                                Model model) {
 
-        if (productDTO.getProductName() == null || productDTO.getProductName().isEmpty()) {
-            model.addAttribute("message", "Product name cannot be empty");
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Form validation failed. Please correct the highlighted fields.");
             return "edit-product";
         }
-
-        productService.saveProduct(productDTO, userId);
-
+        // Retrieves the logged-in user's ID
+        Long userId = accessHelper.getLoggedInUserDetails();
+        if (userId == null) {
+            model.addAttribute("message", "You must be logged in to update a product.");
+            return "edit-product";
+        }
+        // Validate product, and product id is null; it adds an error message to the model
+        if (productDTO == null || productDTO.getId() == null) {
+            model.addAttribute("message", "Missing product id (cannot update).");
+            return "edit-product";
+        }
+        // try catch block to handle exceptions during product update, takes a userId with productDTO
+        try {
+            productService.updateProduct(userId, productDTO);
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("message", ex.getMessage());
+            return "edit-product";
+        } catch (ResourceNotFoundException ex) {
+            model.addAttribute("message", "Product not found (or you don't have access).");
+            return "edit-product";
+        }
+        // Redirects back to the previous page if provided, otherwise redirects to the products page
         if (returnUrl != null && !returnUrl.isEmpty()) {
             return "redirect:" + returnUrl;
         }
-
+        // Redirects to the products page
         return "redirect:/products";
     }
 

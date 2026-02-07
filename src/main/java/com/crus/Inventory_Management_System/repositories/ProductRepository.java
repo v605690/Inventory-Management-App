@@ -40,4 +40,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByProductNameLikeIgnoreCaseAndPrimaryBarcodeStartingWith(String keyword, String barcode);
 
     void deleteProductById(Long id);
+    
+    Optional<Product> findByIdAndUser_UserId(Long id, Long userId);
+
+    boolean existsByPrimaryBarcodeAndIdNot(String primaryBarcode, Long id);
 }

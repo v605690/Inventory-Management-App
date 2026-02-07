@@ -16,22 +16,22 @@ public class VendorViewController {
 
     @Autowired
     VendorService vendorService;
+// delete after validating if method is not used
+//    @GetMapping("/new")
+//    public String showCreateForm(Model model) {
+//        // This is the crucial part!
+//        // We provide an empty object so Thymeleaf has something to bind to.
+//        model.addAttribute("vendor", new Vendor());
+//        return "vendors";
+//    }
 
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        // This is the crucial part!
-        // We provide an empty object so Thymeleaf has something to bind to.
-        model.addAttribute("vendor", new Vendor());
-        return "vendors";
-    }
-
-    @GetMapping("/addVendor")
     public String showAddVendorForm(Model model) {
         model.addAttribute("vendor", new Vendor());
         return "new-vendor";
     }
 
-    @PostMapping("/saveVendor")
+    @PostMapping()
     public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model) {
         try {
             vendorService.savedVendor(vendor);
@@ -45,7 +45,7 @@ public class VendorViewController {
         }
     }
 
-    @PostMapping("/updateVendor")
+    @PostMapping("/update")
     public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model) {
         if (vendor == null ||
             vendor.getAccountNumber() == null || vendor.getAccountNumber().isEmpty() ||

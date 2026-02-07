@@ -44,6 +44,11 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public Vendor getVendor(Long vendorId) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public void deleteVendor(Long vendorId) {
         Vendor vendor = vendorRepository.findById(vendorId)
@@ -72,5 +77,10 @@ public class VendorServiceImpl implements VendorService {
         savedVendor.setEmailAddress(vendor.getEmailAddress());
 
         return vendorRepository.save(savedVendor);
+    }
+
+    @Override
+    public List<Vendor> saveAllVendor(List<Vendor> vendorList) {
+        return List.of();
     }
 }

@@ -43,19 +43,19 @@ public class Product {
     @Builder.Default
     private Set<Category> categories = new HashSet<>();
 
-    @Column(name = "vbrp")
-    private Double vbrp;
-
-    @Column(name = "vbcp")
-    private Double vbcp;
-
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Vendor> vendors = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "vbrp")
+    private Double vbrp;
+
+    @Column(name = "vbcp")
+    private Double vbcp;
 
     @Override
     public final boolean equals(Object o) {

@@ -252,10 +252,26 @@ public class ProductServiceImpl implements ProductService {
     public void deleteItem(Long productId) { productRepository.deleteProductById(productId); }
 
     @Override
-    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException {
+    public ProductDTO updateProduct(Long userId, ProductDTO productDTO) throws ResourceNotFoundException {
+
+        if (userId == null) {
+            throw new IllegalArgumentException("User must be logged in to update a product.");
+        }
+        if (productDTO == null || productDTO.getId() == null) {
+            throw new IllegalArgumentException("Missing product id (cannot update).");
+        }
+
+        Long productId = productDTO.getId();
+
         // Use Spring Data JPA findbyId method to fetch the product by its productId
-        Product productFromDB = productRepository.findById(productId)
+        Product productFromDB = productRepository.findByIdAndUser_UserId(productId, userId)
                 .orElseThrow(ResourceNotFoundException::new);
+
+        if (StringUtils.hasText(productDTO.getPrimaryBarcode())
+                && productRepository.existsByPrimaryBarcodeAndIdNot(productDTO.getPrimaryBarcode(), productId)) {
+            throw new IllegalArgumentException("SKU/Barcode already exists. Please choose a different SKU.");
+        }
+
         // Uses modelMapper to convert productDTO to Product entity
         Product product = modelMapper.map(productDTO, Product.class);
         // Manually set each field from the mapped product to the database product

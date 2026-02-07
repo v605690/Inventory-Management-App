@@ -22,7 +22,7 @@ public interface ProductService {
 
     ProductDTO getProductByQuantity(Long productId);
 
-    ProductDTO updateProduct(Long productId, ProductDTO productDTO) throws ResourceNotFoundException;
+    ProductDTO updateProduct(Long userId, ProductDTO productDTO) throws ResourceNotFoundException;
 
     ProductDTO deleteProduct(Long productId) throws ResourceNotFoundException;
 

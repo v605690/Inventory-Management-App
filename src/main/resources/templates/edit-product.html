@@ -23,9 +23,11 @@
     before it was added to the model, their values populate the fields
     here. The content of the fields then POST to the update endpoint.
     -->
-    <form action="#" th:action="@{'/update/' + ${productId}}"
+    <form action="#" th:action="@{'/products/update'}"
           th:object="${product}" method="post">
         <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
+
+        <input type="hidden" th:field="*{id}" />
 
         <div style="display: inline-block; max-width: 600px;">
             <table border="0" cellpadding="10">

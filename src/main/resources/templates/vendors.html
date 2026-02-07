@@ -18,7 +18,7 @@
     <div class="row justify-content-center">
 
         <div class="col-lg-10">
-            <a th:href="@{/vendors/addVendor}" class="btn btn-dark mb-4" title="Add">Add</a>
+            <a th:href="@{/vendors/new}" class="btn btn-dark mb-4" title="Add">Add</a>
         </div>
         <div class="col-md-6 col-lg-5" th:each="vendor : ${vendors}">
             <!-- This controls the card width -->
@@ -28,7 +28,7 @@
                 </div>
                 <div class="card-body p-4">
                     <!-- FIX: Combined into ONE form so all inputs are submitted together -->
-                    <form th:action="@{/vendors/updateVendor}" method="post"
+                    <form th:action="@{/vendors/update}" method="post"
                           onsubmit="return confirm('Are you sure you want to save changes?')">
                         
                         <!-- FIX: Use name/th:value instead of th:field to avoid binding errors in loops -->

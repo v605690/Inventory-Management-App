@@ -20,7 +20,7 @@
     <div th:if="${error}" class="alert alert-danger" role="alert" style="max-width: 600px; margin: 0 auto;">
         <span th:text="${error}"></span>
     </div>
-    <form action="#" th:action="@{/vendors/saveVendor}"
+    <form action="#" th:action="@{/vendors}"
           th:object="${vendor}" method="post">
         <div style="display: inline-block; max-width: 600px;">
             <table border="0" cellpadding="10">

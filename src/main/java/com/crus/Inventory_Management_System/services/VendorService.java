@@ -10,9 +10,13 @@ public interface VendorService {
 
     List<Vendor> getAllVendors();
 
+    Vendor getVendor(Long vendorId);
+
     void deleteVendor(Long vendorId);
 
     void savedVendor(Vendor vendor);
 
     Vendor updateVendor(Vendor vendor, String accountNumber);
+
+    List<Vendor> saveAllVendor(List<Vendor> vendorList);
 }
