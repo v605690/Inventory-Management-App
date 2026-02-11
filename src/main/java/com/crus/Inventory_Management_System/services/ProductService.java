@@ -1,8 +1,11 @@
 package com.crus.Inventory_Management_System.services;
 
+import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
+
+import java.util.List;
 
 public interface ProductService {
 
@@ -34,5 +37,6 @@ public interface ProductService {
 
     void deleteItem(Long productId);
 
-//    ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse getAllProducts();
+
 }

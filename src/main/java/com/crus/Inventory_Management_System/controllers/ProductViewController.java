@@ -25,9 +25,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @RequestMapping("/products")
 @Controller
 public class ProductViewController {
@@ -115,6 +115,7 @@ public class ProductViewController {
     @GetMapping("/keyword/{category}")
     public String searchProductByKeyword(@PathVariable String category,
                                          @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                         @RequestParam(name = "vendor", required = false, defaultValue = "") String vendor,
                                          @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                          @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                          @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
@@ -281,9 +282,7 @@ public class ProductViewController {
                                 // The product data from the form, automatically bound to a ProductDTO object
                                 @Valid @ModelAttribute("product") ProductDTO productDTO,
                                 // Used to check if the product DTO is valid and contains necessary data
-                                BindingResult bindingResult,
-                                Model model) {
-
+                                BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Form validation failed. Please correct the highlighted fields.");

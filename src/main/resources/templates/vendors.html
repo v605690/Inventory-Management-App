@@ -56,6 +56,26 @@
                                 <label class="form-label">Phone Number</label>
                                 <input type="text" name="phoneNumber" class="form-control" th:value="${vendor.phoneNumber}">
                             </div>
+                            <div class="col-12">
+                                <label class="form-label">Associated Products</label>
+                                <div class="border rounded p-2 bg-light" style="max-height: 150px; overflow-y: auto;">
+                                    <ul class="list-unstyled mb-0">
+                                        <!-- Only show what is already assigned -->
+                                        <li th:each="p : ${vendor.products}" class="small border-bottom pb-1 mb-1">
+                                            <span th:text="${p.productName}">Product Name</span>
+                                            <a th:href="@{/vendors/{vId}/remove/{pId}(vId=${vendor.id}, pId=${p.id})}"
+                                               class="text-danger float-end" style="text-decoration:none;">&times;</a>
+                                        </li>
+                                        <li th:if="${#lists.isEmpty(vendor.products)}" class="text-muted small">
+                                            No products assigned.
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- A simple link to a dedicated assignment page -->
+                                <a th:href="@{/vendors/{id}/assign(id=${vendor.id})}" class="btn btn-sm btn-outline-dark mt-2">
+                                    + Assign New Product
+                                </a>
+                            </div>
                         </div>
 
                         <div class="mt-3">

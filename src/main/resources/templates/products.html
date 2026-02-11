@@ -33,6 +33,16 @@
         <div>
             <form class="second-form" th:action="@{|/products/keyword/${category}|}" method="get">
                 <div>
+                    <label for="vendor">Vendor</label>
+                    <select name="vendor" id="vendor" style="margin-right: 10px;">
+                        <option value="">All Vendors</option>
+                        <option th:each="v : ${vendorList}"
+                                th:value="${v}"
+                                th:text="${v}"
+                                th:selected="${v == selectedVendor}">
+                        </option>
+                    </select>
+
                     <label for="keyword">Search Product</label>
                     <input
                             type="search"

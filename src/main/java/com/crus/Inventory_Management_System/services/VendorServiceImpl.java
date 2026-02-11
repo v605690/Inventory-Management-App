@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,7 +26,7 @@ public class VendorServiceImpl implements VendorService {
     @Transactional
     public Vendor addVendor(Vendor vendor) {
         Vendor vendorList = modelMapper.map(vendor, Vendor.class);
-        Vendor vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
+        Optional<Vendor> vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
         if (vendorFromDB != null) {
             throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
         }
@@ -35,12 +36,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<Vendor> getAllVendors() {
-        List<Vendor> vendors = vendorRepository.findAll();
-
-        if (vendors.isEmpty()) {
-            throw new APIException("No vendors found");
-        }
-        return vendors;
+      return vendorRepository.findAllWithProducts();
     }
 
     @Override
@@ -76,11 +72,24 @@ public class VendorServiceImpl implements VendorService {
         savedVendor.setPhoneNumber(vendor.getPhoneNumber());
         savedVendor.setEmailAddress(vendor.getEmailAddress());
 
+        savedVendor.getProducts().clear();
+        if (vendor.getProducts() != null) {
+            savedVendor.getProducts().addAll(vendor.getProducts());
+        }
+
         return vendorRepository.save(savedVendor);
     }
 
     @Override
     public List<Vendor> saveAllVendor(List<Vendor> vendorList) {
         return List.of();
+    }
+
+    @Override
+    public Vendor findVendorByAccountNumber(String accountNumber) {
+
+        return vendorRepository.findVendorByAccountNumber(accountNumber)
+                .orElseThrow(() -> new APIException("Vendor not found"));
+
     }
 }

@@ -3,6 +3,7 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.User;
+import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.helpers.SortHelper;
@@ -250,6 +251,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteItem(Long productId) { productRepository.deleteProductById(productId); }
+
+    @Override
+    public ProductResponse getAllProducts() {
+        List<Product> products = productRepository.findAll();
+
+        List<ProductDTO> productDTOs = products.stream()
+                .map(this::convertToDTO)
+                .toList();
+        ProductResponse response = new ProductResponse();
+        response.setContent(productDTOs);
+        return response;
+    }
 
     @Override
     public ProductDTO updateProduct(Long userId, ProductDTO productDTO) throws ResourceNotFoundException {

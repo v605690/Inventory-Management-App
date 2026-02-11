@@ -24,6 +24,7 @@ public class SecurityConfig {
                                 "/favicon.ico", "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/vendors/**, /vendors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
                         .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")

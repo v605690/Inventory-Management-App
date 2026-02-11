@@ -1,6 +1,8 @@
 package com.crus.Inventory_Management_System.controllers;
 
+import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
+import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/vendors")
@@ -16,6 +21,9 @@ public class VendorViewController {
 
     @Autowired
     VendorService vendorService;
+
+    @Autowired
+    ProductService productService;
 // delete after validating if method is not used
 //    @GetMapping("/new")
 //    public String showCreateForm(Model model) {
@@ -56,6 +64,7 @@ public class VendorViewController {
 
             model.addAttribute("message", "Please fill in all required fields correctly.");
             model.addAttribute("vendors", vendorService.getAllVendors());
+
             return "vendors";
         }
 
@@ -63,11 +72,12 @@ public class VendorViewController {
         return "redirect:/vendors";
     }
 
+
     @GetMapping()
     public String getAllVendors(Model model) {
         List<Vendor> vendors = vendorService.getAllVendors();
-        System.out.println("Vendors found: " + vendors.size());
         model.addAttribute("vendors", vendors);
+
         return "vendors";
     }
 
@@ -76,4 +86,5 @@ public class VendorViewController {
         vendorService.deleteVendor(id);
         return "redirect:/vendors";
     }
+
 }
