@@ -1,8 +1,10 @@
 package com.crus.Inventory_Management_System.services;
 
+import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -18,6 +20,9 @@ public class VendorServiceImpl implements VendorService {
 
     @Autowired
     private VendorRepository vendorRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -51,7 +56,6 @@ public class VendorServiceImpl implements VendorService {
                         .orElseThrow(() -> new ResourceNotFoundException("Vendor", "vendorId", vendorId));
 
         vendorRepository.delete(vendor);
-
     }
 
     @Override
@@ -90,6 +94,29 @@ public class VendorServiceImpl implements VendorService {
 
         return vendorRepository.findVendorByAccountNumber(accountNumber)
                 .orElseThrow(() -> new APIException("Vendor not found"));
+    }
 
+    @Override
+    public List<Product> searchProducts(String keyword) {
+        return productRepository.findByProductNameContaining(keyword);
+    }
+
+    @Transactional
+    @Override
+    public void associateProduct(Long vendorId, Long productId) {
+        Vendor vendor = getVendor(vendorId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new APIException("Product not found"));
+        vendor.getProducts().add(product);
+        vendorRepository.save(vendor);
+    }
+
+    @Transactional
+    @Override
+    public void createNewProductAndAssociate(Long id, Product product) {
+        Vendor vendor = getVendor(id);
+        Product savedProduct = productRepository.save(product);
+        vendor.getProducts().add(savedProduct);
+        vendorRepository.save(vendor);
     }
 }

@@ -1,6 +1,5 @@
 package com.crus.Inventory_Management_System.controllers;
 
-import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
@@ -11,9 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/vendors")
@@ -86,5 +82,4 @@ public class VendorViewController {
         vendorService.deleteVendor(id);
         return "redirect:/vendors";
     }
-
 }

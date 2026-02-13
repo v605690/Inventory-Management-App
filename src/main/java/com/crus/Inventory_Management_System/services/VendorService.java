@@ -1,5 +1,6 @@
 package com.crus.Inventory_Management_System.services;
 
+import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -21,4 +22,11 @@ public interface VendorService {
     List<Vendor> saveAllVendor(List<Vendor> vendorList);
 
     Vendor findVendorByAccountNumber(String accountNumber);
+
+    List<Product> searchProducts(String keyword);
+
+    void associateProduct(Long vendorId, Long productId);
+
+    void createNewProductAndAssociate(Long id, Product product);
+
 }

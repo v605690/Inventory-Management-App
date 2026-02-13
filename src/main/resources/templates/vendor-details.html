@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vendor-Details</title>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <h1 th:text="${vendor.contactName}">Vendor Name</h1>
+
+    <!-- 1. List Associated Products -->
+    <section>
+        <h2>Associated Products</h2>
+        <div class="products-grid">
+            <div th:each="product : ${vendor.products}">
+                <p th:text="${product.productName}">Product Name</p>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- 2. Search & Associate Section -->
+    <div class="actions">
+
+        <!-- Search Form -->
+        <form th:action="@{/vendors/{id}/search-products(id=${vendor.getId()})}" method="get">
+            <label>
+                <input type="text" name="keyword" placeholder="Search for a product...">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Search Results (Shown only if results exist) -->
+        <div th:if="${searchResults}" class="search-results">
+            <div th:each="p : ${searchResults}">
+                <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.id}, pId=${p.id})}" method="post">
+                    <button type="submit"
+                            th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})">
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Add New Product Form -->
+        <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" method="post">
+            <label>
+                <input type="text" name="name" placeholder="Create new product name" required>
+            </label>
+            <button type="submit">Create & Associate</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
