@@ -28,7 +28,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vendors-list/**, /vendors-list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
                         .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/overview", "/products/overview/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/products").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
