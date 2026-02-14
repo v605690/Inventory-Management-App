@@ -10,4 +10,9 @@ public class HomeController {
     public String viewIndexPage() {
         return "index";
     }
+
+    @GetMapping("/overview")
+    public String overview() {
+        return "overview";
+    }
 }

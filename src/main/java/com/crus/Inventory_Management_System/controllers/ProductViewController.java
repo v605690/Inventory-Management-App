@@ -171,11 +171,6 @@ public class ProductViewController {
         return "meatPrice";
     }
 
-    @GetMapping("/overview")
-    public String viewOverView() {
-        return "overview";
-    }
-
     /**
      * Handles GET requests to display the new product page.
      * Initializes a new ProductDTO object and adds it to the model
