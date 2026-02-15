@@ -72,7 +72,10 @@
     <!-- Iterating over the vendor list from the controller -->
     <tr th:each="vendor : ${vendors}">
         <td th:text="${vendor.id}">1</td>
-        <td th:text="${vendor.accountNumber}">V-1001</td>
+        <td>
+            <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}"
+               th:text="${vendor.accountNumber}">V-1001</a>
+        </td>
         <td th:text="${vendor.contactName}">John Doe</td>
         <td th:text="${vendor.address}">123 Main St</td>
         <td th:text="${vendor.phoneNumber}">555-0199</td>

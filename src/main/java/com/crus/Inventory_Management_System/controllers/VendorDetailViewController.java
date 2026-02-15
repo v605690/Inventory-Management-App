@@ -29,7 +29,8 @@ public class VendorDetailViewController {
     // Show vendor details and associated products
      @GetMapping("/{accountNumber}")
     public String showVendorDetails(@PathVariable String accountNumber, Model model) {
-        Vendor vendor = vendorService.findVendorByAccountNumber(accountNumber);
+        Vendor vendor = vendorService.findByAccountNumberWithProducts(accountNumber);
+
         model.addAttribute("vendor", vendor);
         return "vendor-details";
     }
@@ -46,13 +47,17 @@ public class VendorDetailViewController {
     @PostMapping("/{vendorId}/associate/{productId}")
     public String associateProduct(@PathVariable Long vendorId, @PathVariable Long productId) {
         vendorService.associateProduct(vendorId, productId);
-        return "redirect:/vendors-list" + vendorId;
+
+        Vendor vendor = vendorService.getVendor(vendorId);
+        return "redirect:/vendors-list" + vendor.getAccountNumber();
     }
 
     // Associate a new product
     @PostMapping("/{id}/new-product")
     public String associateNewProduct(@PathVariable Long id, @ModelAttribute Product product) {
         vendorService.createNewProductAndAssociate(id, product);
-        return "redirect:/vendors-list" + id;
+
+        Vendor vendor = vendorService.getVendor(id);
+        return "redirect:/vendors-list" + vendor.getAccountNumber();
     }
 }

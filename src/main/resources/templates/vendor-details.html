@@ -12,6 +12,8 @@
     <!-- 1. List Associated Products -->
     <section>
         <h2>Associated Products</h2>
+        <p>Debug: Product Count = <span th:text="${vendor.products != null ? vendor.products.size() : 'NULL'}"></span></p>
+
         <div class="products-grid">
             <div th:each="product : ${vendor.products}">
                 <p th:text="${product.productName}">Product Name</p>

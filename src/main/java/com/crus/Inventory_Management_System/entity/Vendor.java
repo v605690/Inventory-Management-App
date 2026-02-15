@@ -42,12 +42,13 @@ public class Vendor {
             joinColumns = @JoinColumn(name = "vendor_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    @Builder.Default
     private Set<Product> products = new HashSet<>();
 
     public void addProduct(Product product) {
-        products.add(product);
-        product.getVendors().add(this);
+        if (this.products == null) {
+            this.products = new HashSet<>();
+        }
+        this.products.add(product);
     }
 
     public void removeProduct(Product product) {

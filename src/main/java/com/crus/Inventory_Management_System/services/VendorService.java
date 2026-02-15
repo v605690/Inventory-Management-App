@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.services;
 
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -29,4 +30,5 @@ public interface VendorService {
 
     void createNewProductAndAssociate(Long id, Product product);
 
+    Vendor findByAccountNumberWithProducts(String accountNumber);
 }

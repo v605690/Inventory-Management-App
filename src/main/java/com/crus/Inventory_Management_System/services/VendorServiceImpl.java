@@ -7,6 +7,7 @@ import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,10 +91,13 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public Vendor findVendorByAccountNumber(String accountNumber) {
+        public Vendor findVendorByAccountNumber(String accountNumber) {
 
-        return vendorRepository.findVendorByAccountNumber(accountNumber)
+        Vendor vendor = vendorRepository.findVendorByAccountNumber(accountNumber)
                 .orElseThrow(() -> new APIException("Vendor not found"));
+
+        vendor.getProducts().size();
+        return vendor;
     }
 
     @Override
@@ -104,19 +108,35 @@ public class VendorServiceImpl implements VendorService {
     @Transactional
     @Override
     public void associateProduct(Long vendorId, Long productId) {
-        Vendor vendor = getVendor(vendorId);
+        //Vendor vendor = getVendor(vendorId);
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new APIException("Vendor not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new APIException("Product not found"));
-        vendor.getProducts().add(product);
-        vendorRepository.save(vendor);
+
+        vendor.addProduct(product);
+        //product.getVendors().add(vendor);
+
+        vendorRepository.saveAndFlush(vendor);
     }
 
     @Transactional
     @Override
     public void createNewProductAndAssociate(Long id, Product product) {
-        Vendor vendor = getVendor(id);
         Product savedProduct = productRepository.save(product);
-        vendor.getProducts().add(savedProduct);
-        vendorRepository.save(vendor);
+//        Vendor vendor = getVendor(id);
+//        vendor.getProducts().add(savedProduct);
+//        vendorRepository.save(vendor);
+        associateProduct(id, savedProduct.getId());
+    }
+
+    @Transactional
+    @Override
+    public Vendor findByAccountNumberWithProducts(String accountNumber) {
+        Vendor vendor = vendorRepository.findByAccountNumberWithProducts(accountNumber)
+                .orElseThrow(() -> new APIException("Vendor account number does not exist"));
+
+        Hibernate.initialize(vendor.getProducts());
+        return vendor;
     }
 }
