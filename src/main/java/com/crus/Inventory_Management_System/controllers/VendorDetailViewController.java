@@ -46,10 +46,19 @@ public class VendorDetailViewController {
     // Associate a searched product
     @PostMapping("/{vendorId}/associate/{productId}")
     public String associateProduct(@PathVariable Long vendorId, @PathVariable Long productId) {
-        vendorService.associateProduct(vendorId, productId);
+//        vendorService.associateProduct(vendorId, productId);
+        try {
+            System.out.println("DEBUG: Entering Controller for IDs: " + vendorId + ", " + productId);
+            vendorService.associateProduct(vendorId, productId);
+            System.out.println("DEBUG: Service call finished successfully");
+        } catch (Exception e) {
+            e.printStackTrace(); // This will show you WHY it's failing in the console
+            return "error";
+        }
 
         Vendor vendor = vendorService.getVendor(vendorId);
-        return "redirect:/vendors-list" + vendor.getAccountNumber();
+        return "redirect:/vendors/" + vendor.getAccountNumber();
+//        return "Product Count in DB: " + vendor.getProducts().size();
     }
 
     // Associate a new product

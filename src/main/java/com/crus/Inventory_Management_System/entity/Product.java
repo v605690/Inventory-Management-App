@@ -40,11 +40,9 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    @Builder.Default
     private Set<Category> categories = new HashSet<>();
 
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    @Builder.Default
+    @ManyToMany(mappedBy = "products")
     private Set<Vendor> vendors = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

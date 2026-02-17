@@ -6,18 +6,26 @@ import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
 public class VendorServiceImpl implements VendorService {
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Autowired
     private VendorRepository vendorRepository;
@@ -27,6 +35,10 @@ public class VendorServiceImpl implements VendorService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private EntityManagerFactoryBuilder entityManagerFactoryBuilder;
 
     @Override
     @Transactional
@@ -114,10 +126,19 @@ public class VendorServiceImpl implements VendorService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new APIException("Product not found"));
 
-        vendor.addProduct(product);
-        //product.getVendors().add(vendor);
+        if(vendor.getProducts() == null) {
+            vendor.setProducts(new HashSet<>());
+        }
+        if (product.getVendors() == null) {
+            product.setVendors(new HashSet<>());
+        }
+
+        vendor.getProducts().add(product);
+        product.getVendors().add(vendor);
 
         vendorRepository.saveAndFlush(vendor);
+        System.out.println("DEBUG: Vendor Products Size: " + vendor.getProducts().size());
+
     }
 
     @Transactional
@@ -130,7 +151,7 @@ public class VendorServiceImpl implements VendorService {
         associateProduct(id, savedProduct.getId());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Vendor findByAccountNumberWithProducts(String accountNumber) {
         Vendor vendor = vendorRepository.findByAccountNumberWithProducts(accountNumber)
