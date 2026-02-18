@@ -14,6 +14,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     @Query("select distinct v from Vendor v left join fetch v.products")
     List<Vendor> findAllWithProducts();
 
-    @Query("SELECT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :accountNumber")
-    Optional<Vendor> findByAccountNumberWithProducts(@Param("accountNumber") String accountNumber);
+    @Query("SELECT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :acc")
+    Optional<Vendor> findByAccountNumberWithProducts(@Param("acc") String accountNumber);
 }

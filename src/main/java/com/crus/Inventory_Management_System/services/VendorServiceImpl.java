@@ -4,6 +4,7 @@ import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.persistence.EntityManager;
@@ -12,13 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -35,10 +33,10 @@ public class VendorServiceImpl implements VendorService {
 
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private EntityManagerFactory entityManagerFactory;
-    @Autowired
-    private EntityManagerFactoryBuilder entityManagerFactoryBuilder;
+
 
     @Override
     @Transactional
@@ -59,7 +57,9 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public Vendor getVendor(Long vendorId) {
-        return null;
+
+        Optional<Vendor> vendor = vendorRepository.findById(vendorId);
+        return vendor.orElse(null);
     }
 
     @Override
@@ -126,29 +126,28 @@ public class VendorServiceImpl implements VendorService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new APIException("Product not found"));
 
-        if(vendor.getProducts() == null) {
-            vendor.setProducts(new HashSet<>());
-        }
-        if (product.getVendors() == null) {
-            product.setVendors(new HashSet<>());
+        if (product.getProductName() == null || product.getProductName().isBlank()) {
+            product.setProductName("Unnamed Product # " + productId);
+            productRepository.save(product);
         }
 
         vendor.getProducts().add(product);
         product.getVendors().add(vendor);
 
         vendorRepository.saveAndFlush(vendor);
+
         System.out.println("DEBUG: Vendor Products Size: " + vendor.getProducts().size());
 
     }
 
     @Transactional
     @Override
-    public void createNewProductAndAssociate(Long id, Product product) {
-        Product savedProduct = productRepository.save(product);
-//        Vendor vendor = getVendor(id);
-//        vendor.getProducts().add(savedProduct);
-//        vendorRepository.save(vendor);
-        associateProduct(id, savedProduct.getId());
+    public void createNewProductAndAssociate(Long id, ProductDTO product) {
+        Product savedProduct = modelMapper.map(product, Product.class);
+
+        Product saved = productRepository.save(savedProduct);
+
+        associateProduct(id, saved.getId());
     }
 
     @Transactional(readOnly = true)

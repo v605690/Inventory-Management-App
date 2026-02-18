@@ -48,6 +48,10 @@ public class Vendor {
             this.products = new HashSet<>();
         }
         this.products.add(product);
+        if (product.getVendors() == null) {
+            product.setVendors(new HashSet<>());
+        }
+        product.getVendors().add(this);
     }
 
     public void removeProduct(Product product) {

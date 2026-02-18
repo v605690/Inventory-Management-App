@@ -7,7 +7,10 @@
 <body>
 <div class="container">
     <!-- Header -->
-    <h1 th:text="${vendor.contactName}">Vendor Name</h1>
+    <h1 th:text="${vendor.contactName}">Vendor Name
+    </h1>
+    <p>Current Vendor Primary Key: <span th:text="${vendor.id}"></span></p>
+    <p>Actual List Size: <span th:text="${#sets.size(vendor.products)}"></span></p>
 
     <!-- 1. List Associated Products -->
     <section>
@@ -49,9 +52,9 @@
         <br>
 
         <!-- Add New Product Form -->
-        <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" method="post">
+        <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}" method="post">
             <label>
-                <input type="text" name="name" placeholder="Create new product name" required>
+                <input type="text" name="productName" placeholder="Create new product name" required>
             </label>
             <button type="submit">Create & Associate</button>
         </form>

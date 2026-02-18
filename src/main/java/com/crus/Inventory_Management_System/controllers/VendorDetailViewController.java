@@ -2,13 +2,17 @@ package com.crus.Inventory_Management_System.controllers;
 
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
+import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+@Slf4j
 @Controller
 @RequestMapping("/vendors")
 public class VendorDetailViewController {
@@ -30,8 +34,11 @@ public class VendorDetailViewController {
      @GetMapping("/{accountNumber}")
     public String showVendorDetails(@PathVariable String accountNumber, Model model) {
         Vendor vendor = vendorService.findByAccountNumberWithProducts(accountNumber);
+        ProductDTO productDTO = new ProductDTO();
 
         model.addAttribute("vendor", vendor);
+        model.addAttribute("product", productDTO);
+
         return "vendor-details";
     }
 
@@ -44,29 +51,31 @@ public class VendorDetailViewController {
     }
 
     // Associate a searched product
-    @PostMapping("/{vendorId}/associate/{productId}")
-    public String associateProduct(@PathVariable Long vendorId, @PathVariable Long productId) {
-//        vendorService.associateProduct(vendorId, productId);
+    @PostMapping("/{vId}/associate/{pId}")
+    public String associateProduct(@PathVariable Long vId, @PathVariable Long pId) {
+        System.out.println(">>> ASSOCIATION START - VendorID: " + vId + " ProductID: " + pId);
+        log.info("REACHED CONTROLLER");
+        Vendor vendor = vendorService.getVendor(vId);
         try {
-            System.out.println("DEBUG: Entering Controller for IDs: " + vendorId + ", " + productId);
-            vendorService.associateProduct(vendorId, productId);
+            System.out.println("DEBUG: Entering Controller for IDs: " + vId + ", " + pId);
+            vendorService.associateProduct(vId, pId);
             System.out.println("DEBUG: Service call finished successfully");
         } catch (Exception e) {
             e.printStackTrace(); // This will show you WHY it's failing in the console
             return "error";
         }
 
-        Vendor vendor = vendorService.getVendor(vendorId);
+        //Vendor vendor = vendorService.getVendor(vId);
         return "redirect:/vendors/" + vendor.getAccountNumber();
 //        return "Product Count in DB: " + vendor.getProducts().size();
     }
 
     // Associate a new product
     @PostMapping("/{id}/new-product")
-    public String associateNewProduct(@PathVariable Long id, @ModelAttribute Product product) {
+    public String associateNewProduct(@PathVariable Long id, @ModelAttribute ProductDTO product) {
         vendorService.createNewProductAndAssociate(id, product);
 
         Vendor vendor = vendorService.getVendor(id);
-        return "redirect:/vendors-list" + vendor.getAccountNumber();
+        return "redirect:/vendors/" + vendor.getAccountNumber();
     }
 }
