@@ -57,3 +57,28 @@
      margin: 0;
      display: flex;
  }
+
+   .products-grid {
+      width: 100%;
+      border-collapse: collapse; /* Merges double lines into one */
+      margin-top: 14px;
+  }
+ .products-grid th,
+
+ .products-grid td {
+     border: 1px solid #000; /* The actual line: 1px wide, solid, black */
+     padding: 6px 10px;
+     text-align: left;
+ }
+
+ .products-grid th {
+     background-color: #f2f2f2; /* Light gray header for contrast */
+     color: #333;
+     font-weight: 600;
+ }
+ .products-grid tr:hover {
+     background-color: #f9f9f9;
+ }
+
+ .filter-section { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+ .table-header { border-bottom: 2px solid #000; font-weight: bold; }

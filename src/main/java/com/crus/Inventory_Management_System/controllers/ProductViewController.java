@@ -13,6 +13,7 @@ import com.crus.Inventory_Management_System.repositories.UserRepository;
 import com.crus.Inventory_Management_System.services.CategoryPriceService;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.ProductServiceImpl;
+import com.crus.Inventory_Management_System.services.VendorService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,9 @@ public class ProductViewController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private VendorService vendorService;
 
     @Autowired
     private CategoryPriceService categoryPriceService;
@@ -123,6 +127,7 @@ public class ProductViewController {
         ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, category, pageNumber, pageSize, sortBy, sortOrder);
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
+        model.addAttribute("vendors", vendorService.getAllVendors());
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);

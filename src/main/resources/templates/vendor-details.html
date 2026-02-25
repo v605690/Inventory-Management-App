@@ -2,64 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+
     <title>Vendor-Details</title>
 </head>
-<body>
-<div class="container">
-    <!-- Header -->
-    <h1 th:text="${vendor.contactName}">Vendor Name
-    </h1>
-    <p>Current Vendor Primary Key: <span th:text="${vendor.id}"></span></p>
-    <p>Actual List Size: <span th:text="${#sets.size(vendor.products)}"></span></p>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="flex-grow-1" style="margin: 50px 200px 200px;">
+    <br>
+    <div class="container">
+        <!-- Header -->
+        <h1 th:text="${vendor.contactName}">Vendor Name
+        </h1>
+        <!--    <p>Current Vendor Primary Key: <span th:text="${vendor.id}"></span></p>-->
+        <!--    <p>Actual List Size: <span th:text="${#sets.size(vendor.products)}"></span></p>-->
 
-    <!-- 1. List Associated Products -->
-    <section>
-        <h2>Associated Products</h2>
-        <p>Debug: Product Count = <span th:text="${vendor.products != null ? vendor.products.size() : 'NULL'}"></span></p>
+        <!-- 1. List Associated Products -->
+<!--        <section>-->
+            <h2>Associated Products</h2>
+            <!--        <p>Debug: Product Count = <span th:text="${vendor.products != null ? vendor.products.size() : 'NULL'}"></span>-->
+<!--            </p>-->
 
-        <div class="products-grid">
-            <div th:each="product : ${vendor.products}">
-                <p th:text="${product.productName}">Product Name</p>
+            <table class="table table-sm table-bordered products-grid">
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Primary Barcode</th>
+                    <th>In-Stock Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${vendor.products}">
+                    <td th:text="${product.productName}">Product Name</td>
+                    <td th:text="${product.primaryBarcode ?: 'N/A'}">SKU123</td>
+                    <td th:text="${product.inStockQuantity}"
+                        th:style="${product.inStockQuantity < 0 ? 'color: red; font-weight: bold' : ''}">0
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+<!--        </section>-->
+        <hr>
+        <!-- 2. Search & Associate Section -->
+        <div class="actions">
+
+            <!-- Search Form -->
+            <form th:action="@{/vendors/{id}/search-products(id=${vendor.getId()})}" method="get">
+                <label>
+                    <input type="text" name="keyword" placeholder="Search for a product...">
+                </label>
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- Search Results (Shown only if results exist) -->
+            <div th:if="${searchResults}" class="search-results">
+                <div th:each="p : ${searchResults}">
+                    <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.id}, pId=${p.id})}" method="post">
+                        <button type="submit"
+                                th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})">
+                        </button>
+
+                    </form>
+                </div>
             </div>
+
+            <br>
+
+            <!-- Add New Product Form -->
+            <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}" method="post">
+                <label>
+                    <input type="text" name="productName" placeholder="Create new product name" required>
+                </label>
+                <button type="submit">Create & Associate</button>
+            </form>
         </div>
-    </section>
-
-    <hr>
-
-    <!-- 2. Search & Associate Section -->
-    <div class="actions">
-
-        <!-- Search Form -->
-        <form th:action="@{/vendors/{id}/search-products(id=${vendor.getId()})}" method="get">
-            <label>
-                <input type="text" name="keyword" placeholder="Search for a product...">
-            </label>
-            <button type="submit">Search</button>
-        </form>
-
-        <!-- Search Results (Shown only if results exist) -->
-        <div th:if="${searchResults}" class="search-results">
-            <div th:each="p : ${searchResults}">
-                <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.id}, pId=${p.id})}" method="post">
-                    <button type="submit"
-                            th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})">
-                    </button>
-
-                </form>
-            </div>
-        </div>
-
-        <br>
-
-        <!-- Add New Product Form -->
-        <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}" method="post">
-            <label>
-                <input type="text" name="productName" placeholder="Create new product name" required>
-            </label>
-            <button type="submit">Create & Associate</button>
-        </form>
     </div>
 </div>
+<div th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>
 
