@@ -1,14 +1,18 @@
 package com.crus.Inventory_Management_System.services;
 
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
+import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
+import com.crus.Inventory_Management_System.repositories.UserRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
@@ -32,10 +36,16 @@ public class VendorServiceImpl implements VendorService {
     private ProductRepository productRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private AccessHelper accessHelper;
 
 
     @Override
@@ -114,7 +124,8 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<Product> searchProducts(String keyword) {
-        return productRepository.findByProductNameContaining(keyword);
+
+        return productRepository.findByProductNameContainingIgnoreCase(keyword);
     }
 
     @Transactional
@@ -146,6 +157,13 @@ public class VendorServiceImpl implements VendorService {
         Product savedProduct = modelMapper.map(product, Product.class);
 
         Product saved = productRepository.save(savedProduct);
+
+        Long userId = accessHelper.getLoggedInUserDetails();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        saved.setUser(user);
 
         associateProduct(id, saved.getId());
     }

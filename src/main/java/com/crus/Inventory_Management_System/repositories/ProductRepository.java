@@ -45,5 +45,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByPrimaryBarcodeAndIdNot(String primaryBarcode, Long id);
 
-    List<Product> findByProductNameContaining(String keyword);
+    List<Product> findByProductNameContainingIgnoreCase(String keyword);
+
 }

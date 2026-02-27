@@ -3,6 +3,8 @@ package com.crus.Inventory_Management_System.controllers;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
+import com.crus.Inventory_Management_System.repositories.ProductRepository;
+import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,10 @@ public class VendorDetailViewController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private VendorRepository vendorRepository;
 
     // List all vendors
     @GetMapping("/all")
@@ -47,6 +53,8 @@ public class VendorDetailViewController {
     public String searchProducts(@PathVariable Long id, @RequestParam String keyword, Model model) {
         model.addAttribute("vendor", vendorService.getVendor(id));
         model.addAttribute("searchResults", vendorService.searchProducts(keyword));
+        // ThymeLeaf requires an initialized (empty) object to bind the input fields
+        model.addAttribute("product", new ProductDTO());
         return "vendor-details";
     }
 
@@ -74,7 +82,6 @@ public class VendorDetailViewController {
     @PostMapping("/{id}/new-product")
     public String associateNewProduct(@PathVariable Long id, @ModelAttribute ProductDTO product) {
         vendorService.createNewProductAndAssociate(id, product);
-
         Vendor vendor = vendorService.getVendor(id);
         return "redirect:/vendors/" + vendor.getAccountNumber();
     }

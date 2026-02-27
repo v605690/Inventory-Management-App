@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:max-height="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
 
@@ -21,10 +21,8 @@
         <!--    <p>Actual List Size: <span th:text="${#sets.size(vendor.products)}"></span></p>-->
 
         <!-- 1. List Associated Products -->
-<!--        <section>-->
             <h2>Associated Products</h2>
             <!--        <p>Debug: Product Count = <span th:text="${vendor.products != null ? vendor.products.size() : 'NULL'}"></span>-->
-<!--            </p>-->
 
             <table class="table table-sm table-bordered products-grid">
                 <thead>
@@ -32,6 +30,7 @@
                     <th>Product Name</th>
                     <th>Primary Barcode</th>
                     <th>In-Stock Quantity</th>
+                    <th>Vendor Price</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,15 +38,17 @@
                     <td th:text="${product.productName}">Product Name</td>
                     <td th:text="${product.primaryBarcode ?: 'N/A'}">SKU123</td>
                     <td th:text="${product.inStockQuantity}"
-                        th:style="${product.inStockQuantity < 0 ? 'color: red; font-weight: bold' : ''}">0
-                    </td>
+                        th:style="${product.inStockQuantity < 0 ? 'color: red; font-weight: bold' : ''}">0</td>
+                    <td th:text="${product.getVbcp()}">Vendor Price</td>
                 </tr>
                 </tbody>
             </table>
-<!--        </section>-->
         <hr>
+
         <!-- 2. Search & Associate Section -->
         <div class="actions">
+
+            <div style="margin-top: 10px;">
 
             <!-- Search Form -->
             <form th:action="@{/vendors/{id}/search-products(id=${vendor.getId()})}" method="get">
@@ -55,28 +56,75 @@
                     <input type="text" name="keyword" placeholder="Search for a product...">
                 </label>
                 <button type="submit">Search</button>
+                <a th:href="@{/vendors/{id}(id=${vendor.accountNumber})}"
+                   class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
             </form>
 
+
+            </div>
             <!-- Search Results (Shown only if results exist) -->
             <div th:if="${searchResults}" class="search-results">
                 <div th:each="p : ${searchResults}">
                     <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.id}, pId=${p.id})}" method="post">
                         <button type="submit"
-                                th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})">
-                        </button>
-
+                                th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})"></button>
                     </form>
                 </div>
             </div>
 
-            <br>
-
             <!-- Add New Product Form -->
             <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}" method="post">
-                <label>
-                    <input type="text" name="productName" placeholder="Create new product name" required>
-                </label>
-                <button type="submit">Create & Associate</button>
+
+                <div style="display: inline-block; max-width: 600px;">
+                    <table border="0" cellpadding="10">
+                        <tr>
+                            <td>Product Name:</td>
+                            <td>
+                                <label>
+                                    <input type="text" th:field="*{productName}"
+                                           required/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SKU:</td>
+                            <td>
+                                <label>
+                                    <input type="text" th:field="*{primaryBarcode}"
+                                           required/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Quantity:</td>
+                            <td>
+                                <label>
+                                    <input type="number" th:field="*{inStockQuantity}"
+                                           required/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cost Price:</td>
+                            <td>
+                                <label>
+                                    <input type="number" step="0.01" th:field="*{vbcp}"
+                                           required/>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="submit">Create & Associate Product</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+<!--                <label>-->
+<!--                    <input type="text" name="productName" placeholder="Create new product" required>-->
+<!--                </label>-->
+<!--                <button type="submit">Create & Associate</button>-->
+
             </form>
         </div>
     </div>
