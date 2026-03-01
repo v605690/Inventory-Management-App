@@ -9,9 +9,13 @@ import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -50,9 +54,18 @@ public class VendorDetailViewController {
 
     // Search for existing products to associate
     @GetMapping("/{id}/search-products")
-    public String searchProducts(@PathVariable Long id, @RequestParam String keyword, Model model) {
+    public String searchProducts(@PathVariable Long id, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Model model) {
+
+        int size = 9;
+        Page<Product> productPage = vendorService.searchProducts(keyword, PageRequest.of(page, size));
+
+        model.addAttribute("id", id);
         model.addAttribute("vendor", vendorService.getVendor(id));
-        model.addAttribute("searchResults", vendorService.searchProducts(keyword));
+        //model.addAttribute("searchResults", vendorService.searchProducts(keyword, PageRequest.of(page, size)));
+        model.addAttribute("searchResults", productPage);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         // ThymeLeaf requires an initialized (empty) object to bind the input fields
         model.addAttribute("product", new ProductDTO());
         return "vendor-details";

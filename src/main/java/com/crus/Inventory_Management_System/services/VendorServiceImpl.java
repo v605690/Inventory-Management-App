@@ -13,6 +13,8 @@ import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
@@ -123,9 +125,9 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<Product> searchProducts(String keyword) {
+    public Page<Product> searchProducts(String keyword, PageRequest pageRequest) {
 
-        return productRepository.findByProductNameContainingIgnoreCase(keyword);
+        return productRepository.findByProductNameContainingIgnoreCase(keyword, pageRequest);
     }
 
     @Transactional

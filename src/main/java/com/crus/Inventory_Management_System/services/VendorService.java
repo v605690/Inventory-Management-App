@@ -3,6 +3,8 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public interface VendorService {
 
     Vendor findVendorByAccountNumber(String accountNumber);
 
-    List<Product> searchProducts(String keyword);
+    Page<Product> searchProducts(String keyword, PageRequest pageRequest);
 
     void associateProduct(Long vendorId, Long productId);
 
