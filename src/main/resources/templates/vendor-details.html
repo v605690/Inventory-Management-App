@@ -117,70 +117,119 @@
                         </li>
                     </ul>
                 </nav>
-                    <!-- Add New Product Form -->
-                    <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}"
+                <!-- Add New Product Form -->
+<!--                <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}"-->
+<!--                      method="post">-->
 
-                          method="post">
+<!--                    <div style="display: inline-block; max-width: 600px;">-->
+<!--                        <table border="0" cellpadding="10">-->
+<!--                            <tr>-->
+<!--                                <td>Product Name:</td>-->
+<!--                                <td>-->
+<!--                                    <label>-->
+<!--                                        <input type="text" th:field="*{productName}"-->
+<!--                                               required/>-->
+<!--                                    </label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>SKU:</td>-->
+<!--                                <td>-->
+<!--                                    <label>-->
+<!--                                        <input type="text" th:field="*{primaryBarcode}"-->
+<!--                                               required/>-->
+<!--                                    </label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Quantity:</td>-->
+<!--                                <td>-->
+<!--                                    <label>-->
+<!--                                        <input type="number" th:field="*{inStockQuantity}"-->
+<!--                                               required/>-->
+<!--                                    </label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Category:</td>-->
+<!--                                <td>-->
+<!--                                    <label>-->
+<!--                                        <input type="text" th:field="*{categories}"-->
+<!--                                               required/>-->
+<!--                                    </label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Cost Price:</td>-->
+<!--                                <td>-->
+<!--                                    <label>-->
+<!--                                        <input type="number" step="0.01" th:field="*{vbcp}"-->
+<!--                                               required/>-->
+<!--                                    </label>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td colspan="2">-->
+<!--                                    <button type="submit">Create & Associate Product</button>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </form>-->
+                <div class="dropdown">
+                    <button class="btn-dark btn-sm rounded-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Add New Product
+                    </button>
 
-                        <div style="display: inline-block; max-width: 600px;">
-                            <table border="0" cellpadding="10">
-                                <tr>
-                                    <td>Product Name:</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" th:field="*{productName}"
-                                                   required/>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>SKU:</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" th:field="*{primaryBarcode}"
-                                                   required/>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Quantity:</td>
-                                    <td>
-                                        <label>
-                                            <input type="number" th:field="*{inStockQuantity}"
-                                                   required/>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Category:</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" th:field="*{categories}"
-                                                   required/>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Cost Price:</td>
-                                    <td>
-                                        <label>
-                                            <input type="number" step="0.01" th:field="*{vbcp}"
-                                                   required/>
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <button type="submit">Create & Associate Product</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </form>
+                    <!-- Use dropdown-menu-end if the button is on the right side of the screen -->
+                    <div class="dropdown-menu p-4" style="min-width: 350px;">
+                        <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}" method="post">
+
+                            <div class="mb-3">
+                                <label class="form-label">Product Name</label>
+                                <label>
+                                    <input type="text" class="form-control" th:field="*{productName}" required />
+                                </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">SKU</label>
+                                <label>
+                                    <input type="text" class="form-control" th:field="*{primaryBarcode}" required />
+                                </label>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Quantity</label>
+                                    <label>
+                                        <input type="number" class="form-control" th:field="*{inStockQuantity}" required />
+                                    </label>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Cost Price</label>
+                                    <label>
+                                        <input type="number" step="0.01" class="form-control" th:field="*{vbcp}" required />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <label>
+                                    <input type="text" class="form-control" th:field="*{categories}" required />
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100">Create & Associate Product</button>
+                        </form>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 <div th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>
