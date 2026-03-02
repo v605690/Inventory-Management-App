@@ -56,7 +56,7 @@ public class VendorDetailViewController {
     @GetMapping("/{id}/search-products")
     public String searchProducts(@PathVariable Long id, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Model model) {
 
-        int size = 9;
+        int size = 27;
         Page<Product> productPage = vendorService.searchProducts(keyword, PageRequest.of(page, size));
 
         model.addAttribute("id", id);
