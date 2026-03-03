@@ -15,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @Slf4j
 @Controller
@@ -25,7 +23,6 @@ public class VendorDetailViewController {
 
     @Autowired
     VendorService vendorService;
-
     @Autowired
     ProductService productService;
     @Autowired
@@ -35,8 +32,14 @@ public class VendorDetailViewController {
 
     // List all vendors
     @GetMapping("/all")
-    public String listVendors(Model model) {
-        model.addAttribute("vendors", vendorService.getAllVendors());
+    public String listVendors(@RequestParam(defaultValue = "0") int page, Model model) {
+        int size = 22;
+        Page<Vendor> vendorPage = vendorService.getAllVendors(PageRequest.of(page, size));
+
+        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", vendorPage.getTotalPages());
+
         return "vendors-list";
     }
 

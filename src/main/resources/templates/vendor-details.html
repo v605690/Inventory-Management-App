@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:max-height="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
 <head>
     <meta charset="UTF-8">
 
@@ -75,8 +76,9 @@
                                   method="post">
                                 <button type="submit"
                                         class="btn btn-light border text-start w-100 p-1 shadow-sm text-truncate"
-                                        style="font-size: 0.75rem; border-color: #333 !important; border-width: 1.5px !important;"
-                                        th:text="'Associate: ' + (${p.productName} ?: 'Unknown ID: ' + ${p.id})">
+                                        style="font-size: 0.75rem; border-color: #333 !important; border-width: 1.5px !important;">
+                                    <span style="color: blue;">Associate: </span>
+                                    <span th:text="${p.productName} ?: 'Unknown ID: ' + ${p.id}"></span>
                                 </button>
                             </form>
                         </div>
@@ -221,7 +223,7 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-success w-100">Create & Associate Product</button>
+                            <button type="submit" class="btn-dark btn-sm rounded-0">Create & Associate Product</button>
                         </form>
                     </div>
                 </div>

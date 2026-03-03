@@ -5,6 +5,8 @@ import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,7 @@ public class VendorViewController {
     }
 
     @PostMapping()
-    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model) {
+    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         try {
             vendorService.savedVendor(vendor);
             System.out.println("Vendor Saved: " + vendor);
@@ -44,13 +46,13 @@ public class VendorViewController {
         } catch (Exception e) {
             model.addAttribute("error", "Failed to save vendor: " + e.getMessage());
             model.addAttribute("vendor", vendor);
-            model.addAttribute("vendors", vendorService.getAllVendors());
+            model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
             return "vendors";
         }
     }
 
     @PostMapping("/update")
-    public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model) {
+    public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         if (vendor == null ||
             vendor.getAccountNumber() == null || vendor.getAccountNumber().isEmpty() ||
             vendor.getContactName() == null || vendor.getContactName().isEmpty() ||
@@ -59,7 +61,7 @@ public class VendorViewController {
             vendor.getEmailAddress() == null || vendor.getEmailAddress().isEmpty()) {
 
             model.addAttribute("message", "Please fill in all required fields correctly.");
-            model.addAttribute("vendors", vendorService.getAllVendors());
+            model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
 
             return "vendors";
         }
@@ -70,8 +72,8 @@ public class VendorViewController {
 
 
     @GetMapping()
-    public String getAllVendors(Model model) {
-        List<Vendor> vendors = vendorService.getAllVendors();
+    public String getAllVendors(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+        Page<Vendor> vendors = vendorService.getAllVendors(PageRequest.of(page, size));
         model.addAttribute("vendors", vendors);
 
         return "vendors";

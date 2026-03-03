@@ -63,8 +63,8 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<Vendor> getAllVendors() {
-      return vendorRepository.findAllWithProducts();
+    public Page<Vendor> getAllVendors(PageRequest pageRequest) {
+      return vendorRepository.findAllWithProducts(pageRequest);
     }
 
     @Override

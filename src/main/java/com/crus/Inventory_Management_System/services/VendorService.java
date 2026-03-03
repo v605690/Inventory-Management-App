@@ -12,7 +12,7 @@ import java.util.List;
 public interface VendorService {
     Vendor addVendor(Vendor vendor);
 
-    List<Vendor> getAllVendors();
+    Page<Vendor> getAllVendors(PageRequest pageRequest);
 
     Vendor getVendor(Long vendorId);
     
