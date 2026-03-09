@@ -123,11 +123,11 @@ public class ProductViewController {
                                          @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                          @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                          @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
-                                         @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Model model, int page, int size) {
+                                         @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Model model) {
         ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, category, pageNumber, pageSize, sortBy, sortOrder);
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
-        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
+        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);

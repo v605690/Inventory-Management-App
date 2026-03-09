@@ -55,6 +55,8 @@ public class Product {
     @Column(name = "vbcp")
     private Double vbcp;
 
+    private String imagePath;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

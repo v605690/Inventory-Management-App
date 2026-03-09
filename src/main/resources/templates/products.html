@@ -27,6 +27,7 @@
                 <option value="categories" label="Category"></option>
                 <option value="inStockQuantity" label="Quantity"></option>
                 <option value="vbrp" label="Price"></option>
+                <option value="imagePath" label="Thumbnail"></option>
             </datalist>
 
         </form>
@@ -146,6 +147,7 @@
                 <th>Category</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Thumbnail</th>
                 <th>Actions</th>
                 <a th:href="@{/products/new}" class="btn btn-primary" title="Add">
                     Add
@@ -159,6 +161,14 @@
                 <td th:text="${product.categories}">Category</td>
                 <td th:text="${product.inStockQuantity}">0</td>
                 <td th:text="'$' + ${product.getVbrp}">$0.00</td>
+                <td>
+                    <div class="table-thumbnail-wrapper">
+                        <!-- If imagePath is null/empty, fallback to placeholder.png -->
+                        <img th:src="${product.imagePath != null ? '/product-images/' + product.imagePath : 'https://placehold.co'}"
+                             class="table-thumbnail" alt="">
+                    </div>
+                </td>
+
                 <td>
                     <div class="action-buttons">
                         <a th:href="@{'/products/edit/' + ${product.id}}" class="btn-circle-edit" title="Edit">

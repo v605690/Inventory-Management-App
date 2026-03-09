@@ -20,8 +20,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/w3images/**",
+                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/product-images", "/w3images/**",
                                 "/favicon.ico", "/error").permitAll()
+                        .requestMatchers("/product-images/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vendors/**, /vendors").permitAll()
