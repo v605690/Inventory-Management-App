@@ -266,6 +266,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getProductsByCategoryAndVendor(String category, Long id) {
+        if (category.equalsIgnoreCase("all")) {
+            return productRepository.findByVendorsId(id);
+        }
+            Category categoryEnum = Category.valueOf(category.toUpperCase());
+
+            return productRepository.findByCategoriesAndVendors(categoryEnum, id);
+    }
+
+    @Override
     public ProductDTO updateProduct(Long userId, ProductDTO productDTO) throws ResourceNotFoundException {
 
         if (userId == null) {

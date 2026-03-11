@@ -40,4 +40,6 @@ public interface ProductService {
     ProductResponse getAllProducts();
 
     List<Product> getProductsByVendor(Long id);
+
+    List<Product> getProductsByCategoryAndVendor(String category, Long id);
 }

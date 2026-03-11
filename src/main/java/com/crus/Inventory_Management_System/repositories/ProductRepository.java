@@ -47,4 +47,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByProductNameContainingIgnoreCase(String keyword, Pageable pageable);
 
+    @Query("SELECT p FROM Product p JOIN p.categories c JOIN p.vendors v WHERE c = :category AND v.id = :vendorId")
+    List<Product> findByCategoriesAndVendors(@Param("category") Category category, @Param("vendorId") Long vendorsId);
+
 }

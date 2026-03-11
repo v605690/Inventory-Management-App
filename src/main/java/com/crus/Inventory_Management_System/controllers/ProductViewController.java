@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @RequestMapping("/products")
@@ -119,7 +120,7 @@ public class ProductViewController {
 
     @GetMapping("/keyword/{category}")
     public String searchProductByKeyword(@PathVariable String category,
-                                         @RequestParam(required = false) Long id,
+                                         @RequestParam(name = "vendorId", required = false) Long vendorId,
                                          @RequestParam(required = false) Long userId,
                                          @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
                                          @RequestParam(name = "vendor", required = false, defaultValue = "") String vendor,
@@ -128,10 +129,20 @@ public class ProductViewController {
                                          @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                          @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Model model) {
         ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, category, pageNumber, pageSize, sortBy, sortOrder);
-        final List<ProductDTO> productDTOList = productResponse.getContent();
+        List<ProductDTO> productDTOList = productResponse.getContent();
 
-        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
+            if (vendorId != null && vendorId > 0) {
+                // Fetch Entities and Map to DTOs in one go
+                productDTOList = productService.getProductsByCategoryAndVendor(category, vendorId)
+                        .stream()
+                        .map(product -> modelMapper.map(product, ProductDTO.class))
+                        .toList();
+
+                model.addAttribute("selectedVendorId", vendorId);
+            }
+
         model.addAttribute("productDTOList", productDTOList);
+        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("pageNumber", pageNumber);
@@ -141,11 +152,6 @@ public class ProductViewController {
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
         model.addAttribute("title", displayKeywordTitle.displayTitle(category, keyword));
-
-        if (id != null) {
-            model.addAttribute("products", productService.getProductsByVendor(id));
-            model.addAttribute("products", productService.getProductsByCategory(category, userId, pageNumber, pageSize, sortBy, sortOrder));
-        }
 
         return "products";
     }
