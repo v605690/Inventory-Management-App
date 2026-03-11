@@ -14,12 +14,12 @@ public class InventoryManagementSystemApplication extends SpringBootServletIniti
 		SpringApplication.run(InventoryManagementSystemApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner init(ProductImageService service) {
-		return args -> {
-			System.out.println("Checking for local images to sync...");
-			service.syncLocalImagesToDB();
-		};
-	}
+//	@Bean
+//	CommandLineRunner init(ProductImageService service) {
+//		return args -> {
+//			System.out.println("Checking for local images to sync...");
+//			service.syncLocalImagesToDB();
+//		};
+//	}
 
 }

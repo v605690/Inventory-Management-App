@@ -3,7 +3,6 @@ package com.crus.Inventory_Management_System.services;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.User;
-import com.crus.Inventory_Management_System.exceptions.APIException;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.helpers.SortHelper;
@@ -22,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.crus.Inventory_Management_System.helpers.AppConfig.createProductResponse;
@@ -262,6 +258,11 @@ public class ProductServiceImpl implements ProductService {
         ProductResponse response = new ProductResponse();
         response.setContent(productDTOs);
         return response;
+    }
+
+    @Override
+    public List<Product> getProductsByVendor(Long id) {
+        return productRepository.findByVendorsId(id);
     }
 
     @Override

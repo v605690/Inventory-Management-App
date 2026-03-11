@@ -76,6 +76,7 @@ public class ProductViewController {
 
         final List<ProductDTO> productDTOList = productResponse.getContent();
 
+        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
@@ -118,6 +119,8 @@ public class ProductViewController {
 
     @GetMapping("/keyword/{category}")
     public String searchProductByKeyword(@PathVariable String category,
+                                         @RequestParam(required = false) Long id,
+                                         @RequestParam(required = false) Long userId,
                                          @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
                                          @RequestParam(name = "vendor", required = false, defaultValue = "") String vendor,
                                          @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -139,6 +142,10 @@ public class ProductViewController {
         model.addAttribute("totalElements", productResponse.getTotalElements());
         model.addAttribute("title", displayKeywordTitle.displayTitle(category, keyword));
 
+        if (id != null) {
+            model.addAttribute("products", productService.getProductsByVendor(id));
+            model.addAttribute("products", productService.getProductsByCategory(category, userId, pageNumber, pageSize, sortBy, sortOrder));
+        }
 
         return "products";
     }
