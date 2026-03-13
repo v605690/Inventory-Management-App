@@ -76,7 +76,8 @@
             </p>
 
             <!-- Bootstrap Pagination Navigation with Limited Pages -->
-            <nav aria-label="Page navigation">
+
+            <nav th:if="${selectedVendorId == null}" aria-label="Page navigation">
                 <ul class="pagination">
                     <!-- Previous Button -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
@@ -197,6 +198,7 @@
             </p>
         </div>
     </div>
+
 </div>
 <div th:insert="fragments/footer :: inventory-footer"></div>
 </body>

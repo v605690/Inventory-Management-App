@@ -60,7 +60,7 @@
                         <input type="text" name="keyword" placeholder="Search for a product...">
                     </label>
                     <button type="submit">Search</button>
-                    <a th:href="@{/vendors/{id}(id=${vendor.accountNumber})}"
+                    <a th:href="@{/vendors/{id}(id=${vendor.id})}"
                        class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
                 </form>
             </div>
@@ -72,7 +72,7 @@
 
                         <!-- Loop on the column wrapper -->
                         <div class="col mb-2" th:each="p : ${searchResults}">
-                            <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.id}, pId=${p.id})}"
+                            <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.accountNumber}, pId=${p.id})}"
                                   method="post">
                                 <button type="submit"
                                         class="btn btn-light border text-start w-100 p-1 shadow-sm text-truncate"
@@ -84,6 +84,7 @@
                         </div>
                     </div>
                 </div>
+<!--                Pagination-->
                 <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
                     <ul class="pagination pagination-sm justify-content-center flex-wrap">
 
@@ -119,65 +120,7 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- Add New Product Form -->
-<!--                <form th:action="@{/vendors/{id}/new-product(id=${vendor.id})}" th:object="${product}"-->
-<!--                      method="post">-->
-
-<!--                    <div style="display: inline-block; max-width: 600px;">-->
-<!--                        <table border="0" cellpadding="10">-->
-<!--                            <tr>-->
-<!--                                <td>Product Name:</td>-->
-<!--                                <td>-->
-<!--                                    <label>-->
-<!--                                        <input type="text" th:field="*{productName}"-->
-<!--                                               required/>-->
-<!--                                    </label>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>SKU:</td>-->
-<!--                                <td>-->
-<!--                                    <label>-->
-<!--                                        <input type="text" th:field="*{primaryBarcode}"-->
-<!--                                               required/>-->
-<!--                                    </label>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Quantity:</td>-->
-<!--                                <td>-->
-<!--                                    <label>-->
-<!--                                        <input type="number" th:field="*{inStockQuantity}"-->
-<!--                                               required/>-->
-<!--                                    </label>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Category:</td>-->
-<!--                                <td>-->
-<!--                                    <label>-->
-<!--                                        <input type="text" th:field="*{categories}"-->
-<!--                                               required/>-->
-<!--                                    </label>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Cost Price:</td>-->
-<!--                                <td>-->
-<!--                                    <label>-->
-<!--                                        <input type="number" step="0.01" th:field="*{vbcp}"-->
-<!--                                               required/>-->
-<!--                                    </label>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td colspan="2">-->
-<!--                                    <button type="submit">Create & Associate Product</button>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </form>-->
+<!--                Add New Product-->
                 <div class="dropdown">
                     <button class="btn-dark btn-sm rounded-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Add New Product

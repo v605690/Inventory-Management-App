@@ -267,9 +267,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategoryAndVendor(String category, Long id) {
+
         if (category.equalsIgnoreCase("all")) {
             return productRepository.findByVendorsId(id);
         }
+
             Category categoryEnum = Category.valueOf(category.toUpperCase());
 
             return productRepository.findByCategoriesAndVendors(categoryEnum, id);
