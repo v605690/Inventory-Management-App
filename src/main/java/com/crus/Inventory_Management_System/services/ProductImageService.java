@@ -30,7 +30,7 @@ public class ProductImageService {
         return safeName.isBlank() ? "unknown-product" : safeName;
     }
 
-    public void syncLocalImagesToDB() {
+    public void saveFileName() {
         List<Product> products = productRepository.findAll();
 
         for (Product product : products) {

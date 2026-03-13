@@ -119,6 +119,7 @@ public class ProductViewController {
     }
 
     @GetMapping("/keyword/{category}")
+    // below setup to search for products
     public String searchProductByKeyword(@PathVariable String category,
                                          @RequestParam(name = "vendorId", required = false) Long vendorId,
                                          @RequestParam(required = false) Long userId,
@@ -130,7 +131,7 @@ public class ProductViewController {
                                          @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder, Model model) {
         ProductResponse productResponse = productServiceImpl.getProductByKeywordAndCategory(keyword, category, pageNumber, pageSize, sortBy, sortOrder);
         List<ProductDTO> productDTOList = productResponse.getContent();
-
+            // below is set up to filter vendor products
             if (vendorId != null && vendorId > 0) {
                 // Fetch Entities and Map to DTOs in one go
                 productDTOList = productService.getProductsByCategoryAndVendor(category, vendorId)

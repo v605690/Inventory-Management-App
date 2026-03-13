@@ -55,24 +55,28 @@
             <div style="margin-top: 10px;">
 
                 <!-- Search Form -->
+<!--                builds url path, id is the placeholder that will replace by real value-->
                 <form th:action="@{/vendors/{id}/search-products(id=${vendor.getId()})}" method="get">
                     <label>
                         <input type="text" name="keyword" placeholder="Search for a product...">
                     </label>
                     <button type="submit">Search</button>
+<!--                    // define url structure, id placeholder-->
                     <a th:href="@{/vendors/{id}(id=${vendor.id})}"
                        class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
                 </form>
             </div>
             <div style="margin-top: 10px;">
                 <!-- Search Results (Shown only if results exist) -->
+                <!--conditional attribute, look for searchResults in the model passed by the controller-->
                 <div th:if="${searchResults}" class="search-results">
                     <!-- Row forces children into a 3-column grid -->
                     <div class="row row-cols-1 row-cols-md-3 g-2">
 
                         <!-- Loop on the column wrapper -->
                         <div class="col mb-2" th:each="p : ${searchResults}">
-                            <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.accountNumber}, pId=${p.id})}"
+                        <!--builds url path, vId is the placeholder that will replace by real value-->
+                            <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.getId()}, pId=${p.id})}"
                                   method="post">
                                 <button type="submit"
                                         class="btn btn-light border text-start w-100 p-1 shadow-sm text-truncate"
@@ -84,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-<!--                Pagination-->
+                <!--Pagination-->
                 <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
                     <ul class="pagination pagination-sm justify-content-center flex-wrap">
 
@@ -120,7 +124,7 @@
                         </li>
                     </ul>
                 </nav>
-<!--                Add New Product-->
+                <!--Add New Product-->
                 <div class="dropdown">
                     <button class="btn-dark btn-sm rounded-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Add New Product
