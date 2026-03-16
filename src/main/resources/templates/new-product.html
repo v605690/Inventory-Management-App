@@ -3,9 +3,9 @@
 
 <head>
 
-    <th:block th:replace="fragments/head :: commonHeader" />
+    <th:block th:replace="fragments/head :: commonHeader"/>
 
-    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
 
     <title>Create New Product</title>
 </head>
@@ -16,7 +16,7 @@
 <div align="center" class="flex-grow-1">
     <h1 style="color: black">Create New Product</h1>
 
-    <br />
+    <br/>
     <!--
     Here is the form that will be used to save the new customer.
     The form is tied to the Customer object you added to the model,
@@ -87,7 +87,16 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <button type="submit">Save</button>
+                        <p th:if="${message != null}" th:text="${message}" class="alert alert-primary"></p>
+
+                        <form method="post" th:action="@{/upload/{id}(id=${product.id})}" enctype="multipart/form-data">
+                            <div class="form-group d-flex align-items-center">
+                                <input type="file" name="image" accept="image/*" class="form-control-file mr-2">
+                                <button type="submit">Save Image</button>
+                            </div>
+                        </form>
+
+                        <span th:if="${msg != null}" th:text="${msg}"></span>
                     </td>
                 </tr>
             </table>

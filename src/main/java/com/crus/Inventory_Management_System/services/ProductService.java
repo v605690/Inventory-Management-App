@@ -4,7 +4,9 @@ import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
@@ -42,4 +44,6 @@ public interface ProductService {
     List<Product> getProductsByVendor(Long id);
 
     List<Product> getProductsByCategoryAndVendor(String category, Long id);
+
+    ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }

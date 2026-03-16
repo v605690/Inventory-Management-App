@@ -57,6 +57,8 @@ public class Product {
 
     private String imagePath;
 
+    private String image;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

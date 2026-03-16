@@ -11,8 +11,10 @@ import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +55,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private AccessHelper accessHelper;
+
+    @Value("product-images/")
+    private String path;
 
     private Long convertUsernameToId(String username) {
         return Math.abs((long) username.hashCode());
@@ -275,6 +286,38 @@ public class ProductServiceImpl implements ProductService {
             Category categoryEnum = Category.valueOf(category.toUpperCase());
 
             return productRepository.findByCategoriesAndVendors(categoryEnum, id);
+    }
+
+    @Override
+    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+        Product productFromDB = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        String productName = "";
+        String fileName = uploadImage(path, image, productName);
+        productFromDB.setImage(fileName);
+        Product updateProduct = productRepository.save(productFromDB);
+        return modelMapper.map(updateProduct, ProductDTO.class);
+    }
+
+    public String uploadImage(String path, MultipartFile file, String productName) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+
+        String cleanFileName = productName.replaceAll("^a-zA-Z0-9", "-").toLowerCase();
+
+        String newFileName = cleanFileName + extension;
+        String filePath = path + File.separator + cleanFileName;
+
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+
+        return newFileName;
     }
 
     @Override
