@@ -1,108 +1,88 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-
-    <th:block th:replace="fragments/head :: commonHeader"/>
-
-    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
-
-    <title>Create New Product</title>
+    <th:block th:replace="~{fragments/head :: commonHeader}"></th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}")/>>
+    <title>Product Management</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div align="center" class="flex-grow-1">
-    <h1 style="color: black">Create New Product</h1>
+<div align="center" class="container mt-4 flex-grow-1">
+    <h1 style="color: black" th:text="${product.id == null ? 'Create New Product' : 'Edit Product'}">Product Form</h1>
 
-    <br/>
-    <!--
-    Here is the form that will be used to save the new customer.
-    The form is tied to the Customer object you added to the model,
-    and on submission it will hit the `/save` endpoint using the
-    POST method.
-    -->
-    <form action="#" th:action="@{/products}"
-          th:object="${product}" method="post">
-        <!--
-        These input fields are used to collect the information
-        required to complete the referenced Customer object.
-        -->
-        <div style="display: inline-block; max-width: 600px;">
-            <table border="0" cellpadding="10">
+    <!-- 2. MAIN PRODUCT DETAILS FORM (FOR TEXT DATA) -->
+    <form th:action="@{/products}" th:object="${product}" method="post">
+        <!-- Hidden fields preserve state -->
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{imagePath}" />
+
+        <div style="display: inline-block; max-width: 600px; text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+            <table border="0" cellpadding="10" class="table table-borderless">
                 <tr>
                     <td>Product Name:</td>
-                    <td>
-                        <label>
-                            <input type="text" th:field="*{productName}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="text" th:field="*{productName}" class="form-control" required/></td>
                 </tr>
                 <tr>
                     <td>SKU:</td>
-                    <td>
-                        <label>
-                            <input type="text" th:field="*{primaryBarcode}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="text" th:field="*{primaryBarcode}" class="form-control" required/></td>
                 </tr>
                 <tr>
                     <td>Quantity:</td>
-                    <td>
-                        <label>
-                            <input type="number" th:field="*{inStockQuantity}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="number" th:field="*{inStockQuantity}" class="form-control" required/></td>
                 </tr>
                 <tr>
                     <td>Category:</td>
-                    <td>
-                        <label>
-                            <input type="text" th:field="*{categories}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="text" th:field="*{categories}" class="form-control" required placeholder="Grocery, Produce..."/></td>
                 </tr>
                 <tr>
                     <td>Retail Price:</td>
-                    <td>
-                        <label>
-                            <input type="number" step="0.01" th:field="*{vbrp}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="number" step="0.01" th:field="*{vbrp}" class="form-control" required/></td>
                 </tr>
                 <tr>
                     <td>Cost Price:</td>
-                    <td>
-                        <label>
-                            <input type="number" step="0.01" th:field="*{vbcp}"
-                                   required/>
-                        </label>
-                    </td>
+                    <td><input type="number" step="0.01" th:field="*{vbcp}" class="form-control" required/></td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <p th:if="${message != null}" th:text="${message}" class="alert alert-primary"></p>
-
-                        <form method="post" th:action="@{/upload/{id}(id=${product.id})}" enctype="multipart/form-data">
-                            <div class="form-group d-flex align-items-center">
-                                <input type="file" name="image" accept="image/*" class="form-control-file mr-2">
-                                <button type="submit">Save Image</button>
-                            </div>
-                        </form>
-
-                        <span th:if="${msg != null}" th:text="${msg}"></span>
+                    <td colspan="2" class="text-center pt-3">
+                        <button type="submit">Save Product Details</button>
                     </td>
                 </tr>
             </table>
         </div>
-    </form>
+    </form> <!-- CRITICAL: MAIN FORM ENDS HERE -->
+
+    <hr style="max-width: 600px; margin: 30px auto;"/>
+
+    <!-- 3. SEPARATE IMAGE UPLOAD FORM (THE TWO BUTTONS) -->
+    <!-- These buttons only appear once the product is saved and has an ID -->
+    <div th:if="${product.id != null}" style="max-width: 600px; margin-bottom: 50px;">
+        <h3 class="mb-3">Step 2: Upload Product Image</h3>
+
+        <!-- This is a NEW form, NOT nested inside the first one -->
+        <form method="post" th:action="@{/products/{id}/image(id=${product.id})}" enctype="multipart/form-data">
+            <div class="card p-4" style="border: 1px dashed #ccc;">
+                <div class="form-group text-left">
+                    <label class="font-weight-bold">Choose File:</label>
+                    <!-- BUTTON 1: CHOOSE FILE -->
+                    <input type="file" name="image" accept="image/*" class="form-control-file mb-3" required>
+                </div>
+
+                <!-- BUTTON 2: SAVE IMAGE -->
+                <button type="submit" class="btn btn-dark w-100">Save Image</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Alert for new products -->
+    <div th:if="${product.id == null}" class="alert alert-warning mb-5" style="max-width: 600px;">
+        The <strong>Choose File</strong> and <strong>Save Image</strong> buttons will appear here after you save the details above.
+    </div>
+
+    <p th:if="${message != null}" th:text="${message}" class="alert alert-info mt-3" style="max-width: 600px;"></p>
 </div>
-<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
+
+<div class="text-center" th:insert="~{fragments/footer :: inventory-footer}"></div>
 </body>
 </html>

@@ -55,9 +55,8 @@ public class Product {
     @Column(name = "vbcp")
     private Double vbcp;
 
+    @Column(name = "image_path")
     private String imagePath;
-
-    private String image;
 
     @Override
     public boolean equals(Object o) {

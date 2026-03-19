@@ -28,5 +28,4 @@ public class ProductDTO {
     @JsonProperty("vbcp")
     private BigDecimal vbcp;
     private String imagePath;
-    private String image;
 }

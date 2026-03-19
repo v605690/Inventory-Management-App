@@ -165,7 +165,7 @@
                 <td>
                     <div class="table-thumbnail-wrapper">
                         <!-- If imagePath is null/empty, fallback to placeholder.png -->
-                        <img th:src="${product.imagePath != null ? '/product-images/' + product.imagePath : '/product-images/comingsoon.png'}"
+                        <img th:src="@{${product.imagePath != null ? '/product-images/' + product.imagePath : '/product-images/comingsoon.png'}}"
                              class="table-thumbnail" alt="">
                     </div>
                 </td>

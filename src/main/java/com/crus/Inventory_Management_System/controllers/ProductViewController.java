@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 @RequestMapping("/products")
@@ -63,6 +62,7 @@ public class ProductViewController {
     private ModelMapper modelMapper;
 
     @GetMapping()
+    // THIS IS THE METHOD BEEN CALLED FOR THE PRODUCT LIST
     public String viewHomePage(Model model,
                                @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
@@ -90,6 +90,16 @@ public class ProductViewController {
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
         model.addAttribute("category", category);
+
+        for (ProductDTO product : productDTOList) {
+            try {
+                if (product.getImagePath().equalsIgnoreCase("hello-panda-choco-12340987.png")) {
+                    System.out.println("STOP");
+                }
+            } catch (Exception e) {
+
+            }
+        }
 
         if ("all".equals(category)) {
             model.addAttribute("title", "HKM Product List");
@@ -145,6 +155,16 @@ public class ProductViewController {
 
                 model.addAttribute("selectedVendorId", vendorId);
             }
+
+        for (ProductDTO product : productDTOList) {
+            try {
+                if (product.getImagePath().equalsIgnoreCase("hello-panda-choco-12340987.png")) {
+                    System.out.println("STOP");
+                }
+            } catch (Exception e) {
+
+            }
+        }
 
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
@@ -245,10 +265,13 @@ public class ProductViewController {
             return "error";
         }
 
-        // Save the product to the service layer; takes in DTO and userId for processing,
-        // finally redirect to the edit page
+        // Save the product to the service layer; takes in DTO and userId for processing
         ProductDTO savedProduct = productService.saveProduct(productDTO, userId);
-        return "redirect:/products/edit/" + savedProduct.getId();
+
+        model.addAttribute("product", savedProduct);
+        model.addAttribute("message", "Details saved! Now upload your image below.");
+
+        return "new-product";
     }
     // This method is not called, invoked by Spring’s DispatcherServlet when an HTTP request matches its route
     // Spring will call this method when the browser requests the edit page for a specific product,
@@ -336,11 +359,15 @@ public class ProductViewController {
     }
 
     @PostMapping("/{productId}/image")
-    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
-                                                  @RequestParam("image")MultipartFile image) throws IOException {
+    public String updateProductImage(@PathVariable Long productId,
+                                     @RequestParam("image")MultipartFile image,
+                                     Model model) throws IOException {
         ProductDTO updatedProduct = productService.updateProductImage(productId, image);
 
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        model.addAttribute("product", updatedProduct);
+        model.addAttribute("message", "Image updated successfully");
+
+        return "new-product";
     }
 
     @GetMapping("/increase/{productId}")

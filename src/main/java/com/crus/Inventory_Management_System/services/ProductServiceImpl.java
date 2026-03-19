@@ -11,7 +11,6 @@ import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -217,13 +216,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDTO saveProduct(ProductDTO productDTO, Long userId) {
+
         Product product;
 
         if (productDTO.getId() != null) {
             product = productRepository.findById(productDTO.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productDTO.getId()));
 
+            String currentFilename = product.getImagePath();
+
             modelMapper.map(productDTO, product);
+
+            if (product.getImagePath() == null || product.getImagePath().isBlank()) {
+                product.setImagePath(currentFilename);
+                productDTO.setImagePath(currentFilename);
+            }
+
+            productRepository.save(product);
+            return productDTO;
 
         } else {
             product = modelMapper.map(productDTO, Product.class);
@@ -289,35 +299,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
         Product productFromDB = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        String productName = "";
-        String fileName = uploadImage(path, image, productName);
-        productFromDB.setImage(fileName);
-        Product updateProduct = productRepository.save(productFromDB);
+        String fileName = uploadImage(path, image, productFromDB.getProductName());
+
+        productFromDB.setImagePath(fileName);
+        Product updateProduct = productRepository.saveAndFlush(productFromDB);
         return modelMapper.map(updateProduct, ProductDTO.class);
     }
 
     public String uploadImage(String path, MultipartFile file, String productName) throws IOException {
-        String originalFilename = file.getOriginalFilename();
-        assert originalFilename != null;
-        String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
 
-        String cleanFileName = productName.replaceAll("^a-zA-Z0-9", "-").toLowerCase();
+        File uploadDir = new File("product-images").getAbsoluteFile();
+        if (!uploadDir.exists()) uploadDir.mkdirs();
 
-        String newFileName = cleanFileName + extension;
-        String filePath = path + File.separator + cleanFileName;
+        String cleanFileName = productName.replaceAll("[^a-zA-Z0-9]", "-").toLowerCase() + ".png";
 
-        File folder = new File(path);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
+        Path filePath = uploadDir.toPath().resolve(cleanFileName);
 
-        Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("Saving file to: " + filePath.toAbsolutePath());
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return newFileName;
+        return cleanFileName;
     }
 
     @Override
