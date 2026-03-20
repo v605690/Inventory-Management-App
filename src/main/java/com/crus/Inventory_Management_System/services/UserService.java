@@ -27,11 +27,11 @@ public class UserService implements UserDetailsService {
     RoleRepository roleRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String loginValue) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameOrEmail(loginValue, loginValue);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found " + username);
+            throw new UsernameNotFoundException("User not found " + loginValue);
         }
 
         return user;
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
     public User registerUser(User userDetails) {
 
         try {
-            if (userRepository.findByUsername(userDetails.getUsername()) != null) {
+            if (userRepository.findByUsernameOrEmail(userDetails.getUsername(), userDetails.getEmail()) != null) {
                 throw new IllegalStateException("User already exists");
             }
 

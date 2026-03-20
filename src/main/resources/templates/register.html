@@ -41,6 +41,13 @@
     </div>
     <div style="margin-bottom: 15px;"></div>
     <div style="margin-top: 15px;"></div>
+    <div>
+        <label for="email" style="display: inline-block; width: 10px; text-align: right; margin-right: 30px;">Email:</label>
+        <input type="text" id="email" th:field="*{email}" style="margin-left: 40px" required />
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{username}" class="text-danger"></span>
+    </div>
+    <div style="margin-bottom: 15px;"></div>
+    <div style="margin-top: 15px;"></div>
 
     <div>
         <label for="password" style="margin-left: 15px;">Password:</label>

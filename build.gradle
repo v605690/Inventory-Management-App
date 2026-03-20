@@ -39,6 +39,9 @@ dependencies {
     implementation group: 'org.webjars', name: 'bootstrap', version: '5.3.8'
     implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.59'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     implementation("org.modelmapper:modelmapper:3.2.4")
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -48,6 +51,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

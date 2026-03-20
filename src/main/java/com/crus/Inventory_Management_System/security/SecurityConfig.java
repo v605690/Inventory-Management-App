@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/product-images/**", "/w3images/**",
-                                "/favicon.ico", "/error").permitAll()
+                                "/favicon.ico", "/login", "/oauth2/**", "/error").permitAll()
                         .requestMatchers("/product-images/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
@@ -39,15 +39,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/price/**", "/price").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
- //               .formLogin(Customizer.withDefaults())
+
                 .formLogin(form -> form
                         .loginPage("/login")
-//                        .defaultSuccessUrl("/overview")
                         .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .permitAll());
 
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                );
         return http.build();
     }
 

@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializeUsers() {
-        if (userRepository.findByUsername("admin") == null) {
+        if (userRepository.findByUsernameOrEmail("admin", "admin") == null) {
             Role adminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
 
             List<Role> adminAuthorities = new ArrayList<>();
@@ -57,6 +57,7 @@ public class DataInitializer implements CommandLineRunner {
 
             User admin = User.builder()
                     .username("admin")
+                    .email("admin@gmail.com")
                     .password(passwordEncoder.encode("gJq9jNc8mY3WuIo"))
                     .isAccountNonLocked(true)
                     .isCredentialsNonExpired(true)
@@ -76,6 +77,7 @@ public class DataInitializer implements CommandLineRunner {
 
             User user = User.builder()
                     .username("user")
+                    .email("user@gmail.com")
                     .password(passwordEncoder.encode("!QAZ2wsx"))
                     .isAccountNonLocked(true)
                     .isCredentialsNonExpired(true)

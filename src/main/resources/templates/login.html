@@ -47,18 +47,19 @@
       <div>
         <button type="submit" class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs style=" background-color: #dd4b39>Sign in</button>
       </div>
-
-      <hr class="my-4">
-
-      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white mt-3" style="background-color: #DB4437;"
-              type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
-      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white" style="background-color: #24292e;"
-              type="submit"><i class="fab fa-github me-2"></i>Sign in with github</button>
     </form>
+      <hr class="my-4">
+    <a th:href="@{/oauth2/authorization/google}" class="no-underline">
+      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white mt-3" style="background-color: #DB4437;"
+              type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button></a>
+      <br>
+    <a th:href="@{/oauth2/authorization/github}">
+      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white" style="background-color: #24292e;"
+              type="submit"><i class="fab fa-github me-2"></i>Sign in with github</button></a>
 
     <p class="mt-10 text-center text-sm/6 text-gray-500">
       Not a member?
-      <a href="#" class="font-semibold text-black hover:text-gray-900">Register Here</a>
+      <a th:href="@{/register}" class="font-semibold text-black hover:text-gray-900">Register Here</a>
     </p>
   </div>
 </div>
