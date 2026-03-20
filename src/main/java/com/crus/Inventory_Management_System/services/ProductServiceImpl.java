@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -308,20 +308,31 @@ public class ProductServiceImpl implements ProductService {
 
         productFromDB.setImagePath(fileName);
         Product updateProduct = productRepository.saveAndFlush(productFromDB);
+
         return modelMapper.map(updateProduct, ProductDTO.class);
     }
 
     public String uploadImage(String path, MultipartFile file, String productName) throws IOException {
 
-        File uploadDir = new File("product-images").getAbsoluteFile();
-        if (!uploadDir.exists()) uploadDir.mkdirs();
+        Path uploadDir = Paths.get("product-images").toAbsolutePath();
+        if (Files.notExists(uploadDir)) Files.createDirectories(uploadDir);
 
         String cleanFileName = productName.replaceAll("[^a-zA-Z0-9]", "-").toLowerCase() + ".png";
-
-        Path filePath = uploadDir.toPath().resolve(cleanFileName);
+        Path filePath = uploadDir.resolve(cleanFileName);
 
         System.out.println("Saving file to: " + filePath.toAbsolutePath());
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        // InputStream - Exercise 01 labs
+        try (InputStream inStr = file.getInputStream();
+             OutputStream outStr = new FileOutputStream(filePath.toFile())) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inStr.read(buffer)) != -1) {
+                outStr.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException exc) {
+            exc.printStackTrace();
+        }
 
         return cleanFileName;
     }

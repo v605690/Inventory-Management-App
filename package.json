@@ -1,0 +1,26 @@
+{
+  "name": "inventory-management-system-tailwindcss",
+  "version": "1.0.0",
+  "description": "***",
+  "keywords": [],
+  "homepage": "https://github.com/v605690/Inventory-Management-App#readme",
+  "bugs": {
+    "url": "https://github.com/v605690/Inventory-Management-App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/v605690/Inventory-Management-App.git"
+  },
+  "license": "ISC",
+  "author": "Pravin Patel",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19"
+  }
+}

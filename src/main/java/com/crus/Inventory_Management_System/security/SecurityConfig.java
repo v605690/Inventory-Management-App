@@ -39,11 +39,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/price/**", "/price").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults())
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/login")
+ //               .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
 //                        .defaultSuccessUrl("/overview")
-//                        .permitAll())
+                        .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                         .permitAll());
