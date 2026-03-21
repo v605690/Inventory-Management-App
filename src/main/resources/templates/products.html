@@ -92,7 +92,7 @@
                     <!-- First Page -->
                     <li class="page-item" th:if="${currentPage > 2}">
                         <a class="page-link"
-                           th:href="${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">>
+                           th:href="${keyword != null and keyword != ''} ? @{'/products/keyword/' + ${category}(keyword=${keyword}, pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})} : @{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
                             1
                         </a>
                     </li>

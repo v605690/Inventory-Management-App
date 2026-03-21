@@ -20,23 +20,26 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/product-images/**", "/w3images/**",
-                                "/favicon.ico", "/login", "/oauth2/**", "/error").permitAll()
-                        .requestMatchers("/product-images/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/vendors/**, /vendors").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/vendors-list/**, /vendors-list").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
-                        .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/delete/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/edit/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/graph/**", "/graph").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/meatPrice/**", "/meatPrice").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/price/**", "/price").hasRole("ADMIN")
+
+                        .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
+                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/product-images/**", "/w3images/**",
+                                "/favicon.ico", "/login", "/oauth2/**", "/error").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/vendors/**", "/vendors").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/vendors-list/**", "/vendors-list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()
 
                         .anyRequest().authenticated())
 
@@ -46,6 +49,7 @@ public class SecurityConfig {
 
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
+                        .permitAll()
                 );
         return http.build();
     }
