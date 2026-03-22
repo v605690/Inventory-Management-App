@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vendors-list/**", "/vendors-list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()

@@ -5,6 +5,7 @@ import com.crus.Inventory_Management_System.entity.Role;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,7 @@ public class InventoryPermissionEvaluator implements PermissionEvaluator {
     }
 
     @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, @NonNull Object permission) {
 
         if (!permission.getClass().equals("".getClass())) {
             throw new SecurityException("Cannot execute hasPermission() calls where " +
