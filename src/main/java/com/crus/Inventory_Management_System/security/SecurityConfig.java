@@ -39,10 +39,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vendors/**", "/vendors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vendors-list/**", "/vendors-list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/products/keyword/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/products/keyword").authenticated()
 
                         .anyRequest().authenticated())
 

@@ -12,6 +12,10 @@ import java.math.BigDecimal;
 @Builder
 public class ProductDTO {
     private Long id;
+
+    @JsonProperty("userId")
+    private Long userId;
+
     @NotBlank(message = "Product name is required and cannot be empty")
     @JsonProperty("productName")
     private String productName;
@@ -28,4 +32,8 @@ public class ProductDTO {
     @JsonProperty("vbcp")
     private BigDecimal vbcp;
     private String imagePath;
+
+    public boolean getId(String currentUsername) {
+        return false;
+    }
 }

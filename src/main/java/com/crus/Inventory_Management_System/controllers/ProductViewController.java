@@ -9,6 +9,7 @@ import com.crus.Inventory_Management_System.helpers.DisplayKeywordTitle;
 import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
+import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.UserRepository;
 import com.crus.Inventory_Management_System.services.CategoryPriceService;
 import com.crus.Inventory_Management_System.services.ProductService;
@@ -58,15 +59,22 @@ public class ProductViewController {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping()
     // THIS IS THE METHOD BEEN CALLED FOR THE PRODUCT LIST
-    public String viewHomePage(Model model,
+    public String viewHomePage(Model model, Authentication authentication,
                                @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder,
                                @RequestParam(name = "category", defaultValue = "all", required = false) String category) {
+
+        String currentUserId = authentication.getName();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         ProductResponse productResponse;
 
@@ -77,7 +85,14 @@ public class ProductViewController {
             productResponse = productServiceImpl.getProductByCategory(category, pageNumber, pageSize, sortBy, sortOrder);
         }
 
-        final List<ProductDTO> productDTOList = productResponse.getContent();
+        List<ProductDTO> productDTOList;
+        if (isAdmin) {
+           productDTOList = new ArrayList<>(productResponse.getContent());
+        } else {
+            productDTOList = productResponse.getContent().stream()
+                    .filter(product -> false)
+                    .toList();
+        }
 
         model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("productDTOList", productDTOList);

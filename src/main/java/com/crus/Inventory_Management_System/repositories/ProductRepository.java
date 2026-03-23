@@ -2,6 +2,7 @@ package com.crus.Inventory_Management_System.repositories;
 
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
+import com.crus.Inventory_Management_System.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
@@ -49,5 +50,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p JOIN p.categories c JOIN p.vendors v WHERE c = :category AND v.id = :vendorId")
     List<Product> findByCategoriesAndVendors(@Param("category") Category category, @Param("vendorId") Long vendorsId);
-
 }

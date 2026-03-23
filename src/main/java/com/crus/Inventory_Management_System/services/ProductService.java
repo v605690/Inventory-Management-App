@@ -46,4 +46,5 @@ public interface ProductService {
     List<Product> getProductsByCategoryAndVendor(String category, Long id);
 
     ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
+
 }
