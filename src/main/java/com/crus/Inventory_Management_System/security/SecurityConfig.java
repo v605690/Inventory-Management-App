@@ -7,9 +7,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +40,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vendors-list/**", "/vendors-list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/keyword/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/keyword").permitAll()
@@ -50,6 +52,10 @@ public class SecurityConfig {
 
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo.userAuthoritiesMapper(authorities -> {
+                            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                                })
+                        )
                         .permitAll()
                 );
         return http.build();

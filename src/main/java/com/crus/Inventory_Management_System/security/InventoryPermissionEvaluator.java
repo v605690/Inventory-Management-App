@@ -5,7 +5,9 @@ import com.crus.Inventory_Management_System.entity.Role;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -46,7 +48,7 @@ public class InventoryPermissionEvaluator implements PermissionEvaluator {
                 Optional<Product> product = productRepository.findById(Long.parseLong(targetId.toString()));
 
                 if (product.isEmpty()) {
-                    return true;
+                    throw new EntityNotFoundException("The product you are trying to access does not exist");
                 }
 
                 return product
@@ -54,8 +56,21 @@ public class InventoryPermissionEvaluator implements PermissionEvaluator {
                         .getProductName()
                         .equals(productDetails.getProductName());
             }
+            else if (targetType.equalsIgnoreCase("vendor")) {
+                Vendor vendorDetails = (Vendor) authentication.getPrincipal();
+
+                Optional<Vendor> vendor = vendorRepository.findById(Long.parseLong(targetId.toString()));
+
+                if (vendor.isEmpty()) {
+                    throw new EntityNotFoundException("The vendor you are trying to access does not exist");
+                }
+                return vendor
+                        .get()
+                        .getContactName()
+                        .equals(vendorDetails.getContactName());
+            }
         }
-        return false;
+        return true;
     }
 
     private boolean userIsAdmin(Authentication authentication) {
