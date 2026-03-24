@@ -2,24 +2,17 @@
 <html class="h-full bg-white" xmlns:th="http://www.thymeleaf.org" lang="us"
       xmlns:background-color="http://www.w3.org/1999/xhtml">
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+
   <th:block th:replace="fragments/head :: commonHeader"/>
   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
   <link rel="stylesheet" th:href="@{/css/main.css}" />
   <title></title>
 </head>
 <body class="h-full">
-<!--
-  This example requires updating your template:
 
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=gray&shade=600" alt="Your Company" class="mx-auto h-10 w-auto" />
+    <div th:replace="fragments/head :: logo"></div>
     <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
   </div>
 

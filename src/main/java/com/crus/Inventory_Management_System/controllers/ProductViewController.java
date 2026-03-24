@@ -21,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -394,7 +395,8 @@ public class ProductViewController {
         }
     }
 
-    @RequestMapping("/delete/{productId}")
+    @DeleteMapping("/delete/{productId}")
+//    @PreAuthorize("hasPermission(#productId, 'Product', 'delete')")
     public String deleteProduct(@PathVariable Long productId,
                                 HttpServletRequest request) {
 
@@ -406,6 +408,6 @@ public class ProductViewController {
             return "redirect:" + referer;
         }
 
-        return "redirect:/products/all";
+        return "/products";
     }
 }

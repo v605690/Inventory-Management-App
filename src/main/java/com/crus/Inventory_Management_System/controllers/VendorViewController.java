@@ -7,10 +7,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -72,9 +74,24 @@ public class VendorViewController {
 
 
     @GetMapping()
-    public String getAllVendors(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+    public String getAllVendors(Model model, Authentication authentication, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         Page<Vendor> vendors = vendorService.getAllVendors(PageRequest.of(page, size));
-        model.addAttribute("vendors", vendors);
+
+        String currentUserId = authentication.getName();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        List<Vendor> vendorList;
+        if (isAdmin) {
+            vendorList = new ArrayList<>(vendors.getContent());
+        } else {
+            vendorList = vendors.getContent().stream()
+                    .filter(vendor -> false)
+                    .toList();
+        }
+
+        model.addAttribute("vendors", vendorList);
 
         return "vendors";
     }

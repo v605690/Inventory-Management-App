@@ -11,6 +11,7 @@ import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -41,8 +42,9 @@ public class InventoryPermissionEvaluator implements PermissionEvaluator {
 
         if (userIsAdmin(authentication)) {
             return true;
-        } else {
-            Product productDetails = (Product) authentication.getPrincipal();
+        }
+
+        String username = authentication.getName();
 
             if (targetType.equalsIgnoreCase("product")) {
                 Optional<Product> product = productRepository.findById(Long.parseLong(targetId.toString()));
@@ -52,35 +54,23 @@ public class InventoryPermissionEvaluator implements PermissionEvaluator {
                 }
 
                 return product
-                        .get()
-                        .getProductName()
-                        .equals(productDetails.getProductName());
+                        .get().getUser() != null
+                        && product.get().getUser().getEmail().equalsIgnoreCase(username);
             }
             else if (targetType.equalsIgnoreCase("vendor")) {
-                Vendor vendorDetails = (Vendor) authentication.getPrincipal();
-
                 Optional<Vendor> vendor = vendorRepository.findById(Long.parseLong(targetId.toString()));
 
                 if (vendor.isEmpty()) {
                     throw new EntityNotFoundException("The vendor you are trying to access does not exist");
                 }
                 return vendor
-                        .get()
-                        .getContactName()
-                        .equals(vendorDetails.getContactName());
+                        .get().getEmailAddress() != null
+                        && vendor.get().getEmailAddress().equalsIgnoreCase(username);
             }
+            return false;
         }
-        return true;
-    }
-
     private boolean userIsAdmin(Authentication authentication) {
-        Collection<Role> grantedAuthorities = (Collection<Role>) authentication.getAuthorities();
-
-        for (Role r : grantedAuthorities) {
-            if (r.getAuthority().equals("ROLE_ADMIN")) {
-                return true;
-            }
-        }
-        return false;
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }

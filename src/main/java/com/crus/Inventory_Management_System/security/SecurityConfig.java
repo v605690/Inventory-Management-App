@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     @Bean
@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/products/delete/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/delete/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/products/edit/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/graph/**", "/graph").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/meatPrice/**", "/meatPrice").hasRole("ADMIN")
@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**", "/api").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/vendors/**", "/vendors").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/vendors/**", "/vendors").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/vendors/all", "/vendors/all/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/vendors-list/**", "/vendors-list").permitAll()
                         .requestMatchers(HttpMethod.GET, "/getVendors/**", "/getVendors").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").authenticated()

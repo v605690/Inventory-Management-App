@@ -11,9 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -23,20 +27,37 @@ public class VendorDetailViewController {
 
     @Autowired
     VendorService vendorService;
+
     @Autowired
     ProductService productService;
+
     @Autowired
     private ProductRepository productRepository;
+
     @Autowired
     private VendorRepository vendorRepository;
 
     // List all vendors
     @GetMapping("/all")
-    public String listVendors(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String listVendors(@RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
         int size = 22;
         Page<Vendor> vendorPage = vendorService.getAllVendors(PageRequest.of(page, size));
 
-        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
+        String currentUserId = authentication.getName();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        List<Vendor> vendorList;
+        if (isAdmin) {
+            vendorList = new ArrayList<>(vendorPage.getContent());
+        } else {
+            vendorList = vendorPage.getContent().stream()
+                    .filter(vendor -> false)
+                    .toList();
+        }
+
+        model.addAttribute("vendors",vendorList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vendorPage.getTotalPages());
 
