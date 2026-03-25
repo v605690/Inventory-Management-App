@@ -3,6 +3,21 @@ spring:
     oauth2:
       client:
         registration:
+          google:
+            scope:
+              - openid
+              - profile
+              - email
           github:
+            # Externalize secrets using ${} syntax
             client-id: Ov23liYvOy2rAn7f5x2p
             client-secret: 94d5554556bf313ebb079726ec601e201fa1e385
+            scope:
+              - read:user
+              - user:email
+        provider:
+          github:
+            # FIX: Explicitly maps the identity to GitHub's 'id' field
+            user-name-attribute: id
+          google:
+            user-name-attribute: sub

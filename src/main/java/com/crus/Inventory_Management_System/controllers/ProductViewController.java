@@ -73,6 +73,7 @@ public class ProductViewController {
                                @RequestParam(name = "category", defaultValue = "all", required = false) String category) {
 
         String currentUserId = authentication.getName();
+        System.out.println("Authentication name = " + authentication.getName());
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -261,12 +262,19 @@ public class ProductViewController {
      * @return
      */
     @PostMapping()
+    // come back to this ->  or #productDTO.userId == authentication.principal.id
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public String saveProduct(@ModelAttribute("product") ProductDTO productDTO, Model model) {
         // Map ProductDTO to Product entity (converts the productDTO to an entity for JPA persistence)
         Product product = modelMapper.map(productDTO, Product.class);
 
         // Retrieve the logged-in user's details
         Long userId = accessHelper.getLoggedInUserDetails();
+        if (userId == null) {
+            model.addAttribute("message", "You may require elevated permissions to save a product.");
+            return "error";
+        }
+
         // Fetch the user from the database or throw an exception if not found
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userId));

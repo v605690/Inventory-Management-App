@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String loginValue) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsernameOrEmail(loginValue, loginValue);
+        User user = userRepository.findByUsernameOrEmail(loginValue, loginValue).orElse(null);
         if (user == null) {
             throw new UsernameNotFoundException("User not found " + loginValue);
         }
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
     public User registerUser(User userDetails) {
 
         try {
-            if (userRepository.findByUsernameOrEmail(userDetails.getUsername(), userDetails.getEmail()) != null) {
+            if (userRepository.findByUsernameOrEmail(userDetails.getUsername(), userDetails.getEmail()).isPresent()) {
                 throw new IllegalStateException("User already exists");
             }
 
