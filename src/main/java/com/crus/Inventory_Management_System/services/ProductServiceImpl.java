@@ -125,6 +125,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponse getAllProductsByUserId(Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
+
+        Page<Product> page = productRepository.findAllByUser_UserId(userId, pageable);
+
+        List<ProductDTO> productDTOS = page.stream()
+                .map(this::convertToDTO)
+                .toList();
+
+        return createProductResponse(productDTOS, page);
+    }
+
+    @Override
+    public ProductResponse getProductByCategoryForUser(String category, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
+
+        if (category == null || "null".equalsIgnoreCase(category) || "all".equalsIgnoreCase(category)) {
+            return getAllProductsByUserId(userId, pageNumber, pageSize, sortBy, sortOrder);
+        }
+
+        Category parsedCategory = categoryService.parseCategory(category);
+        Page<Product> page = productRepository.findProductsByCategoryName(parsedCategory, userId, pageable);
+
+        List<ProductDTO> productDTOS = page.stream()
+                .map(this::convertToDTO)
+                .toList();
+
+        return createProductResponse(productDTOS, page);
+    }
+
+    @Override
     public ProductResponse getProductsByCategory(String categoryName, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         // Takes the input categoryName (a String) and converts it to a Category object and
         // uses parseCategory method to handle the conversion
@@ -293,7 +324,7 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.findByVendorsId(id);
         }
 
-            Category categoryEnum = Category.valueOf(category.toUpperCase());
+            Category categoryEnum = categoryService.parseCategory(category);
 
             return productRepository.findByCategoriesAndVendors(categoryEnum, id);
     }
@@ -371,7 +402,7 @@ public class ProductServiceImpl implements ProductService {
         // Clear categories before it set to something else during the update
         productFromDB.getCategories().clear();
         if (productDTO.getCategories() != null && !productDTO.getCategories().isEmpty()) {
-            Category category = Category.valueOf(productDTO.getCategories().toUpperCase());
+            Category category = categoryService.parseCategory(productDTO.getCategories());
             productFromDB.getCategories().add(category);
         }
         // Saved the updated product to the database
@@ -396,6 +427,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.getCategories() != null && !product.getCategories().isEmpty()) {
             String categoriesString = product.getCategories().stream()
                     .map(Category::name)
+                    .map(name -> name.replace("_", " "))
                     .collect(Collectors.joining(", "));
             productDTO.setCategories(categoriesString);
 

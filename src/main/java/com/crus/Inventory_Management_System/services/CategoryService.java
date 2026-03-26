@@ -15,9 +15,12 @@ public class CategoryService {
         }
 
         String normalizeName = categoryName.trim().toUpperCase()
-                .replace("-", "_")
-                .replace(" ", "_")
-                .replace("&", "_");
+                .replaceAll("[^A-Z0-9]+", "_")
+                .replaceAll("_+", "_")
+                .replaceAll("^_|_$", "");
+
+        System.out.println("RAW CATEGORY = [" + categoryName + "]");
+        System.out.println("NORMALIZED CATEGORY = [" + normalizeName + "]");
 
         for (Category category : Category.values()) {
             if (category.name().equals(normalizeName)) {
@@ -27,7 +30,9 @@ public class CategoryService {
 
         String availableCategories = Arrays.stream(Category.values())
                 .map(Category::name)
+                .map(name -> name.replace("_", " "))
                 .collect(Collectors.joining(", "));
+
         throw new IllegalArgumentException(String.format("Invalid category '%s'.  Available categories are: %s",
                 categoryName, availableCategories));
     }

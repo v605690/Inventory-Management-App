@@ -72,8 +72,12 @@ public class ProductViewController {
                                @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder,
                                @RequestParam(name = "category", defaultValue = "all", required = false) String category) {
 
-        String currentUserId = authentication.getName();
-        System.out.println("Authentication name = " + authentication.getName());
+        Long currentUserId = accessHelper.getLoggedInUserDetails();
+        if (currentUserId == null) {
+            model.addAttribute("message", "You must be logged in");
+            return "error";
+        }
+        System.out.println("Authentication name = " + currentUserId);
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -82,18 +86,16 @@ public class ProductViewController {
 
         if (category == null || category.trim().isEmpty() || "null".equalsIgnoreCase(category) || "all".equalsIgnoreCase(category)) {
             category = "all";
-            productResponse = productServiceImpl.getAllProducts(pageNumber, pageSize, sortBy, sortOrder);
+            productResponse = productServiceImpl.getAllProductsByUserId(currentUserId, pageNumber, pageSize, sortBy, sortOrder);
         } else {
-            productResponse = productServiceImpl.getProductByCategory(category, pageNumber, pageSize, sortBy, sortOrder);
+            productResponse = productServiceImpl.getProductByCategoryForUser(category, currentUserId, pageNumber, pageSize, sortBy, sortOrder);
         }
 
         List<ProductDTO> productDTOList;
         if (isAdmin) {
            productDTOList = new ArrayList<>(productResponse.getContent());
         } else {
-            productDTOList = productResponse.getContent().stream()
-                    .filter(product -> false)
-                    .toList();
+            productDTOList = productResponse.getContent();
         }
 
         model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
@@ -101,10 +103,12 @@ public class ProductViewController {
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortOrder", sortOrder);
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
         model.addAttribute("category", category);
+        model.addAttribute("showPagination", productResponse.getTotalPages() > 1);
 
         for (ProductDTO product : productDTOList) {
             try {
@@ -140,9 +144,13 @@ public class ProductViewController {
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortOrder", sortOrder);
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
+        model.addAttribute("category", categoryName);
+        model.addAttribute("showPagination", productResponse.getTotalPages() > 1);
 
         return "products";
     }
@@ -188,9 +196,11 @@ public class ProductViewController {
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortOrder", sortOrder);
         model.addAttribute("totalPages", productResponse.getTotalPages());
         model.addAttribute("currentPage", productResponse.getPageNumber());
         model.addAttribute("totalElements", productResponse.getTotalElements());
+        model.addAttribute("showPagination", productResponse.getTotalPages() > 1);
         model.addAttribute("title", displayKeywordTitle.displayTitle(category, keyword));
 
         return "products";

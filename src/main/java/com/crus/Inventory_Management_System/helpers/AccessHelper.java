@@ -23,13 +23,6 @@ public class AccessHelper {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return null;
         }
-//            boolean isAdmin = authentication.getAuthorities().stream()
-//                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-//
-//            if (isAdmin) {
-//                return null;
-//            }
-
                 Object principal = authentication.getPrincipal();
 
                 if (principal instanceof User user) {

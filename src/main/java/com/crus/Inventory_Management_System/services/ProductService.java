@@ -14,6 +14,8 @@ public interface ProductService {
     ProductDTO addProduct(ProductDTO productDTO);
 
     ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse getAllProductsByUserId(Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse getProductByCategoryForUser(String category, Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     //ProductResponse getProductsByCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
@@ -46,5 +48,7 @@ public interface ProductService {
     List<Product> getProductsByCategoryAndVendor(String category, Long id);
 
     ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
+
+
 
 }
