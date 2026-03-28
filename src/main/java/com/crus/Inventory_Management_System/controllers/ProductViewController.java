@@ -60,6 +60,7 @@ public class ProductViewController {
 
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private ProductRepository productRepository;
 

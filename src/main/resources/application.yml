@@ -4,6 +4,8 @@ spring:
       client:
         registration:
           google:
+            client-id: 479096137676-pfrn22stian49fh9341jikuscn5algin.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - openid
               - profile
@@ -19,5 +21,3 @@ spring:
           github:
             # FIX: Explicitly maps the identity to GitHub's 'id' field
             user-name-attribute: id
-          google:
-            user-name-attribute: sub

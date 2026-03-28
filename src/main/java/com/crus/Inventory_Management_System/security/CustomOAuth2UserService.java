@@ -4,6 +4,7 @@ import com.crus.Inventory_Management_System.entity.Role;
 import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.repositories.RoleRepository;
 import com.crus.Inventory_Management_System.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -47,7 +48,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new CustomOAuth2User(oAuth2User, saveduser);
     }
 
-    private User createNewUser(String username, String email) {
+    @Transactional
+    protected User createNewUser(String username, String email) {
         Role userRole = roleRepository.findByRole(Role.Roles.ROLE_USER);
         if (userRole == null) {
             throw new IllegalStateException("ROLE_USER is missing from database");

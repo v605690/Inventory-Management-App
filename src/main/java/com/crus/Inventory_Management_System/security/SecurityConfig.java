@@ -21,11 +21,13 @@ import java.util.List;
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomOidcUserService customOidcUserService) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customOidcUserService = customOidcUserService;
     }
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
@@ -72,12 +74,7 @@ public class SecurityConfig {
                                 })
 
                                 .userService(customOAuth2UserService)
-                                .oidcUserService(oidcUserRequest -> {
-                                    var oidcUser = new OidcUserService()
-                                            .loadUser(oidcUserRequest);
-                                    System.out.println("Google OIDC claims " + oidcUser.getClaims());
-                                    return oidcUser;
-                                })
+                                .oidcUserService(customOidcUserService)
                         )
                         .permitAll()
                 )
