@@ -40,7 +40,7 @@ public class VendorViewController {
     }
 
     @PostMapping()
-    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         try {
             vendorService.savedVendor(vendor);
             System.out.println("Vendor Saved: " + vendor);
@@ -48,13 +48,13 @@ public class VendorViewController {
         } catch (Exception e) {
             model.addAttribute("error", "Failed to save vendor: " + e.getMessage());
             model.addAttribute("vendor", vendor);
-            model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
+            model.addAttribute("vendors", vendorService.getAllVendors(keyword, PageRequest.of(page, size)));
             return "vendors";
         }
     }
 
     @PostMapping("/update")
-    public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+    public String updateVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         if (vendor == null ||
             vendor.getAccountNumber() == null || vendor.getAccountNumber().isEmpty() ||
             vendor.getContactName() == null || vendor.getContactName().isEmpty() ||
@@ -63,7 +63,7 @@ public class VendorViewController {
             vendor.getEmailAddress() == null || vendor.getEmailAddress().isEmpty()) {
 
             model.addAttribute("message", "Please fill in all required fields correctly.");
-            model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(page, size)));
+            model.addAttribute("vendors", vendorService.getAllVendors(keyword, PageRequest.of(page, size)));
 
             return "vendors";
         }
@@ -74,8 +74,8 @@ public class VendorViewController {
 
 
     @GetMapping()
-    public String getAllVendors(Model model, Authentication authentication, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
-        Page<Vendor> vendors = vendorService.getAllVendors(PageRequest.of(page, size));
+    public String getAllVendors(Model model, Authentication authentication, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+        Page<Vendor> vendors = vendorService.getAllVendors(keyword, PageRequest.of(page, size));
 
         String currentUserId = authentication.getName();
 

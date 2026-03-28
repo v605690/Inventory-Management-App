@@ -39,9 +39,10 @@ public class VendorDetailViewController {
 
     // List all vendors
     @GetMapping("/all")
-    public String listVendors(@RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
+    public String listVendors(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
+
         int size = 22;
-        Page<Vendor> vendorPage = vendorService.getAllVendors(PageRequest.of(page, size));
+        Page<Vendor> vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size));
 
         String currentUserId = authentication.getName();
 
@@ -58,6 +59,8 @@ public class VendorDetailViewController {
         }
 
         model.addAttribute("vendors",vendorList);
+        model.addAttribute("searchResults", vendorPage);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vendorPage.getTotalPages());
 

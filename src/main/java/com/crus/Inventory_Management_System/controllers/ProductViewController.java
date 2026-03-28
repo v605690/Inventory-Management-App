@@ -71,7 +71,7 @@ public class ProductViewController {
                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
                                @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder,
-                               @RequestParam(name = "category", defaultValue = "all", required = false) String category) {
+                               @RequestParam(name = "category", defaultValue = "all", required = false) String category, String keyword) {
 
         Long currentUserId = accessHelper.getLoggedInUserDetails();
         if (currentUserId == null) {
@@ -99,7 +99,7 @@ public class ProductViewController {
             productDTOList = productResponse.getContent();
         }
 
-        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
+        model.addAttribute("vendors", vendorService.getAllVendors(keyword, PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("productDTOList", productDTOList);
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
@@ -191,7 +191,7 @@ public class ProductViewController {
         }
 
         model.addAttribute("productDTOList", productDTOList);
-        model.addAttribute("vendors", vendorService.getAllVendors(PageRequest.of(pageNumber, pageSize)));
+        model.addAttribute("vendors", vendorService.getAllVendors(keyword, PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("pageNumber", pageNumber);

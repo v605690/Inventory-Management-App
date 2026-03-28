@@ -34,8 +34,8 @@ public class VendorController {
     }
 
     @GetMapping("/getMyVendors")
-    public ResponseEntity<Page<Vendor>> getAllVendors(int page, int size) {
-        Page<Vendor> vendors = vendorService.getAllVendors(PageRequest.of(page, size));
+    public ResponseEntity<Page<Vendor>> getAllVendors(String keyword, int page, int size) {
+        Page<Vendor> vendors = vendorService.getAllVendors(keyword, PageRequest.of(page, size));
         return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 }

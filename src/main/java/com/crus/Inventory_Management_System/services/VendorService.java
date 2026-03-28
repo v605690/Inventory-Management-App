@@ -12,6 +12,8 @@ import java.util.List;
 public interface VendorService {
     Vendor addVendor(Vendor vendor);
 
+    Page<Vendor> getAllVendors(String keyword, PageRequest pageRequest);
+
     Page<Vendor> getAllVendors(PageRequest pageRequest);
 
     Vendor getVendor(Long vendorId);
