@@ -40,9 +40,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/meatPrice/**", "/meatPrice").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/price/**", "/price").hasRole("ADMIN")
 
-                        .requestMatchers("/login/**", "/register", "/register/**", "/overview", "/overview/**").permitAll()
+                        .requestMatchers("/login", "/register", "/register/**", "/overview", "/overview/**").permitAll()
                         .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/product-images/**", "/w3images/**",
-                                "/favicon.ico", "/login", "/oauth2/**", "/error").permitAll()
+                                "/favicon.ico", "/error").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/index/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/**", "/api").permitAll()
@@ -56,13 +56,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/products/keyword/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/products/keyword").authenticated()
-
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll())
-
 
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
@@ -72,7 +70,6 @@ public class SecurityConfig {
                                     mapped.add(new SimpleGrantedAuthority("ROLE_USER"));
                                     return mapped;
                                 })
-
                                 .userService(customOAuth2UserService)
                                 .oidcUserService(customOidcUserService)
                         )

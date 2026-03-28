@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -68,27 +67,34 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private String extractEmail(OAuth2User oAuth2User, String registrationId, String username) {
-        return switch (registrationId) {
-            case "github" -> {
-                Object email = oAuth2User.getAttribute("email");
-                yield email != null ? String.valueOf(email) : username + "@github.local";
+        if ("github".equalsIgnoreCase(registrationId)) {
+            Object email = oAuth2User.getAttribute("email");
+            if (email != null) {
+                return String.valueOf(email);
             }
-            case "google" -> {
-                Object email = oAuth2User.getAttribute("email");
-                yield email != null ? String.valueOf(email) : username + "@google.local";
-            }
-            default -> "Unknown";
-        };
+            return username + "@github.local";
+        }
+        Object email = oAuth2User.getAttributes().get("email");
+        return email != null ? String.valueOf(email) : username + "@unknown.local";
     }
 
     private String extractUsername(OAuth2User oAuth2User, String registrationId) {
-        return switch (registrationId) {
-            case "github" -> oAuth2User.getAttribute("login");
-            case "google" -> oAuth2User.getAttribute("sub");
-            default -> throw new OAuth2AuthenticationException(
-                    new OAuth2Error("unknown_provider"),
-                    "Unknown provider: " + registrationId
-            );
-        };
+        if ("github".equalsIgnoreCase(registrationId)) {
+            Object email = oAuth2User.getAttributes().get("email");
+            if (email != null) {
+                return String.valueOf(email);
+            }
+            Object login = oAuth2User.getAttributes().get("login");
+            if (login != null) {
+                return String.valueOf(login);
+            }
+            return oAuth2User.getAttribute("login");
+        }
+        Object login = oAuth2User.getAttributes().get("login");
+        if (login != null) {
+            return String.valueOf(login);
+        }
+        return oAuth2User.getAttribute("login");
     }
 }
+
