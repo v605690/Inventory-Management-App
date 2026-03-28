@@ -9,6 +9,7 @@ build/
 .env
 docker-compose.yml
 .DS_Store
+/src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
