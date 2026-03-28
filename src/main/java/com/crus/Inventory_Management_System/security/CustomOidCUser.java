@@ -24,17 +24,17 @@ public class CustomOidCUser implements OidcUser {
 
     @Override
     public Map<String, Object> getClaims() {
-        return Map.of();
+        return oidcUser.getClaims();
     }
 
     @Override
     public OidcUserInfo getUserInfo() {
-        return null;
+        return oidcUser.getUserInfo();
     }
 
     @Override
     public OidcIdToken getIdToken() {
-        return null;
+        return oidcUser.getIdToken();
     }
 
 
