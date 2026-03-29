@@ -92,6 +92,10 @@ public class VendorViewController {
         }
 
         model.addAttribute("vendors", vendorList);
+        model.addAttribute("searchResults", vendors);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", vendors.getTotalPages());
 
         return "vendors";
     }

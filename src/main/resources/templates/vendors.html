@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en" xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 
     <th:block th:replace="fragments/head :: commonHeader"/>
@@ -15,11 +15,46 @@
 
 <div class="container mt-5">
 
+    <!--Pagination-->
+    <div class="d-flex align-items-center mt-4">
+        <div style="width: 20px;"></div>
+
+        <!-- 1. Pagination First -->
+        <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}">
+            <ul class="pagination pagination-sm mb-0">
+                <!-- Previous -->
+                <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number > 0 ? searchResults.number - 1 : 0})}">Previous</a>
+                </li>
+
+                <!-- Number Loop -->
+                <th:block th:each="i : ${#numbers.sequence(0, searchResults.totalPages - 1)}">
+                    <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
+                        class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
+                        <a class="page-link" th:href="@{/vendors(page=${i})}" th:text="${i + 1}">1</a>
+                    </li>
+                    <!-- Ellipsis -->
+                    <li th:if="${(i == 1 and searchResults.number > 3) or (i == searchResults.totalPages - 2 and searchResults.number < searchResults.totalPages - 4)}"
+                        class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                </th:block>
+
+                <!-- Next -->
+                <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number + 1})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<br>
     <div class="row justify-content-center">
 
         <div class="col-lg-10">
             <a th:href="@{/vendors/new}" class="btn btn-dark mb-4" title="Add">Add</a>
         </div>
+
         <div class="col-md-6 col-lg-5" th:each="vendor : ${vendors}">
             <!-- This controls the card width -->
             <div class="card shadow-sm mb-4">
@@ -95,7 +130,6 @@
             </div>
         </div>
     </div>
-</div>
 <div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
 </body>
 </html>

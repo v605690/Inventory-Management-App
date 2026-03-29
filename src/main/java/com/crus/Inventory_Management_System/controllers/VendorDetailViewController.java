@@ -71,6 +71,7 @@ public class VendorDetailViewController {
      @GetMapping("/{accountNumber}")
     public String showVendorDetails(@PathVariable String accountNumber, Model model) {
         Vendor vendor = vendorService.findByAccountNumberWithProducts(accountNumber);
+
         ProductDTO productDTO = new ProductDTO();
 
         model.addAttribute("vendor", vendor);

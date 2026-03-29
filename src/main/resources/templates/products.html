@@ -77,7 +77,7 @@
 
             <!-- Bootstrap Pagination Navigation with Limited Pages -->
             <nav th:if="${selectedVendorId == null}" aria-label="Page navigation">
-                <ul class="pagination">
+                <ul class="pagination pagination-sm flex-wrap">
 
                     <!-- Previous Button -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">

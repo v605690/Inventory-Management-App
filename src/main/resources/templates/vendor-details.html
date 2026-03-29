@@ -62,7 +62,7 @@
                     </label>
                     <button type="submit">Search</button>
 <!--                    // define url structure, id placeholder-->
-                    <a th:href="@{/vendors/{id}(id=${vendor.id})}"
+                    <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}"
                        class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
                 </form>
             </div>
@@ -73,6 +73,44 @@
                     <!-- Row forces children into a 3-column grid -->
                     <div class="row row-cols-1 row-cols-md-3 g-2">
 
+                        <!--Pagination-->
+                        <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
+                            <ul class="pagination pagination-sm flex-wrap">
+
+                                <!-- Previous -->
+                                <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number - 1})}">Previous</a>
+                                </li>
+
+                                <!-- Windowed Number Loop -->
+                                <th:block th:each="i : ${#numbers.sequence(0, searchResults.totalPages - 1)}">
+
+                                    <!-- Show if First, Last, or within 2 of Current -->
+                                    <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
+                                        class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${i})}"
+                                           th:text="${i + 1}">1</a>
+                                    </li>
+
+                                    <!-- Ellipsis Logic -->
+                                    <li th:if="${(i == 1 and searchResults.number > 3) or (i == searchResults.totalPages - 2 and searchResults.number < searchResults.totalPages - 4)}"
+                                        class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+
+                                </th:block>
+
+                                <!-- Next -->
+                                <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number + 1})}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div></div>
+                        <div></div>
                         <!-- Loop on the column wrapper -->
                         <div class="col mb-2" th:each="p : ${searchResults}">
                         <!--builds url path, vId is the placeholder that will replace by real value-->
@@ -88,44 +126,11 @@
                         </div>
                     </div>
                 </div>
-                <!--Pagination-->
-                <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
-                    <ul class="pagination pagination-sm justify-content-center flex-wrap">
 
-                        <!-- Previous -->
-                        <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number - 1})}">Previous</a>
-                        </li>
-
-                        <!-- Windowed Number Loop -->
-                        <th:block th:each="i : ${#numbers.sequence(0, searchResults.totalPages - 1)}">
-
-                            <!-- Show if First, Last, or within 2 of Current -->
-                            <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
-                                class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${i})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
-
-                            <!-- Ellipsis Logic -->
-                            <li th:if="${(i == 1 and searchResults.number > 3) or (i == searchResults.totalPages - 2 and searchResults.number < searchResults.totalPages - 4)}"
-                                class="page-item disabled">
-                                <span class="page-link">...</span>
-                            </li>
-
-                        </th:block>
-
-                        <!-- Next -->
-                        <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number + 1})}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
                 <!--Add New Product-->
                 <div class="dropdown">
+                    <div></div>
+                    <div></div>
                     <button class="btn-dark btn-sm rounded-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Add New Product
                     </button>
