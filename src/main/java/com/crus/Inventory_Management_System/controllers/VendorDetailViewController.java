@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +43,7 @@ public class VendorDetailViewController {
     public String listVendors(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
 
         int size = 22;
-        Page<Vendor> vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size));
+        Page<Vendor> vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
 
         String currentUserId = authentication.getName();
 
@@ -62,6 +63,8 @@ public class VendorDetailViewController {
         model.addAttribute("searchResults", vendorPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", Sort.by("id"));
         model.addAttribute("totalPages", vendorPage.getTotalPages());
 
         return "vendors-list";
@@ -85,7 +88,7 @@ public class VendorDetailViewController {
     public String searchProducts(@PathVariable Long id, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, Model model) {
 
         int size = 27;
-        Page<Product> productPage = vendorService.searchProducts(keyword, PageRequest.of(page, size));
+        Page<Product> productPage = vendorService.searchProducts(keyword, PageRequest.of(page, size, Sort.by("id")));
 
         model.addAttribute("id", id);
         model.addAttribute("vendor", vendorService.getVendor(id));
@@ -93,6 +96,8 @@ public class VendorDetailViewController {
         model.addAttribute("searchResults", productPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", Sort.by("id"));
         model.addAttribute("totalPages", productPage.getTotalPages());
         // ThymeLeaf requires an initialized (empty) object to bind the input fields
         model.addAttribute("product", new ProductDTO());

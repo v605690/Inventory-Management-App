@@ -7,11 +7,13 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class VendorViewController {
 
     @GetMapping()
     public String getAllVendors(Model model, Authentication authentication, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
-        Page<Vendor> vendors = vendorService.getAllVendors(keyword, PageRequest.of(page, size));
+        Page<Vendor> vendors = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
 
         String currentUserId = authentication.getName();
 
@@ -95,6 +97,8 @@ public class VendorViewController {
         model.addAttribute("searchResults", vendors);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", Sort.by("id"));
         model.addAttribute("totalPages", vendors.getTotalPages());
 
         return "vendors";
@@ -103,6 +107,12 @@ public class VendorViewController {
     @GetMapping("/delete/{id}")
     public String deleteVendor(@PathVariable Long id) {
         vendorService.deleteVendor(id);
+        return "redirect:/vendors";
+    }
+
+    @GetMapping("{id}/remove/{productId}")
+    public String disassociateVendor(@PathVariable Long id, @PathVariable Long productId) {
+        vendorService.disassociateProduct(id, productId);
         return "redirect:/vendors";
     }
 }

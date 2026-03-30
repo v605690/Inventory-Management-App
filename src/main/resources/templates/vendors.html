@@ -24,14 +24,14 @@
             <ul class="pagination pagination-sm mb-0">
                 <!-- Previous -->
                 <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number > 0 ? searchResults.number - 1 : 0})}">Previous</a>
+                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number > 0 ? searchResults.number - 1 : 0}, size=${size}, sort=${sortBy})}">Previous</a>
                 </li>
 
                 <!-- Number Loop -->
                 <th:block th:each="i : ${#numbers.sequence(0, searchResults.totalPages - 1)}">
                     <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
                         class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
-                        <a class="page-link" th:href="@{/vendors(page=${i})}" th:text="${i + 1}">1</a>
+                        <a class="page-link" th:href="@{/vendors(page=${i}, size=${size}, sort=${sortBy})}" th:text="${i + 1}">1</a>
                     </li>
                     <!-- Ellipsis -->
                     <li th:if="${(i == 1 and searchResults.number > 3) or (i == searchResults.totalPages - 2 and searchResults.number < searchResults.totalPages - 4)}"
@@ -42,7 +42,7 @@
 
                 <!-- Next -->
                 <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number + 1})}">Next</a>
+                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
                 </li>
             </ul>
         </nav>
@@ -102,7 +102,8 @@
                                         <!-- Only show what is already assigned -->
                                         <li th:each="p : ${vendor.products}" class="small border-bottom pb-1 mb-1">
                                             <span th:text="${p.productName}">Product Name</span>
-                                            <a th:href="@{/vendors/{vId}/remove/{pId}(vId=${vendor.id}, pId=${p.id})}"
+<!--                                            <a th:href="@{/vendors/{vId}/remove/{pId}(vId=${vendor.id}, pId=${p.id})}"-->
+                                            <a th:href="@{/vendors/{id}/remove/{productId}(id=${vendor.id}, productId=${p.id})}"
                                                class="text-danger float-end" style="text-decoration:none;">&times;</a>
                                         </li>
                                         <li th:if="${#lists.isEmpty(vendor.products)}" class="text-muted small">
@@ -110,10 +111,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- A simple link to a dedicated assignment page -->
-                                <a th:href="@{/products/new}" class="btn btn-sm btn-outline-dark mt-2">
-                                    + Add New Product
-                                </a>
                             </div>
                         </div>
 

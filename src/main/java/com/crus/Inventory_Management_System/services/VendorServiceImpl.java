@@ -90,6 +90,20 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     @Transactional
+    public void disassociateProduct(Long id, Long productId) {
+        Vendor vendor = vendorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vendor not found"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        vendor.getProducts().remove(product);
+
+        vendorRepository.save(vendor);
+    }
+
+    @Override
+    @Transactional
     public void savedVendor(Vendor vendor) {
         vendorRepository.save(vendor);
     }
@@ -184,4 +198,5 @@ public class VendorServiceImpl implements VendorService {
         Hibernate.initialize(vendor.getProducts());
         return vendor;
     }
+
 }

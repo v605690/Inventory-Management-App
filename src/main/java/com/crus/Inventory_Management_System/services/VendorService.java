@@ -35,4 +35,6 @@ public interface VendorService {
     void createNewProductAndAssociate(Long id, ProductDTO product);
 
     Vendor findByAccountNumberWithProducts(String accountNumber);
+
+    void disassociateProduct(Long id, Long productId);
 }

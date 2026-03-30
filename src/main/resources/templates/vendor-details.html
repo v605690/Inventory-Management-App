@@ -80,7 +80,7 @@
                                 <!-- Previous -->
                                 <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
                                     <a class="page-link"
-                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number - 1})}">Previous</a>
+                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number - 1}, size=${size}, sort=${sortBy})}">Previous</a>
                                 </li>
 
                                 <!-- Windowed Number Loop -->
@@ -90,7 +90,7 @@
                                     <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
                                         class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
                                         <a class="page-link"
-                                           th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${i})}"
+                                           th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${i}, size=${size}, sort=${sortBy})}"
                                            th:text="${i + 1}">1</a>
                                     </li>
 
@@ -105,7 +105,7 @@
                                 <!-- Next -->
                                 <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
                                     <a class="page-link"
-                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number + 1})}">Next</a>
+                                       th:href="@{/vendors/{id}/search-products(id=${id}, keyword=${keyword}, page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
                                 </li>
                             </ul>
                         </nav>
