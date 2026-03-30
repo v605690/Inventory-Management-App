@@ -43,6 +43,12 @@ public class VendorDetailViewController {
     public String listVendors(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
 
         int size = 22;
+        pagination(keyword, page, model, authentication, size, vendorService);
+
+        return "vendors-list";
+    }
+
+    static void pagination(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication, int size, VendorService vendorService) {
         Page<Vendor> vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
 
         String currentUserId = authentication.getName();
@@ -66,8 +72,6 @@ public class VendorDetailViewController {
         model.addAttribute("size", size);
         model.addAttribute("sortBy", Sort.by("id"));
         model.addAttribute("totalPages", vendorPage.getTotalPages());
-
-        return "vendors-list";
     }
 
     // Show vendor details and associated products

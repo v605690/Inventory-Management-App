@@ -56,7 +56,10 @@
                     <button type="submit">Search</button>
                     <span class="validity" aria-live="polite"></span>
                     <a th:href="${category == 'all'} ? @{/products} : @{/products/keyword/{category}(category=${category})}"
-                       class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
+                    style="text-decoration: none;">
+                    <button type="button">Clear / Show All</button>
+                    </a>
+
                 </div>
             </form>
         </div>

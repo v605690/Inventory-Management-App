@@ -37,4 +37,6 @@ public interface VendorService {
     Vendor findByAccountNumberWithProducts(String accountNumber);
 
     void disassociateProduct(Long id, Long productId);
+
+    List<Vendor> findByContactName(String contactName);
 }

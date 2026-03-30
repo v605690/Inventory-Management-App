@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
@@ -17,4 +18,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
     @Query("SELECT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :acc")
     Optional<Vendor> findByAccountNumberWithProducts(@Param("acc") String accountNumber);
+
+    List<Vendor> findByContactNameContainingIgnoreCase(String contactName);
 }

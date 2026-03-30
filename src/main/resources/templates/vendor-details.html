@@ -63,7 +63,9 @@
                     <button type="submit">Search</button>
 <!--                    // define url structure, id placeholder-->
                     <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}"
-                       class="btn btn-dark btn-sm rounded-0">Clear / Show All</a>
+                       style="text-decoration: none;">
+                    <button type="button">Clear / Show All</button>
+                    </a>
                 </form>
             </div>
             <div style="margin-top: 10px;">

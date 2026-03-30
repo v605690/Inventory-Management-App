@@ -103,6 +103,11 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public List<Vendor> findByContactName(String contactName) {
+        return vendorRepository.findByContactNameContainingIgnoreCase(contactName);
+    }
+
+    @Override
     @Transactional
     public void savedVendor(Vendor vendor) {
         vendorRepository.save(vendor);

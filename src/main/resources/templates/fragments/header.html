@@ -27,7 +27,7 @@
                 class="fa fa-caret-down"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-card-4">
             <a th:href="@{/vendors/all}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors-List</a>
-            <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors</a>
+            <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors Card View</a>
         </div>
     </div>
     <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -50,13 +50,12 @@
                 id="keyword"
                 name="keyword"
                 th:value="${keyword}"
-                placeholder="Search…"
+                placeholder="Search By Products…"
                 required
                 style="max-width: 200px;"/>
             <button type="submit" class="w3-button w3-black" style="padding: 4px 8px;">
                 <i class="fa fa-search"></i>
             </button>
-
         </form>
 
         <th:block sec:authorize="isAuthenticated()">

@@ -41,6 +41,17 @@ public class VendorViewController {
         return "new-vendor";
     }
 
+    @GetMapping("/search")
+    public String searchVendors(@RequestParam(name = "contactName") String contactName, Model model) {
+        List<Vendor> foundVendors = vendorService.findByContactName(contactName);
+
+        model.addAttribute("vendors", foundVendors);
+        model.addAttribute("vendorContactList", "contactName");
+
+        return "vendors";
+    }
+
+
     @PostMapping()
     public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         try {
@@ -77,29 +88,7 @@ public class VendorViewController {
 
     @GetMapping()
     public String getAllVendors(Model model, Authentication authentication, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
-        Page<Vendor> vendors = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
-
-        String currentUserId = authentication.getName();
-
-        boolean isAdmin = authentication.getAuthorities().stream()
-                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        List<Vendor> vendorList;
-        if (isAdmin) {
-            vendorList = new ArrayList<>(vendors.getContent());
-        } else {
-            vendorList = vendors.getContent().stream()
-                    .filter(vendor -> false)
-                    .toList();
-        }
-
-        model.addAttribute("vendors", vendorList);
-        model.addAttribute("searchResults", vendors);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("size", size);
-        model.addAttribute("sortBy", Sort.by("id"));
-        model.addAttribute("totalPages", vendors.getTotalPages());
+        VendorDetailViewController.pagination(keyword, page, model, authentication, size, vendorService);
 
         return "vendors";
     }

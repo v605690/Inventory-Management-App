@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:margin-right="http://www.w3.org/1999/xhtml"
+      xmlns:margin-top="http://www.w3.org/1999/xhtml" xmlns:margin-bottom="http://www.w3.org/1999/xhtml">
 <head>
 
     <th:block th:replace="fragments/head :: commonHeader"/>
 
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
 
     <title>Vendors</title>
@@ -15,8 +17,39 @@
 
 <div class="container mt-5">
 
+    <h2 class="mb-4" style="margin-left: 20px; margin-right: 20px;">Vendors Card View</h2>
+
+    <div class="filter-section border"
+         style="margin-left: 20px; margin-right: 20px; padding: 10px; display: flex; align-items: center; border-radius: 5px;">
+
+    <div style="margin-left: 5px;">
+        <form class="second-form" th:action="@{|/vendors/search|}" method="get">
+            <label for="vendors">Search Vendor</label>
+            <input
+                    type="search"
+                    id="vendors"
+                    name="contactName"
+                    th:value="${vendorContactList}"
+                    placeholder="Search By Vendors…"
+                    required
+            />
+            <button type="submit">Search</button>
+            <span class="validity" aria-live="polite"></span>
+            <a th:href="@{/vendors}" style="text-decoration: none;">
+                <button type="button">Clear / Show All</button>
+            </a>
+        </form>
+    </div>
+    </div>
+
+    <style>
+        form.second-form {
+            margin-top: 15px; /* space above second form */
+        }
+    </style>
+
     <!--Pagination-->
-    <div class="d-flex align-items-center mt-4">
+    <div class="d-flex align-items-center mt-4" style="margin-bottom: -15px;">
         <div style="width: 20px;"></div>
 
         <!-- 1. Pagination First -->
@@ -52,10 +85,11 @@
     <div class="row justify-content-center">
 
         <div class="col-lg-10">
-            <a th:href="@{/vendors/new}" class="btn btn-dark mb-4" title="Add">Add</a>
+            <a th:href="@{/vendors/new}" class="btn btn-sm btn-outline-dark mt-2 mb-2" title="Add">Add</a>
         </div>
 
         <div class="col-md-6 col-lg-5" th:each="vendor : ${vendors}">
+
             <!-- This controls the card width -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-black text-white">

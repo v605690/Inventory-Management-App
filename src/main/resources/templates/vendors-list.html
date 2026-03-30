@@ -9,11 +9,7 @@
 
     <title>Vendors List</title>
 
-    <!-- Using Bootstrap for styling as seen in the image -->
-    <!--    <link href="https://cdn.jsdelivr.net" rel="stylesheet">-->
-
 </head>
-
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
@@ -27,9 +23,9 @@
         <form th:action="@{/vendors/all}" method="get" class="row align-items-center">
             <div class="col-md-4">
                 <div class="input-group">
-                    <span class="input-group-text">Search Term:</span>
+                    <span class="input-group-text">Search Vendor:</span>
                     <label>
-                        <input type="text" name="searchTerm" class="form-control" placeholder="Search...">
+                        <input type="text" name="searchVendor" class="form-control" placeholder="Search...">
                     </label>
                     <button class="btn btn-outline-secondary" type="button">Clear</button>
                 </div>
@@ -60,6 +56,8 @@
         </form>
     </div>
 
+
+
     <!--Pagination-->
     <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
         <ul class="pagination pagination-sm flex-wrap">
@@ -67,7 +65,7 @@
             <!-- Previous -->
             <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number - 1})}">Previous</a>
+                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number - 1}, size=${size}, sort=${sortBy})}">Previous</a>
             </li>
 
             <!-- Windowed Number Loop -->
@@ -77,7 +75,7 @@
                 <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
                     class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
                     <a class="page-link"
-                       th:href="@{/vendors/all(keyword=${keyword}, page=${i})}"
+                       th:href="@{/vendors/all(keyword=${keyword}, page=${i}, size=${size}, sort=${sortBy})}"
                        th:text="${i + 1}">1</a>
                 </li>
 
@@ -92,7 +90,7 @@
             <!-- Next -->
             <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number + 1})}">Next</a>
+                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
             </li>
         </ul>
     </nav>
@@ -135,7 +133,6 @@
             <label>
                 <select class="form-select d-inline-block w-auto ms-2">
                     <option>22</option>
-                    <option>44</option>
                 </select>
             </label>
         </div>
