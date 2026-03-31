@@ -123,7 +123,6 @@ public class VendorDetailViewController {
             return "error";
         }
 
-        //Vendor vendor = vendorService.getVendor(vId);
         return "redirect:/vendors/" + vendor.getAccountNumber();
 //        return "Product Count in DB: " + vendor.getProducts().size();
     }

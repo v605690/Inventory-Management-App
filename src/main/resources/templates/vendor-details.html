@@ -118,6 +118,9 @@
                         <!--builds url path, vId is the placeholder that will replace by real value-->
                             <form th:action="@{/vendors/{vId}/associate/{pId}(vId=${vendor.getId()}, pId=${p.id})}"
                                   method="post">
+
+                                <input type="hidden" name="keyword" th:value="${keyword}" />
+
                                 <button type="submit"
                                         class="btn btn-light border text-start w-100 p-1 shadow-sm text-truncate"
                                         style="font-size: 0.75rem; border-color: #333 !important; border-width: 1.5px !important;">
