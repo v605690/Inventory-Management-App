@@ -7,6 +7,7 @@ import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.VendorRepository;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +112,7 @@ public class VendorDetailViewController {
 
     // Associate a searched product
     @PostMapping("/{vId}/associate/{pId}")
-    public String associateProduct(@PathVariable Long vId, @PathVariable Long pId) {
+    public String associateProduct(HttpServletRequest request, @PathVariable Long vId, @PathVariable Long pId) {
         System.out.println(">>> ASSOCIATION START - VendorID: " + vId + " ProductID: " + pId);
         log.info("REACHED CONTROLLER");
         Vendor vendor = vendorService.getVendor(vId);
@@ -123,8 +125,11 @@ public class VendorDetailViewController {
             return "error";
         }
 
-        return "redirect:/vendors/" + vendor.getAccountNumber();
-//        return "Product Count in DB: " + vendor.getProducts().size();
+        // Allows staying on previous page
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + referer;
+
     }
 
     // Associate a new product
