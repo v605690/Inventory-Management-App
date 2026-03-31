@@ -39,4 +39,6 @@ public interface VendorService {
     void disassociateProduct(Long id, Long productId);
 
     List<Vendor> findByContactName(String contactName);
+
+    Page<Vendor> findByContactName(String contactName, PageRequest pageRequest);
 }

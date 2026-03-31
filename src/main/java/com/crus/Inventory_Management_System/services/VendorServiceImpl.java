@@ -15,6 +15,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
@@ -48,6 +49,8 @@ public class VendorServiceImpl implements VendorService {
 
     @Autowired
     private AccessHelper accessHelper;
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableResolver;
 
 
     @Override
@@ -105,6 +108,11 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<Vendor> findByContactName(String contactName) {
         return vendorRepository.findByContactNameContainingIgnoreCase(contactName);
+    }
+
+    @Override
+    public Page<Vendor> findByContactName(String contactName, PageRequest pageRequest) {
+        return vendorRepository.findByContactNameContainingIgnoreCase(contactName, pageRequest);
     }
 
     @Override

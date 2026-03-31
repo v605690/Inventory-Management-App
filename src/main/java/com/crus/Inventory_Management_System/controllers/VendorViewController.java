@@ -51,7 +51,6 @@ public class VendorViewController {
         return "vendors";
     }
 
-
     @PostMapping()
     public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, @RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
         try {
@@ -87,8 +86,8 @@ public class VendorViewController {
 
 
     @GetMapping()
-    public String getAllVendors(Model model, Authentication authentication, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
-        VendorDetailViewController.pagination(keyword, page, model, authentication, size, vendorService);
+    public String getAllVendors(Model model, Authentication authentication, @RequestParam(name = "contactName", required = false, defaultValue = "") String contactName, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "22") int size) {
+        VendorDetailViewController.pagination(contactName, keyword, page, model, authentication, size, vendorService);
 
         return "vendors";
     }

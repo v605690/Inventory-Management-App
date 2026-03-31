@@ -20,4 +20,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     Optional<Vendor> findByAccountNumberWithProducts(@Param("acc") String accountNumber);
 
     List<Vendor> findByContactNameContainingIgnoreCase(String contactName);
+
+    Page<Vendor> findByContactNameContainingIgnoreCase(String contactName, Pageable pageable);
 }

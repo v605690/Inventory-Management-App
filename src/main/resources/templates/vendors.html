@@ -17,12 +17,12 @@
 
 <div class="container mt-5">
 
-    <h2 class="mb-4" style="margin-left: 20px; margin-right: 20px;">Vendors Card View</h2>
+    <h2 class="mb-4">Vendors Card View</h2>
 
-    <div class="filter-section border"
-         style="margin-left: 20px; margin-right: 20px; padding: 10px; display: flex; align-items: center; border-radius: 5px;">
+<!--         style="margin-left: 20px; margin-right: 20px; padding: 10px; display: flex; align-items: center; border-radius: 5px;">-->
 
-    <div style="margin-left: 5px;">
+<!--    <div style="margin-left: 5px;">-->
+    <div class="filter-section border">
         <form class="second-form" th:action="@{|/vendors/search|}" method="get">
             <label for="vendors">Search Vendor</label>
             <input
@@ -40,18 +40,7 @@
             </a>
         </form>
     </div>
-    </div>
-
-    <style>
-        form.second-form {
-            margin-top: 15px; /* space above second form */
-        }
-    </style>
-
     <!--Pagination-->
-    <div class="d-flex align-items-center mt-4" style="margin-bottom: -15px;">
-        <div style="width: 20px;"></div>
-
         <!-- 1. Pagination First -->
         <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}">
             <ul class="pagination pagination-sm mb-0">
@@ -75,23 +64,22 @@
 
                 <!-- Next -->
                 <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/vendors(page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
+                    <a class="page-link mb-3" th:href="@{/vendors(page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
                 </li>
             </ul>
         </nav>
     </div>
-</div>
-<br>
+
     <div class="row justify-content-center">
 
         <div class="col-lg-10">
-            <a th:href="@{/vendors/new}" class="btn btn-sm btn-outline-dark mt-2 mb-2" title="Add">Add</a>
+            <a th:href="@{/vendors/new}" class="btn btn-sm btn-outline-dark mb-2 ms-2" title="Add">Add</a>
         </div>
 
         <div class="col-md-6 col-lg-5" th:each="vendor : ${vendors}">
 
             <!-- This controls the card width -->
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm mt-2 mb-2 mx-2">
                 <div class="card-header bg-black text-white">
                     <h5 class="mb-0">
                       <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}"
@@ -103,7 +91,7 @@
                     <!-- FIX: Combined into ONE form so all inputs are submitted together -->
                     <form th:action="@{/vendors/update}" method="post"
                           onsubmit="return confirm('Are you sure you want to save changes?')">
-                        
+
                         <!-- FIX: Use name/th:value instead of th:field to avoid binding errors in loops -->
                         <input type="hidden" name="id" th:value="${vendor.id}" />
 
@@ -152,7 +140,7 @@
                             <button type="submit" class="btn btn-dark me-2">Update</button>
                             <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}" class="btn btn-outline-secondary">View Details</a>
                             <!-- Delete form or link -->
-                            <a th:href="@{/vendors/delete/{id}(id=${vendor.id})}" 
+                            <a th:href="@{/vendors/delete/{id}(id=${vendor.id})}"
                                class="btn btn-dark ms-2"
                                onclick="return confirm('Are you sure you want to delete this vendor?')">Delete</a>
                         </div>

@@ -42,16 +42,23 @@ public class VendorDetailViewController {
 
     // List all vendors
     @GetMapping("/all")
-    public String listVendors(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
+    public String listVendors(@RequestParam(name = "contactName", required = false, defaultValue = "") String contactName, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
 
         int size = 22;
-        pagination(keyword, page, model, authentication, size, vendorService);
+        pagination(contactName, keyword, page, model, authentication, size, vendorService);
 
         return "vendors-list";
     }
 
-    static void pagination(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication, int size, VendorService vendorService) {
-        Page<Vendor> vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
+    static void pagination(@RequestParam(name = "contactName", required = false, defaultValue = "") String contactName, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(defaultValue = "0") int page, Model model, Authentication authentication, int size, VendorService vendorService) {
+
+        Page<Vendor> vendorPage;
+
+        if (contactName != null && !contactName.trim().isEmpty()) {
+            vendorPage = vendorService.findByContactName(contactName, PageRequest.of(page, size, Sort.by("id")));
+        } else {
+            vendorPage = vendorService.getAllVendors(keyword, PageRequest.of(page, size, Sort.by("id")));
+        }
 
         String currentUserId = authentication.getName();
 
@@ -69,6 +76,7 @@ public class VendorDetailViewController {
 
         model.addAttribute("vendors",vendorList);
         model.addAttribute("searchResults", vendorPage);
+        model.addAttribute("contactName", contactName);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
