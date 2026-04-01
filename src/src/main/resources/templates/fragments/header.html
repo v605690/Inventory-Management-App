@@ -1,0 +1,81 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<div th:fragment="header" class="w3-top">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/stackingOrder.css}"/>
+
+    <div class="w3-bar w3-black w3-card">
+        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right"
+           href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                class="fa fa-bars"></i></a>
+        <a th:href="@{/}" class="w3-bar-item w3-button w3-padding-large">Home</a>
+        <a th:href="@{/overview}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Overview</a>
+
+        <div class="w3-dropdown-hover w3-hide-small" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+            <button class="w3-padding-large w3-button" title="Mange Product">Manage Products<i
+                    class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a th:href="@{/products}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Products List</a>
+                <a th:href="@{/products/new}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Add Product</a>
+            </div>
+        </div>
+
+    <div class="w3-dropdown-hover w3-hide-small" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">
+        <button class="w3-padding-large w3-button" title="Mange Vendors">Manage Vendors<i
+                class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+            <a th:href="@{/vendors/all}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors-List</a>
+            <a th:href="@{/vendors}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vendors Card View</a>
+        </div>
+    </div>
+    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+        <div class="w3-dropdown-hover w3-hide-small">
+            <button class="w3-padding-large w3-button" title="More">More<i class="fa fa-caret-down"></i>
+            </button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="#" class="w3-bar-item w3-button">Customers</a>
+                <a href="#" class="w3-bar-item w3-button">Extras</a>
+            </div>
+        </div>
+    </div>
+
+        <form class="w3-bar-item w3-right w3-hide-small"
+              style="padding: 8px 16px; display: inline-flex; gap: 8px; align-items: center;"
+              th:action="@{|/products/keyword/${category}|}" method="get">
+
+            <label for="keyword"></label><input
+                type="search"
+                id="keyword"
+                name="keyword"
+                th:value="${keyword}"
+                placeholder="Search By Products…"
+                required
+                style="max-width: 200px;"/>
+            <button type="submit" class="w3-button w3-black" style="padding: 4px 8px;">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+
+        <th:block sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}"
+               class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-red w3-right"
+               style="margin-right: 25px;">Logout</a>
+        </th:block>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}"
+               class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-blue w3-right"
+               style="margin-right: 25px;">Login</a>
+        </th:block>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">Register
+                an Account</a>
+        </th:block>
+    </div>
+</div>
+
+</body>
+</html>

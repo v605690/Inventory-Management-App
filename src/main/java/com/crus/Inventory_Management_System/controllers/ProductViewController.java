@@ -6,12 +6,10 @@ import com.crus.Inventory_Management_System.exceptions.ResourceNotFoundException
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.helpers.AppConstants;
 import com.crus.Inventory_Management_System.helpers.DisplayKeywordTitle;
-import com.crus.Inventory_Management_System.mappers.CategoryPriceDTO;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.mappers.ProductResponse;
 import com.crus.Inventory_Management_System.repositories.ProductRepository;
 import com.crus.Inventory_Management_System.repositories.UserRepository;
-import com.crus.Inventory_Management_System.services.CategoryPriceService;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.ProductServiceImpl;
 import com.crus.Inventory_Management_System.services.VendorService;
@@ -20,7 +18,6 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -70,7 +67,7 @@ public class ProductViewController {
                                @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder,
                                @RequestParam(name = "category", defaultValue = "all", required = false) String category, String keyword) {
 
-        Long currentUserId = accessHelper.getLoggedInUserDetails();
+        String currentUserId = String.valueOf(accessHelper.getLoggedInUserDetails());
         if (currentUserId == null) {
             model.addAttribute("message", "You must be logged in");
             return "error";
@@ -84,9 +81,9 @@ public class ProductViewController {
 
         if (category == null || category.trim().isEmpty() || "null".equalsIgnoreCase(category) || "all".equalsIgnoreCase(category)) {
             category = "all";
-            productResponse = productServiceImpl.getAllProductsByUserId(currentUserId, pageNumber, pageSize, sortBy, sortOrder);
+            productResponse = productServiceImpl.getAllProductsByUserId(Long.valueOf(currentUserId), pageNumber, pageSize, sortBy, sortOrder);
         } else {
-            productResponse = productServiceImpl.getProductByCategoryForUser(category, currentUserId, pageNumber, pageSize, sortBy, sortOrder);
+            productResponse = productServiceImpl.getProductByCategoryForUser(category, Long.valueOf(currentUserId), pageNumber, pageSize, sortBy, sortOrder);
         }
 
         List<ProductDTO> productDTOList;
@@ -263,7 +260,7 @@ public class ProductViewController {
         }
 
         // Save the product to the service layer; takes in DTO and userId for processing
-        ProductDTO savedProduct = productService.saveProduct(productDTO, userId);
+        ProductDTO savedProduct = productService.saveProduct(productDTO, (userId));
 
         model.addAttribute("product", savedProduct);
         model.addAttribute("message", "Details saved! Now upload your image below.");

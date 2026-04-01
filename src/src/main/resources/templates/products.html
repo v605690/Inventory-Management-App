@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="us">
+
+<head>
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <title></title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div style="margin: 50px 200px 200px;">
+    <br>
+    <h1 th:text="${title}"></h1>
+    <hr>
+    <div>
+        <style>
+            form.search-form {
+                margin-bottom: 25px; /* space below first form */
+            }
+        </style>
+        <form class="search-form" th:action="@{/products}" method="get">
+
+            <datalist id="sortByOptions">
+                <option value="productName" label="Name"></option>
+                <option value="primaryBarcode" label="SKU"></option>
+                <option value="categories" label="Category"></option>
+                <option value="inStockQuantity" label="Quantity"></option>
+                <option value="vbrp" label="Price"></option>
+                <option value="imagePath" label="Thumbnail"></option>
+            </datalist>
+
+        </form>
+        <div>
+            <form class="second-form" th:action="@{|/products/keyword/${category}|}" method="get">
+                <div>
+                    <label for="vendor">Vendor</label>
+                    <select name="vendorId" id="vendor" onchange="this.form.submit()" style="margin-right: 10px;">
+                        <option value="">All Vendors</option>
+                        <option th:each="v : ${vendors}"
+                                th:value="${v.id}"
+                                th:text="${v.contactName}"
+                                th:selected="${v.id == selectedVendorId}">
+                        </option>
+                    </select>
+
+                    <label for="keyword">Search Product</label>
+                    <input
+                            type="search"
+                            id="keyword"
+                            name="keyword"
+                            th:value="${keyword}"
+                            placeholder="Search By Keyword…"
+                            required
+                    />
+                    <button type="submit">Search</button>
+                    <span class="validity" aria-live="polite"></span>
+                    <a th:href="${category == 'all'} ? @{/products} : @{/products/keyword/{category}(category=${category})}"
+                    style="text-decoration: none;">
+                    <button type="button">Clear / Show All</button>
+                    </a>
+
+                </div>
+            </form>
+        </div>
+        <style>
+            form.second-form {
+                margin-top: 15px; /* space above second form */
+            }
+        </style>
+
+        <!-- Pagination Navigation aligned with forms -->
+        <div th:if="${showPagination and totalPages != null and totalPages > 0}" style="margin-top: 15px;">
+            <!-- Page Info -->
+            <p style="margin: 10px 0; font-size: 16px; color: #333;">
+                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span
+                        th:text="${totalPages}">1</span></strong>
+                <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
+            </p>
+
+            <!-- Bootstrap Pagination Navigation with Limited Pages -->
+            <nav th:if="${selectedVendorId == null}" aria-label="Page navigation">
+                <ul class="pagination pagination-sm flex-wrap">
+
+                    <!-- Previous Button -->
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:if="${currentPage == 0}"
+                           href="#"
+                           tabindex="-1"
+                           aria-disabled="true">
+                            Previous
+                        </a>
+                        <a class="page-link"
+                           th:unless="${currentPage == 0}"
+                           th:href="@{/products/keyword/{category}(category=${category}, keyword=${keyword}, pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:if="${keyword != null and keyword != ''}">
+                            Previous
+                        </a>
+                        <a class="page-link"
+                           th:unless="${currentPage == 0 or (keyword != null and keyword != '')}"
+                           th:href="@{/products(pageNumber=${currentPage - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
+                            Previous
+                        </a>
+                    </li>
+
+                    <!-- First Page -->
+                    <li class="page-item" th:if="${currentPage > 2}">
+                        <a class="page-link"
+                           th:if="${keyword != null and keyword != ''}"
+                           th:href="@{/products/keyword/{category}(category=${category}, keyword=${keyword}, pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                            1
+                        </a>
+                        <a class="page-link"
+                           th:unless="${keyword != null and keyword != ''}"
+                           th:href="@{/products(pageNumber=0, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
+                            1
+                        </a>
+                    </li>
+
+                    <!-- Ellipsis if needed -->
+                    <li class="page-item disabled" th:if="${currentPage > 3}">
+                        <span class="page-link">...</span>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <th:block th:with="startPage=${currentPage > 2 ? currentPage - 2 : 0},
+                           endPage=${currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1}">
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link"
+                               th:if="${keyword != null and keyword != ''}"
+                               th:href="@{/products/keyword/{category}(category=${category}, keyword=${keyword}, pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                               th:text="${i + 1}">1</a>
+                            <a class="page-link"
+                               th:unless="${keyword != null and keyword != ''}"
+                               th:href="@{/products(pageNumber=${i}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+                    </th:block>
+
+                    <!-- Ellipsis if needed -->
+                    <li class="page-item disabled" th:if="${currentPage + 3 < totalPages - 1}">
+                        <span class="page-link">...</span>
+                    </li>
+
+                    <!-- Last Page -->
+                    <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
+                        <a class="page-link"
+                           th:if="${keyword != null and keyword != ''}"
+                           th:href="@{/products/keyword/{category}(category=${category}, keyword=${keyword}, pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                           th:text="${totalPages}">
+                            Last
+                        </a>
+                        <a class="page-link"
+                           th:unless="${keyword != null and keyword != ''}"
+                           th:href="@{/products(pageNumber=${totalPages - 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}"
+                           th:text="${totalPages}">
+                            Last
+                        </a>
+                    </li>
+
+                    <!-- Next Button -->
+                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                        <a class="page-link"
+                           th:if="${currentPage + 1 >= totalPages}"
+                           href="#">
+                            Next
+                        </a>
+                        <a class="page-link"
+                           th:unless="${currentPage + 1 >= totalPages}"
+                           th:if="${keyword != null and keyword != ''}"
+                           th:href="@{/products/keyword/{category}(category=${category}, keyword=${keyword}, pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}">
+                            Next
+                        </a>
+                        <a class="page-link"
+                           th:unless="${currentPage + 1 >= totalPages or (keyword != null and keyword != '')}"
+                           th:href="@{/products(pageNumber=${currentPage + 1}, pageSize=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder}, category=${category})}">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Actions</th>
+                <a th:href="@{/products/new}" class="btn btn-sm btn-outline-dark mt-1" title="Add">
+                    Add
+                </a>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${productDTOList}">
+                <td th:text="${product.productName}">Product Name</td>
+                <td th:text="${product.primaryBarcode}">SKU123</td>
+                <td th:text="${product.categories}">Category</td>
+                <td th:text="${product.inStockQuantity}">0</td>
+                <td th:text="${product.vbrp != null ? '$' + product.vbrp : '$0.00'}">$0.00</td>
+                <td>
+                    <div class="table-thumbnail-wrapper">
+                        <!-- If imagePath is null/empty, fallback to placeholder.png -->
+                        <img th:src="${product.imagePath != null ? '/product-images/' + product.imagePath : '/product-images/comingsoon.png'}"
+                             class="table-thumbnail" alt="">
+                    </div>
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+                        <a th:href="@{'/products/edit/' + ${product.id}}" class="btn-circle-edit" title="Edit">
+                            &#9998;
+                        </a>
+                        <form th:action="@{'/products/delete/' + ${product.id}}" method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this product?  This action cannot be undone.');">
+
+                            <input type="hidden" name="_method" value="delete" />
+                            <input type="hidden" name="category" th:value="${category}" />
+                            <input type="hidden" name="keyword" th:value="${keyword}" />
+
+                            <button type="submit" class="btn-circle-delete" title="Delete">
+                                &#128465;
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${currentPage != null and totalPages != null}">
+            <p style="margin: 10px 0; font-size: 16px; color: #333;">
+                <strong>Page <span th:text="${currentPage + 1}">1</span> of <span
+                        th:text="${totalPages}">1</span></strong>
+                <span style="color: #666;"> | Total: <span th:text="${totalElements}">0</span> products</span>
+            </p>
+        </div>
+    </div>
+
+</div>
+<div th:insert="fragments/footer :: inventory-footer"></div>
+</body>
+</html>

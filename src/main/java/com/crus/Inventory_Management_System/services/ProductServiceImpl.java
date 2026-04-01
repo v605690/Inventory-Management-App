@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         // Uses modelMapper to convert incoming ProductDTO to a product entity
         Product product = modelMapper.map(productDTO, Product.class);
 
-        Long userId = accessHelper.getLoggedInUserDetails();
+        Long userId = Long.valueOf(accessHelper.getLoggedInUserDetails());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
@@ -166,7 +166,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
-        Page<Product> page = productRepository.findProductsByCategoryName(category, accessHelper.getLoggedInUserDetails(), pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, Long.valueOf(accessHelper.getLoggedInUserDetails()), pageable);
 
         // Transform a list of Product into ProductDTO objects using Java Streams
         List<ProductDTO> productDTOS = page.getContent()
@@ -184,7 +184,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
 
         String searchPattern = "%" + keyword.trim() + "%";
-        Long currentUserId = accessHelper.getLoggedInUserDetails();
+        Long currentUserId = Long.valueOf(accessHelper.getLoggedInUserDetails());
 
         System.out.println("DEBUG SEARCH - User ID: [" + currentUserId + "] | Keyword Pattern: [" + searchPattern + "]");
 
@@ -438,7 +438,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductByKeywordAndCategory(String keyword, String allowedCategory, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
         Pageable pageable = sortHelper.createPageable(pageNumber, pageSize, sortBy, sortOrder);
-        Long userId = accessHelper.getLoggedInUserDetails();
+        Long userId = Long.valueOf(accessHelper.getLoggedInUserDetails());
         String searchPattern = "%" + (keyword != null ? keyword.trim() : "") + "%";
 
         System.out.println("DEBUG: getProductByKeywordAndCategory called. User: " + userId + " Keyword: " + searchPattern);
@@ -446,7 +446,7 @@ public class ProductServiceImpl implements ProductService {
 
         if (allowedCategory == null || "null".equalsIgnoreCase(allowedCategory) || "all".equalsIgnoreCase(allowedCategory)) {
 
-            page = productRepository.findByProductNameLikeIgnoreCaseAndUser_UserId ('%' + keyword + '%', accessHelper.getLoggedInUserDetails(), pageable);
+            page = productRepository.findByProductNameLikeIgnoreCaseAndUser_UserId ('%' + keyword + '%', Long.valueOf(accessHelper.getLoggedInUserDetails()), pageable);
 
         } else {
             Category category = categoryService.parseCategory(allowedCategory);
@@ -473,7 +473,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
 
-        Page<Product> page = productRepository.findProductsByCategoryName(category, accessHelper.getLoggedInUserDetails(), pageable);
+        Page<Product> page = productRepository.findProductsByCategoryName(category, Long.valueOf(accessHelper.getLoggedInUserDetails()), pageable);
 
         List<ProductDTO> productDTOS = page.stream()
                 .map((element) -> modelMapper.map(element, ProductDTO.class))

@@ -14,7 +14,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     Optional<Vendor> findVendorByAccountNumber(String accountNumber);
 
     @Query("select distinct v from Vendor v left join fetch v.products")
-    Page<Vendor> findAllWithProducts(Pageable pageable);
+    Page<Vendor> findAllWithProducts(String keyword, Pageable pageable);
 
     @Query("SELECT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :acc")
     Optional<Vendor> findByAccountNumberWithProducts(@Param("acc") String accountNumber);
@@ -22,4 +22,9 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     List<Vendor> findByContactNameContainingIgnoreCase(String contactName);
 
     Page<Vendor> findByContactNameContainingIgnoreCase(String contactName, Pageable pageable);
+
+    Page<Vendor> findByCreatedByUserIdAndContactNameContainingIgnoreCase(Long userId, String contactName,
+                                                                         Pageable pageable);
+    Page<Vendor> findByCreatedByUserId(Long userId, Pageable pageable);
+
 }

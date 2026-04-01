@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:margin-left="http://www.w3.org/1999/xhtml">
+<head>
+
+    <th:block th:replace="fragments/head :: commonHeader"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/overview.css}"/>
+
+    <title>Vendors List</title>
+
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">Vendors List</h2>
+
+    <!-- Search and Filter Section -->
+    <div class="filter-section border">
+        <form th:action="@{/vendors/all}" method="get">
+            <label for="vendors">Search Vendor:</label>
+            <input
+                    type="search"
+                    id="vendors"
+                    name="contactName"
+                    th:value="${contactName}"
+                    placeholder="Search By Vendors..."
+                    required
+            />
+            <button type="submit">Search</button>
+            <span class="validity" aria-live="polite"></span>
+            <a th:href="@{/vendors/all}" style="text-decoration: none;">
+                <button type="button">Clear / Show All</button>
+            </a>
+
+<!--            <div class="col-md-6 d-flex align-items-center">-->
+<!--                <span class="me-3 fw-bold">Filters:</span>-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                    <label>-->
+<!--                        <input class="form-check-input" type="checkbox" checked>-->
+<!--                    </label> <label class="form-check-label">All</label>-->
+<!--                </div>-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                    <label>-->
+<!--                        <input class="form-check-input" type="checkbox">-->
+<!--                    </label> <label class="form-check-label">Enabled</label>-->
+<!--                </div>-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                    <label>-->
+<!--                        <input class="form-check-input" type="checkbox">-->
+<!--                    </label> <label class="form-check-label">Disabled</label>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-md-2 text-end">-->
+<!--                <button type="button" class="btn btn-dark btn-sm rounded-pill">Remove all filters</button>-->
+<!--            </div>-->
+        </form>
+    </div>
+
+    <!--Pagination-->
+    <nav aria-label="Search navigation" th:if="${searchResults?.totalPages > 1}" class="mt-4">
+        <ul class="pagination pagination-sm flex-wrap">
+
+            <!-- Previous -->
+            <li class="page-item" th:classappend="${searchResults?.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number - 1}, size=${size}, sort=${sortBy})}">Previous</a>
+            </li>
+
+            <!-- Windowed Number Loop -->
+            <th:block th:each="i : ${#numbers.sequence(0, searchResults.totalPages - 1)}">
+
+                <!-- Show if First, Last, or within 2 of Current -->
+                <li th:if="${i == 0 or i == searchResults.totalPages - 1 or (i >= searchResults.number - 2 and i <= searchResults.number + 2)}"
+                    class="page-item" th:classappend="${searchResults.number == i} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/vendors/all(keyword=${keyword}, page=${i}, size=${size}, sort=${sortBy})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+
+                <!-- Ellipsis Logic -->
+                <li th:if="${(i == 1 and searchResults.number > 3) or (i == searchResults.totalPages - 2 and searchResults.number < searchResults.totalPages - 4)}"
+                    class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+
+            </th:block>
+
+            <!-- Next -->
+            <li class="page-item" th:classappend="${searchResults?.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/vendors/all(keyword=${keyword}, page=${searchResults.number + 1}, size=${size}, sort=${sortBy})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Data Table -->
+    <table class="table table-hover">
+        <thead class="table-header">
+        <tr>
+            <th>Id</th>
+            <th>Account Number</th>
+            <th>Contact Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Email Address</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterating over the vendor list from the controller -->
+        <tr th:each="vendor : ${vendors}">
+            <td th:text="${vendor.id}">1</td>
+            <td>
+                <a th:href="@{/vendors/{acc}(acc=${vendor.accountNumber})}"
+                   th:text="${vendor.accountNumber}">V-1001</a>
+            </td>
+            <td th:text="${vendor.contactName}">John Doe</td>
+            <td th:text="${vendor.address}">123 Main St</td>
+            <td th:text="${vendor.phoneNumber}">555-0199</td>
+            <td th:text="${vendor.emailAddress}">john@example.com</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(vendors)}">
+            <td colspan="6" class="text-center">No vendors were found.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Footer -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+            <span>Records per Page</span>
+            <label>
+                <select class="form-select d-inline-block w-auto ms-2">
+                    <option>22</option>
+                </select>
+            </label>
+        </div>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            </ul>
+        </nav>
+        <div>
+            Total Results: <span th:text="${#lists.size(vendors)}">0</span>
+        </div>
+    </div>
+</div>
+<div class="text-center" th:insert="fragments/footer :: inventory-footer"></div>
+</body>
+</html>

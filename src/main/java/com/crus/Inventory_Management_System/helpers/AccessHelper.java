@@ -5,6 +5,7 @@ import com.crus.Inventory_Management_System.repositories.UserRepository;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,14 +24,8 @@ public class AccessHelper {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return null;
         }
-                Object principal = authentication.getPrincipal();
-
-                if (principal instanceof User user) {
-                    return user.getUserId();
-                }
-                String username = authentication.getName();
-                return userRepository.findByUsername(username)
-                        .map(User::getUserId)
-                        .orElse(null);
+        return userRepository.findByUsername(authentication.getName())
+                .map(User::getUserId)
+                .orElse(null);
     }
 }

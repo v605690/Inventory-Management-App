@@ -1,0 +1,9 @@
+.w3-top {
+    z-index: 999 !important; /* High value to stay on top of all other elements */
+}
+
+.nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 999 !important; /* Forces the menu to stay on the top layer */
+}

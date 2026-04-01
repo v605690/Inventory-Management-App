@@ -15,7 +15,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
@@ -49,6 +51,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Autowired
     private AccessHelper accessHelper;
+
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableResolver;
 
@@ -56,24 +59,32 @@ public class VendorServiceImpl implements VendorService {
     @Override
     @Transactional
     public Vendor addVendor(Vendor vendor) {
-        Vendor vendorList = modelMapper.map(vendor, Vendor.class);
-        Optional<Vendor> vendorFromDB = vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber());
-        if (vendorFromDB != null) {
+
+        Long userId = accessHelper.getLoggedInUserDetails();
+
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (vendorRepository.findVendorByAccountNumber(vendor.getAccountNumber()).isPresent()) {
             throw new APIException("Vendor with account number " + vendor.getAccountNumber() + " already exists");
         }
-        Vendor savedVendor = vendorRepository.save(vendorList);
+
+        Vendor vendorToSave = modelMapper.map(vendor, Vendor.class);
+        vendorToSave.setCreatedBy(currentUser);
+
+        Vendor savedVendor = vendorRepository.save(vendorToSave);
         return modelMapper.map(savedVendor, Vendor.class);
     }
 
     @Override
-    public Page<Vendor> getAllVendors(String keyword, PageRequest pageRequest) {
-        return vendorRepository.findAllWithProducts(pageRequest);
+    public Page<Vendor> getAllVendors(String keyword, Pageable pageable) {
+        return vendorRepository.findAllWithProducts(keyword, pageable);
     }
 
-    @Override
-    public Page<Vendor> getAllVendors(PageRequest pageRequest) {
-      return vendorRepository.findAllWithProducts(pageRequest);
-    }
+//    @Override
+//    public Page<Vendor> getAllVendors(Pageable pageable) {
+//      return vendorRepository.findAllWithProducts(keyword, pageable);
+//    }
 
     @Override
     public Vendor getVendor(Long vendorId) {
@@ -106,13 +117,18 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<Vendor> findByContactName(String contactName) {
-        return vendorRepository.findByContactNameContainingIgnoreCase(contactName);
+    public Page<Vendor> findByContactName(String contactName, Pageable pageable) {
+        return vendorRepository.findByContactNameContainingIgnoreCase(contactName, pageable);
     }
 
     @Override
-    public Page<Vendor> findByContactName(String contactName, PageRequest pageRequest) {
-        return vendorRepository.findByContactNameContainingIgnoreCase(contactName, pageRequest);
+    public Page<Vendor> findByCreatedByUserIdAndContactNameContainingIgnoreCase(Long userId, String contactName, Pageable pageable) {
+        return vendorRepository.findByCreatedByUserIdAndContactNameContainingIgnoreCase(userId, contactName, pageable);
+    }
+
+    @Override
+    public Page<Vendor> findByCreatedByUserId(Long userId, Pageable pageable) {
+        return vendorRepository.findByCreatedByUserId(userId, pageable);
     }
 
     @Override

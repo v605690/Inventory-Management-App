@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Error - Product Manager</title>
+</head>
+<body>
+<div align="center">
+    <h1>Error</h1>
+
+    <p th:if="${message}" th:text="${message}" style="color: red; font-size: 18px;">
+        Error message will appear here
+    </p>
+
+    <p th:unless="${message}" style="color: red; font-size: 18px;">
+        Something went wrong. Please try again.
+    </p>
+
+    <br/>
+    <a href="/">Back to Home</a>
+</div>
+</body>
+</html>

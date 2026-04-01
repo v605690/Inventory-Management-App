@@ -5,6 +5,7 @@ import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -12,9 +13,13 @@ import java.util.List;
 public interface VendorService {
     Vendor addVendor(Vendor vendor);
 
-    Page<Vendor> getAllVendors(String keyword, PageRequest pageRequest);
+//    Page<Vendor> getAllVendors(String keyword, PageRequest pageRequest);
 
-    Page<Vendor> getAllVendors(PageRequest pageRequest);
+    Page<Vendor> getAllVendors(String keyword, Pageable pageable);
+
+//    Page<Vendor> getAllVendors(PageRequest pageRequest);
+
+//    Page<Vendor> getAllVendors(Pageable pageable);
 
     Vendor getVendor(Long vendorId);
     
@@ -38,7 +43,12 @@ public interface VendorService {
 
     void disassociateProduct(Long id, Long productId);
 
-    List<Vendor> findByContactName(String contactName);
+    Page<Vendor> findByContactName(String contactName, Pageable pageable);
 
-    Page<Vendor> findByContactName(String contactName, PageRequest pageRequest);
+    Page<Vendor> findByCreatedByUserIdAndContactNameContainingIgnoreCase(Long userId, String contactName, Pageable pageable);
+
+//    Page<Vendor> findByContactName(String contactName, PageRequest id);
+
+    Page<Vendor> findByCreatedByUserId(Long userId, Pageable pageable);
+
 }
