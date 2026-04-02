@@ -14,13 +14,21 @@ import java.util.Collection;
 import java.util.Map;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class CustomOidCUser implements OidcUser {
 
     private OidcUser oidcUser;
-    private User user;
+    private User savedUser;
+
+    public CustomOidCUser(OidcUser oidcUser, User savedUser) {
+        this.oidcUser = oidcUser;
+        this.savedUser = savedUser;
+    }
+
+    public Long getId() {
+        return savedUser.getUserId();
+    }
 
     @Override
     public Map<String, Object> getClaims() {
@@ -45,11 +53,11 @@ public class CustomOidCUser implements OidcUser {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities();
+        return savedUser.getAuthorities();
     }
 
     @Override
     public String getName() {
-        return user.getUsername();
+        return savedUser.getUsername();
     }
 }

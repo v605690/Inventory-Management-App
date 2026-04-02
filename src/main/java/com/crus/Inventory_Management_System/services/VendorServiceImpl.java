@@ -81,11 +81,6 @@ public class VendorServiceImpl implements VendorService {
         return vendorRepository.findAllWithProducts(keyword, pageable);
     }
 
-//    @Override
-//    public Page<Vendor> getAllVendors(Pageable pageable) {
-//      return vendorRepository.findAllWithProducts(keyword, pageable);
-//    }
-
     @Override
     public Vendor getVendor(Long vendorId) {
 
@@ -227,5 +222,4 @@ public class VendorServiceImpl implements VendorService {
         Hibernate.initialize(vendor.getProducts());
         return vendor;
     }
-
 }

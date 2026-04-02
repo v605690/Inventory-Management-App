@@ -1,5 +1,6 @@
 package com.crus.Inventory_Management_System.controllers;
 
+import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.services.ProductService;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -73,11 +75,19 @@ public class VendorViewController {
     }
 
     @PostMapping()
-    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor, Model model, String keyword,
+    public String saveVendor(@Valid @ModelAttribute("vendor") Vendor vendor,
+                             Model model, String keyword,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "22") int size, Pageable pageable) {
 
         try {
+
+            Long userId = accessHelper.getLoggedInUserDetails();
+
+            User user = new User();
+            user.setUserId(userId);
+            vendor.setCreatedBy(user);
+
             vendorService.savedVendor(vendor);
             System.out.println("Vendor Saved: " + vendor);
             return "redirect:/vendors";
