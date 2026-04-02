@@ -5,6 +5,8 @@ import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,8 @@ public class VendorViewController {
 
     @Autowired
     private AccessHelper accessHelper;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
 // delete after validating if method is not used
 //    @GetMapping("/new")
