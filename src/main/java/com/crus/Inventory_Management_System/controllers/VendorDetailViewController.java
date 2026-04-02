@@ -43,7 +43,6 @@ public class VendorDetailViewController {
         VendorDetailViewController.accessHelper = accessHelper;
     }
 
-
     // List all vendors
     @GetMapping("/all")
     public String listVendors(@RequestParam(name = "contactName", required = false, defaultValue = "") String contactName,
@@ -145,7 +144,6 @@ public class VendorDetailViewController {
             String referer = request.getHeader("Referer");
 
             return "redirect:" + referer;
-
         }
 
         // Associate a new product

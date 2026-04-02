@@ -31,9 +31,6 @@ import java.util.Optional;
 public class VendorServiceImpl implements VendorService {
 
     @Autowired
-    private EntityManager entityManager;
-
-    @Autowired
     private VendorRepository vendorRepository;
 
     @Autowired
@@ -46,14 +43,7 @@ public class VendorServiceImpl implements VendorService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private EntityManagerFactory entityManagerFactory;
-
-    @Autowired
     private AccessHelper accessHelper;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableResolver;
-
 
     @Override
     @Transactional

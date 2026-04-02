@@ -79,9 +79,7 @@ public class VendorViewController {
                              Model model, String keyword,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "22") int size, Pageable pageable) {
-
         try {
-
             Long userId = accessHelper.getLoggedInUserDetails();
 
             User user = new User();
@@ -117,7 +115,6 @@ public class VendorViewController {
         vendorService.updateVendor(vendor, vendor.getAccountNumber());
         return "redirect:/vendors";
     }
-
 
     @GetMapping()
     public String getAllVendors(Model model, Authentication authentication, Long userId,
