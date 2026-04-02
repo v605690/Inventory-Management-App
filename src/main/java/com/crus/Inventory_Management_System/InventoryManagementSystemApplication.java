@@ -21,5 +21,4 @@ public class InventoryManagementSystemApplication extends SpringBootServletIniti
 //			service.syncLocalImagesToDB();
 //		};
 //	}
-
 }

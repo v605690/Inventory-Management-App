@@ -51,34 +51,34 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeUsers() {
         List<Map<String, String>> initialAdmins = List.of(
-             Map.of("username", "hkadmin", "email", "hkadmin@gmail.com", "password", "gJq9jNc8mY3WuIo"),
-             Map.of("username", "imsadmin", "email", "imsadmin@gmail.com", "password", "gJq9jNc8mY3WuIo"),
-             Map.of("username", "admin", "email", "admin@gmail.com", "password", "gJq9jNc8mY3WuIo")
+                Map.of("username", "hkadmin", "email", "hkadmin@gmail.com", "password", "gJq9jNc8mY3WuIo"),
+                Map.of("username", "imsadmin", "email", "imsadmin@gmail.com", "password", "gJq9jNc8mY3WuIo"),
+                Map.of("username", "admin", "email", "admin@gmail.com", "password", "gJq9jNc8mY3WuIo")
         );
-            Role adminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
-            List<Role> adminAuthorities = new ArrayList<>();
-            adminAuthorities.add(adminRole);
+        Role adminRole = roleRepository.findByRole(Role.Roles.ROLE_ADMIN);
+        List<Role> adminAuthorities = new ArrayList<>();
+        adminAuthorities.add(adminRole);
 
-            for (Map<String, String> adminInfo : initialAdmins) {
-                String username = adminInfo.get("username");
-                String email = adminInfo.get("email");
+        for (Map<String, String> adminInfo : initialAdmins) {
+            String username = adminInfo.get("username");
+            String email = adminInfo.get("email");
 
-                if (userRepository.findByUsernameOrEmail(username, email) == null) {
-                    User admin = User.builder()
-                            .username(username)
-                            .email(email)
-                            .password(passwordEncoder.encode(adminInfo.get("password")))
-                            .isAccountNonLocked(true)
-                            .isCredentialsNonExpired(true)
-                            .isAccountNonExpired(true)
-                            .isEnabled(true)
-                            .authorities(adminAuthorities)
-                            .build();
+            if (userRepository.findByUsernameOrEmail(username, email) == null) {
+                User admin = User.builder()
+                        .username(username)
+                        .email(email)
+                        .password(passwordEncoder.encode(adminInfo.get("password")))
+                        .isAccountNonLocked(true)
+                        .isCredentialsNonExpired(true)
+                        .isAccountNonExpired(true)
+                        .isEnabled(true)
+                        .authorities(adminAuthorities)
+                        .build();
 
-                    userRepository.save(admin);
-                    log.info("Created admin user with password");
-                }
+                userRepository.save(admin);
+                log.info("Created admin user with password");
             }
+        }
 
         if (userRepository.findByUsername("user") == null) {
             Role userRole = roleRepository.findByRole(Role.Roles.ROLE_USER);

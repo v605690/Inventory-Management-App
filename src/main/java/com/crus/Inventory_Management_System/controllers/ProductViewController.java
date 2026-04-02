@@ -375,7 +375,7 @@ public class ProductViewController {
         }
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @GetMapping("/delete/{productId}")
 //    @PreAuthorize("hasPermission(#productId, 'Product', 'delete')")
     public String deleteProduct(@PathVariable Long productId,
                                 HttpServletRequest request) {
