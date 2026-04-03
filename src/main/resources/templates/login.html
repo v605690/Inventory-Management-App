@@ -3,62 +3,75 @@
       xmlns:background-color="http://www.w3.org/1999/xhtml">
 <head>
 
-  <th:block th:replace="fragments/head :: commonHeader"/>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-  <link rel="stylesheet" th:href="@{/css/main.css}" />
-  <title></title>
+    <th:block th:replace="fragments/head :: commonHeader"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <title></title>
 </head>
 <body class="h-full">
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <div th:replace="fragments/head :: logo"></div>
-    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-  </div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div th:replace="fragments/head :: logo"></div>
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+    </div>
 
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm rounded-md border border-gray-300 p-6">
-    <form action="#" method="POST" class="space-y-6">
-      <div>
-        <label for="username" class="block text-sm/6 font-medium text-gray-900">Email or username</label>
-        <div class="mt-2">
-          <input id="username" type="text" name="username" required autocomplete="text" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6" />
-        </div>
-      </div>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm rounded-md border-4 border-gray-300 p-6">
+        <form action="#" method="POST" class="space-y-6">
+            <div class="px-4 mt-2">
+                <label for="username" class="block text-sm/6 font-medium text-gray-900">Email or username</label>
+                <div>
+                    <input id="username" type="text" name="username" required autocomplete="text"
+                           class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"/>
+                </div>
+            </div>
 
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
-          <div class="text-sm">
-            <a href="#" class="font-semibold text-black hover:text-gray-900">Forgot password?</a>
-          </div>
-        </div>
-        <div class="mt-2">
-          <input id="password" type="password" name="password" required autocomplete="current-password" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6" />
-        </div>
-      </div>
+            <div>
+                <div class="px-4 flex items-center justify-between">
+                    <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
+                    <div class="text-sm">
+                        <a href="#" class="font-semibold text-black hover:text-gray-900">Forgot password?</a>
+                    </div>
+                </div>
+                <div class="px-4">
+                    <input id="password" type="password" name="password" required autocomplete="current-password"
+                           class="flex w-full justify-center rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"/>
+                </div>
+            </div>
 
-      <div>
-        <button type="submit"
-        class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm"
-        style="background-color: #2563EB;">
-  Sign in
-</button>
-      </div>
-    </form>
-      <hr class="my-4">
-    <a th:href="@{/oauth2/authorization/google}" class="no-underline">
-      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white mt-3" style="background-color: #DB4437;"
-              type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button></a>
-      <br>
-    <a th:href="@{/oauth2/authorization/github}">
-      <button data-mdb-button-init data-mdb-ripple-init class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white" style="background-color: #24292e;"
-              type="submit"><i class="fab fa-github me-2"></i>Sign in with github</button></a>
+            <!-- Main Sign In Button -->
+            <div class="px-4">
+                <button type="submit"
+                        class="flex w-full justify-center rounded-md bg-blue-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        style="background-color: #2563EB;">
+                    Sign in
+                </button>
+            </div>
+            <!-- Google Button -->
+            <div class="px-4">
+                <a th:href="@{/oauth2/authorization/google}" class="w-11/12 no-underline">
+                    <button class="flex w-full justify-center items-center rounded-md px-3 py-1.5 text-sm font-semibold text-white shadow-sm"
+                            style="background-color: #DB4437;" type="button">
+                        <i class="fab fa-google me-2"></i> Sign in with google
+                    </button>
+                </a>
+            </div>
 
-    <p class="mt-10 text-center text-sm/6 text-gray-500">
-      Not a member?
-      <a th:href="@{/register}" class="font-semibold text-black hover:text-gray-900">Register Here</a>
-    </p>
-  </div>
+            <!-- Github Button -->
+            <div class="px-4">
+                <a th:href="@{/oauth2/authorization/github}" class="w-11/12 no-underline">
+                    <button class="flex w-full justify-center items-center rounded-md px-3 py-1.5 text-sm font-semibold text-white shadow-sm"
+                            style="background-color: #24292e;" type="button">
+                        <i class="fab fa-github me-2"></i> Sign in with github
+                    </button>
+                </a>
+            </div>
+
+        <p class="mt-10 text-center text-sm/6 text-gray-500">
+            Not a member?
+            <a th:href="@{/register}" class="font-semibold text-black hover:text-gray-900">Register Here</a>
+        </p>
+    </div>
 </div>
 </body>
 </html>
