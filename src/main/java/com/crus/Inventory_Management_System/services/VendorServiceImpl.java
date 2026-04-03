@@ -116,6 +116,11 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public Page<Vendor> findByContactNameContainingIgnoreCase(String contactName, PageRequest pageRequest) {
+        return vendorRepository.findByContactNameContainingIgnoreCase(contactName, pageRequest);
+    }
+
+    @Override
     @Transactional
     public void savedVendor(Vendor vendor) {
         vendorRepository.save(vendor);

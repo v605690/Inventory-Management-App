@@ -39,4 +39,6 @@ public interface VendorService {
     Page<Vendor> findByCreatedByUserIdAndContactNameContainingIgnoreCase(Long userId, String contactName, Pageable pageable);
 
     Page<Vendor> findByCreatedByUserId(Long userId, Pageable pageable);
+
+    Page<Vendor> findByContactNameContainingIgnoreCase(String contactName, PageRequest pageRequest);
 }

@@ -3,6 +3,7 @@ package com.crus.Inventory_Management_System.controllers;
 import com.crus.Inventory_Management_System.entity.User;
 import com.crus.Inventory_Management_System.entity.Vendor;
 import com.crus.Inventory_Management_System.helpers.AccessHelper;
+import com.crus.Inventory_Management_System.mappers.ProductDTO;
 import com.crus.Inventory_Management_System.services.ProductService;
 import com.crus.Inventory_Management_System.services.VendorService;
 import jakarta.persistence.EntityManager;
@@ -50,14 +51,17 @@ public class VendorViewController {
     }
 
     @GetMapping("/search")
-    public String searchVendors(@RequestParam(name = "contactName") String contactName,
+    public String searchVendors(@RequestParam(name = "contactName", required = false, defaultValue = "") String contactName,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "22") int size,
                                 Model model, Authentication authentication) {
 
         Long userId = accessHelper.getLoggedInUserDetails();
+
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        System.out.println("Is Admin " + isAdmin);
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id"));
 
@@ -74,6 +78,8 @@ public class VendorViewController {
         model.addAttribute("searchResults", vendorPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vendorPage.getTotalPages());
+
+        System.out.println("DEBUG: Result List Size = " + vendorPage.getContent().size());
 
         return "vendors";
     }
