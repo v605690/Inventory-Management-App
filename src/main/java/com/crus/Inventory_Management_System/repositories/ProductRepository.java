@@ -3,12 +3,14 @@ package com.crus.Inventory_Management_System.repositories;
 import com.crus.Inventory_Management_System.entity.Category;
 import com.crus.Inventory_Management_System.entity.Product;
 import com.crus.Inventory_Management_System.entity.User;
+import jakarta.persistence.QueryHint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -21,15 +23,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByVendorsContactName(String vendors_contactName);
     List<Product> findByVendorsPhoneNumber(String vendors_phoneNumber);
 
+
     @Query(
-            value = "SELECT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId",
-            countQuery = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId"
+            value = "SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId",
+            countQuery = "SELECT DISTINCT COUNT(p) FROM Product p JOIN p.categories c WHERE c = :category AND p.user.userId = :userId"
     )
     Page<Product> findProductsByCategoryName(@Param("category") Category category, @Param("userId") Long userId, Pageable pageable);
 
     Page<Product> findByProductNameLikeIgnoreCase(String keyword, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE UPPER(p.productName) LIKE UPPER(:keyword) AND p.user.userId = :userId")
+    @Query("SELECT DISTINCT p FROM Product p WHERE UPPER(p.productName) LIKE UPPER(:keyword) AND p.user.userId = :userId")
     Page<Product> findByKeywordAndUserId(@Param("keyword") String keyword, @Param("userId") Long userId, Pageable pageable);
 
     Page<Product> findByProductNameLikeIgnoreCaseAndUser_UserId(@NotBlank(message = "Product name is required and cannot be empty") @Size(min = 1, max = 255, message = "Product name must be between 1 and 255 characters") String productName, Long user_userId, Pageable pageable);
@@ -48,8 +51,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByProductNameContainingIgnoreCase(String keyword, Pageable pageable);
 
-    @Query("SELECT p FROM Product p JOIN p.categories c JOIN p.vendors v WHERE c = :category AND v.id = :vendorId")
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c JOIN p.vendors v WHERE c = :category AND v.id = :vendorId")
     List<Product> findByCategoriesAndVendors(@Param("category") Category category, @Param("vendorId") Long vendorsId);
 
+    @Query("SELECT DISTINCT p FROM Product p WHERE p.user.userId = :userId")
     Page<Product> findAllByUser_UserId(Long userId, Pageable pageable);
 }

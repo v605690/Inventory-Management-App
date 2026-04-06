@@ -87,11 +87,26 @@ public class ProductViewController {
         }
 
         List<ProductDTO> productDTOList;
-        if (isAdmin) {
-           productDTOList = new ArrayList<>(productResponse.getContent());
-        } else {
-            productDTOList = productResponse.getContent();
+
+        Map<String, ProductDTO> uniqueProductsByName = new LinkedHashMap<>();
+        for (ProductDTO dto : productResponse.getContent()) {
+            uniqueProductsByName.putIfAbsent(dto.getProductName(), dto);
         }
+
+//        productDTOList = new ArrayList<>(uniqueProductsByName.values());
+
+
+        if (isAdmin) {
+            productDTOList = new ArrayList<>(uniqueProductsByName.values());
+        } else {
+            productDTOList = new ArrayList<>(uniqueProductsByName.values());
+        }
+
+//        if (isAdmin) {
+//           productDTOList = new ArrayList<>(productResponse.getContent());
+//        } else {
+//            productDTOList = productResponse.getContent();
+//        }
 
         model.addAttribute("vendors", vendorService.getAllVendors(keyword, PageRequest.of(pageNumber, pageSize)));
         model.addAttribute("productDTOList", productDTOList);
@@ -105,21 +120,24 @@ public class ProductViewController {
         model.addAttribute("category", category);
         model.addAttribute("showPagination", productResponse.getTotalPages() > 1);
 
-        for (ProductDTO product : productDTOList) {
-            try {
-                if (product.getImagePath().equalsIgnoreCase("hello-panda-choco-12340987.png")) {
-                    System.out.println("STOP");
-                }
-            } catch (Exception e) {
-
-            }
-        }
+//        for (ProductDTO product : productDTOList) {
+//            try {
+//                if (product.getImagePath().equalsIgnoreCase("hello-panda-choco-12340987.png")) {
+//                    System.out.println("STOP");
+//                }
+//            } catch (Exception e) {
+//
+//            }
+//        }
 
         if ("all".equals(category)) {
             model.addAttribute("title", "HKM Product List");
         } else {
             model.addAttribute("title", category + " List");
         }
+
+        System.out.println("Final list size: " + productDTOList.size());
+        System.out.println("List size after Name deduplication: " + productDTOList.size());
 
         return "products";
     }

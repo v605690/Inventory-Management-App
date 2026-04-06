@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "in_stock_quantity")
     private Integer inStockQuantity;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)

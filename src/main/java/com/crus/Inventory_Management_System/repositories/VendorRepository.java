@@ -13,10 +13,10 @@ import java.util.Optional;
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
     Optional<Vendor> findVendorByAccountNumber(String accountNumber);
 
-    @Query("select distinct v from Vendor v left join fetch v.products")
+    @Query("select DISTINCT v from Vendor v left join fetch v.products")
     Page<Vendor> findAllWithProducts(String keyword, Pageable pageable);
 
-    @Query("SELECT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :acc")
+    @Query("SELECT DISTINCT v FROM Vendor v LEFT JOIN FETCH v.products WHERE v.accountNumber = :acc")
     Optional<Vendor> findByAccountNumberWithProducts(@Param("acc") String accountNumber);
 
     List<Vendor> findByContactNameContainingIgnoreCase(String contactName);
